@@ -6,10 +6,11 @@ const familySchema = new mongoose.Schema(
       type: String,
       required: [true, "Family name is required"],
     },
-    memebers: [
+    members: [
       {
         type: mongoose.Schema.ObjectId,
         ref: "User",
+        default: [],
       },
     ],
     photo: {
@@ -24,23 +25,28 @@ const familySchema = new mongoose.Schema(
       {
         type: mongoose.Schema.ObjectId,
         ref: "CalendarEvent",
+        default: [],
       },
     ],
-    budget: {
-      type: mongoose.Schema.ObjectId,
-      ref: "Budget",
-      required: [true, "Family budget is required"],
-    },
+    budgets: [
+      {
+        type: mongoose.Schema.ObjectId,
+        ref: "Budget",
+        default: [],
+      },
+    ],
     shoppingList: [
       {
         type: mongoose.Schema.ObjectId,
         ref: "ShoppingItem",
+        default: [],
       },
     ],
     rewards: [
       {
         type: mongoose.Schema.ObjectId,
         ref: "Reward",
+        default: [],
       },
     ],
   },
