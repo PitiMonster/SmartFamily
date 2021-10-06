@@ -3,8 +3,8 @@ const Family = require("../Family/model");
 const AppError = require("../utils/appError");
 
 exports.isFamilyMember = catchAsync(async (req, res, next) => {
-  console.log(req.params.id);
-  const family = await Family.findById(req.params.id);
+  console.log(req.params);
+  const family = await Family.findById(req.params.familyId);
 
   if (!family) {
     return next(new AppError("Family with that ID does not exist", 404));
