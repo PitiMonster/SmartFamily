@@ -21,6 +21,9 @@ exports.createBudget = catchAsync(async (req, res, next) => {
   const { name, budgetValue, renewalData } = req.body;
   const newBudget = await Budget.create({ name, budgetValue, renewalData });
 
+  req.family.budgets.push(newBudget);
+  req.family.save({ validateBeforeSave: false });
+
   res.status(201).json({ status: "success", data: newBudget });
 });
 

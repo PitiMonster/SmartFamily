@@ -8,16 +8,15 @@ const router = express.Router();
 
 router.use(authController.protect);
 
+router.use("/:id/budgets", budgetRouter);
+
 router
   .route("/")
   .get(familyController.getFamilies)
   .post(familyController.createFamily);
 
-// check if user is member of requested family
-router.use(permissionController.isFamilyMember);
-
-router.use("/:id/budgets", budgetRouter);
-
-router.route("/:id").get(familyController.getOneFamily);
+router
+  .route("/:id")
+  .get(permissionController.isFamilyMember, familyController.getOneFamily);
 
 module.exports = router;

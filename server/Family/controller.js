@@ -1,5 +1,6 @@
 const Family = require("./model");
 const User = require("../User/model");
+const Chat = require("../Chat/model");
 const catchAsync = require("../utils/catchAsync");
 const crudHandlers = require("../controllers/handlers");
 
@@ -15,9 +16,24 @@ exports.getFamilies = catchAsync(async (req, res, next) => {
 });
 
 exports.createFamily = catchAsync(async (req, res, next) => {
-  // TODO create all objects for new family object
+  const user = req.user;
 
-  res.status(201).json({ status: "success", data: {} });
+  const newChat = await Chat.create({
+    name: req.body.name,
+    members: [req.user.id],
+  });
+
+  const newFamily = await Family.create({
+    name: req.body.name,
+    members: [req.user.id],
+    chat: newChat._id,
+    photo: req.body.photo ?? "",
+  });
+
+  user.families.push(newFamily._id);
+  user.save({ validateBeforeSave: false });
+
+  res.status(201).json({ status: "success", data: newFamily });
 });
 
 exports.getOneFamily = crudHandlers.getOne(Family);
