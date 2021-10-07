@@ -42,6 +42,13 @@ const familySchema = new mongoose.Schema(
         default: [],
       },
     ],
+    exercises: [
+      {
+        type: mongoose.Schema.ObjectId,
+        ref: "Exercise",
+        default: [],
+      },
+    ],
     rewards: [
       {
         type: mongoose.Schema.ObjectId,

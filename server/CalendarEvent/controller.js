@@ -15,6 +15,7 @@ exports.createCalendarEvent = catchAsync(async (req, res, next) => {
   const { name, date, description } = req.body;
   const newCalendarEvent = await CalendarEvent.create({
     name,
+    uniqueName: req.family._id.toString() + name.toString(),
     date,
     description,
   });

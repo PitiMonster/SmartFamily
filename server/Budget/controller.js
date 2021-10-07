@@ -14,7 +14,12 @@ exports.getBudgets = catchAsync(async (req, res, next) => {
 
 exports.createBudget = catchAsync(async (req, res, next) => {
   const { name, budgetValue, renewalData } = req.body;
-  const newBudget = await Budget.create({ name, budgetValue, renewalData });
+  const newBudget = await Budget.create({
+    name,
+    uniqueName: req.family._id.toString() + name.toString(),
+    budgetValue,
+    renewalData,
+  });
 
   req.family.budgets.push(newBudget);
   req.family.save({ validateBeforeSave: false });

@@ -5,6 +5,11 @@ const expenseSchema = mongoose.Schema({
     type: String,
     required: [true, "Expense name is required"],
   },
+  uniqueName: {
+    type: String,
+    required: [true, "Unique expense name is required"],
+    unique: true,
+  },
   value: {
     type: Number,
     required: [true, "Expense value is required"],
