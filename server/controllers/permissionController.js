@@ -18,5 +18,5 @@ exports.isFamilyMember = catchAsync(async (req, res, next) => {
 
   req.family = family;
 
-  next();
+  return next();
 });
