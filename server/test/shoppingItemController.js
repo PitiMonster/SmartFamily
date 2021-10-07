@@ -6,11 +6,11 @@ const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
 dotenv.config({ path: "./config.env" });
 
-const Reward = require("../Reward/model");
+const ShoppingItem = require("../ShoppingItem/model");
 const Family = require("../Family/model");
-const rewardController = require("../Reward/controller");
+const shoppingItemController = require("../ShoppingItem/controller");
 
-describe("Reward Controller ", () => {
+describe("ShoppingItem Controller ", () => {
   before((done) => {
     const DB = process.env.TEST_DATABASE.replace(
       "<PASSWORD>",
@@ -25,17 +25,18 @@ describe("Reward Controller ", () => {
       })
       .then(() => {
         console.log("BD CONNECTED SUCCESSFUL");
-        return Reward.create({
-          name: "Test reward",
-          uniqueName: "5c0f66b979af55031b34728aTest reward",
-          points: 12,
+        return ShoppingItem.create({
+          name: "Test shoppingItem",
+          uniqueName: "5c0f66b979af55031b34728aTest shoppingItem",
+          authorName: "TestTest",
+          count: 12,
           _id: "5c0f66b979af55031b34728c",
         });
       })
       .then(() => {
         return Family.create({
           name: "Test family",
-          rewards: ["5c0f66b979af55031b34728c"],
+          shoppingList: ["5c0f66b979af55031b34728c"],
           chat: "5c0f66b979af55031b34728b",
           _id: "5c0f66b979af55031b34728a",
         });
@@ -46,7 +47,7 @@ describe("Reward Controller ", () => {
       .catch((err) => console.log(err));
   });
 
-  it("Test if getRewards returns list of family rewards", (done) => {
+  it("Test if getShoppingItems returns list of family shopping items", (done) => {
     const req = {
       params: {
         familyId: "5c0f66b979af55031b34728a",
@@ -61,8 +62,8 @@ describe("Reward Controller ", () => {
         };
       },
     };
-    rewardController
-      .getRewards(req, res, () => {})
+    shoppingItemController
+      .getShoppingItems(req, res, () => {})
       .then((response) => {
         expect(response).to.has.property("statusCode");
         expect(response).to.has.property("status");
@@ -79,20 +80,23 @@ describe("Reward Controller ", () => {
       .catch((err) => console.log(err));
   });
 
-  it("Test if createRewards add newReward to family rewards", (done) => {
+  it("Test if createShoppingItem add newShoppingItem to family shoppingList", (done) => {
     const req = {
       params: {
         familyId: "5c0f66b979af55031b34728a",
       },
+      user: {
+        name: "Test",
+        surname: "Test",
+      },
       body: {
-        name: "Test reward create",
-        photo: null,
-        points: 12,
+        name: "Test shoppingItem create",
+        count: 12,
         description: null,
       },
       family: {
         _id: "5c0f66b979af55031b34728a",
-        rewards: [],
+        shoppingList: [],
         save: () => {},
       },
     };
@@ -105,17 +109,17 @@ describe("Reward Controller ", () => {
         };
       },
     };
-    rewardController
-      .createReward(req, res, () => {})
+    shoppingItemController
+      .createShoppingItem(req, res, () => {})
       .then((response) => {
         expect(response).to.has.property("statusCode");
         expect(response).to.has.property("status");
         expect(response).to.has.property("data");
         expect(response.statusCode).to.be.equal(201);
         expect(response.status).to.be.equal("success");
-        expect(req.family.rewards.length).to.be.equal(1);
+        expect(req.family.shoppingList.length).to.be.equal(1);
         expect(response.data._id.toString()).to.be.equal(
-          req.family.rewards[0]._id.toString()
+          req.family.shoppingList[0]._id.toString()
         );
 
         done();
@@ -123,7 +127,7 @@ describe("Reward Controller ", () => {
       .catch((err) => console.log(err));
   });
 
-  it("Test getReward", (done) => {
+  it("Test getOneShoppingItem", (done) => {
     const req = {
       params: {
         id: "5c0f66b979af55031b34728c",
@@ -138,8 +142,8 @@ describe("Reward Controller ", () => {
         };
       },
     };
-    rewardController
-      .getReward(req, res, () => {})
+    shoppingItemController
+      .getOneShoppingItem(req, res, () => {})
       .then((response) => {
         expect(response).to.has.property("statusCode");
         expect(response).to.has.property("status");
@@ -157,7 +161,7 @@ describe("Reward Controller ", () => {
 
   after((done) => {
     Family.deleteMany()
-      .then(() => Reward.deleteMany())
+      .then(() => ShoppingItem.deleteMany())
       .then(() => mongoose.disconnect())
       .then(() => done());
   });
