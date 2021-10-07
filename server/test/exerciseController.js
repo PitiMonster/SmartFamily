@@ -6,11 +6,11 @@ const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
 dotenv.config({ path: "./config.env" });
 
-const CalendarEvent = require("../CalendarEvent/model");
+const Exercise = require("../Exercise/model");
 const Family = require("../Family/model");
-const calendarEventController = require("../CalendarEvent/controller");
+const exerciseController = require("../Exercise/controller");
 
-describe("CalendarEvent Controller ", () => {
+describe("Exercise Controller ", () => {
   before((done) => {
     const DB = process.env.TEST_DATABASE.replace(
       "<PASSWORD>",
@@ -25,17 +25,18 @@ describe("CalendarEvent Controller ", () => {
       })
       .then(() => {
         console.log("BD CONNECTED SUCCESSFUL");
-        return CalendarEvent.create({
-          name: "Test calendar event",
-          uniqueName: "5c0f66b979af55031b34728aTest calendar event",
-          date: "12/12/2021",
+        return Exercise.create({
+          name: "Test exercise event",
+          uniqueName: "5c0f66b979af55031b34728aTest exercise",
+          completionDate: "12/12/2021",
+          points: 12,
           _id: "5c0f66b979af55031b34728c",
         });
       })
       .then(() => {
         return Family.create({
           name: "Test family",
-          calendarEvents: ["5c0f66b979af55031b34728c"],
+          exercises: ["5c0f66b979af55031b34728c"],
           chat: "5c0f66b979af55031b34728b",
           _id: "5c0f66b979af55031b34728a",
         });
@@ -46,7 +47,7 @@ describe("CalendarEvent Controller ", () => {
       .catch((err) => console.log(err));
   });
 
-  it("Test if getCalendarEvents returns list of family calendar events", (done) => {
+  it("Test if getExercises returns list of family exercises", (done) => {
     const req = {
       params: {
         familyId: "5c0f66b979af55031b34728a",
@@ -61,8 +62,8 @@ describe("CalendarEvent Controller ", () => {
         };
       },
     };
-    calendarEventController
-      .getCalendarEvents(req, res, () => {})
+    exerciseController
+      .getExercises(req, res, () => {})
       .then((response) => {
         expect(response).to.has.property("statusCode");
         expect(response).to.has.property("status");
@@ -79,18 +80,20 @@ describe("CalendarEvent Controller ", () => {
       .catch((err) => console.log(err));
   });
 
-  it("Test if createCalendarEvent add newCalendarEvent to family calendar events", (done) => {
+  it("Test if createExercise add newExercise to family exercises", (done) => {
     const req = {
       params: {
         familyId: "5c0f66b979af55031b34728a",
       },
       body: {
-        name: "Test calendarEvent create",
-        date: "12/12/2021",
+        name: "Test exercise create",
+        completionDate: "12/12/2021",
+        points: 12,
+        description: null,
       },
       family: {
         _id: "5c0f66b979af55031b34728a",
-        calendarEvents: [],
+        exercises: [],
         save: () => {},
       },
     };
@@ -103,17 +106,17 @@ describe("CalendarEvent Controller ", () => {
         };
       },
     };
-    calendarEventController
-      .createCalendarEvent(req, res, () => {})
+    exerciseController
+      .createExercise(req, res, () => {})
       .then((response) => {
         expect(response).to.has.property("statusCode");
         expect(response).to.has.property("status");
         expect(response).to.has.property("data");
         expect(response.statusCode).to.be.equal(201);
         expect(response.status).to.be.equal("success");
-        expect(req.family.calendarEvents.length).to.be.equal(1);
+        expect(req.family.exercises.length).to.be.equal(1);
         expect(response.data._id.toString()).to.be.equal(
-          req.family.calendarEvents[0]._id.toString()
+          req.family.exercises[0]._id.toString()
         );
 
         done();
@@ -121,7 +124,7 @@ describe("CalendarEvent Controller ", () => {
       .catch((err) => console.log(err));
   });
 
-  it("Test getOneCalendarEvent", (done) => {
+  it("Test getExercise", (done) => {
     const req = {
       params: {
         id: "5c0f66b979af55031b34728c",
@@ -136,8 +139,8 @@ describe("CalendarEvent Controller ", () => {
         };
       },
     };
-    calendarEventController
-      .getCalendarEvent(req, res, () => {})
+    exerciseController
+      .getExercise(req, res, () => {})
       .then((response) => {
         expect(response).to.has.property("statusCode");
         expect(response).to.has.property("status");
@@ -155,7 +158,7 @@ describe("CalendarEvent Controller ", () => {
 
   after((done) => {
     Family.deleteMany()
-      .then(() => CalendarEvent.deleteMany())
+      .then(() => Exercise.deleteMany())
       .then(() => mongoose.disconnect())
       .then(() => done());
   });

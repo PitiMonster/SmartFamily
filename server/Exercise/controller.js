@@ -8,7 +8,7 @@ exports.getExercises = catchAsync(async (req, res, next) => {
     path: "exercises",
     select: "name date",
   });
-  res.status(200).json({ status: "success", data: family.exercises });
+  return res.status(200).json({ status: "success", data: family.exercises });
 });
 
 exports.createExercise = catchAsync(async (req, res, next) => {
@@ -24,7 +24,7 @@ exports.createExercise = catchAsync(async (req, res, next) => {
   req.family.exercises.push(newExercise);
   req.family.save({ validateBeforeSave: false });
 
-  res.status(201).json({ status: "success", data: newExercise });
+  return res.status(201).json({ status: "success", data: newExercise });
 });
 
 exports.getExercise = crudHandlers.getOne(Exercise);

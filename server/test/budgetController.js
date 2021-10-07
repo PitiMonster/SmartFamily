@@ -10,7 +10,7 @@ const Budget = require("../Budget/model");
 const Family = require("../Family/model");
 const budgetController = require("../Budget/controller");
 
-describe("Permission Controller ", () => {
+describe("CalendarEvent Controller ", () => {
   before((done) => {
     const DB = process.env.TEST_DATABASE.replace(
       "<PASSWORD>",
