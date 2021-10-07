@@ -9,6 +9,7 @@ const calendarEventSchema = new mongoose.Schema({
     type: String,
     required: [true, "Calendar event must have unique name"],
     unique: true,
+    select: false,
   },
   date: {
     type: Date,

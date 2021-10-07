@@ -9,6 +9,7 @@ const expenseSchema = mongoose.Schema({
     type: String,
     required: [true, "Unique expense name is required"],
     unique: true,
+    select: false,
   },
   value: {
     type: Number,

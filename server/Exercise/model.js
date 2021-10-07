@@ -9,6 +9,7 @@ const exerciseSchema = mongoose.Schema({
     type: String,
     unique: true,
     required: [true, "Exercise unique name is requied"],
+    select: false,
   },
   createdAt: {
     type: Date,
