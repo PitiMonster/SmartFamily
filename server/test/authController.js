@@ -201,6 +201,7 @@ describe("Auth Controller ", () => {
       .protect(req, {}, next)
       .then(() => {
         expect(req).to.has.property("user");
+        jwt.verify.restore();
         done();
       })
       .catch((err) => console.log(err));
