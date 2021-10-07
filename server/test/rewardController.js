@@ -6,11 +6,11 @@ const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
 dotenv.config({ path: "./config.env" });
 
-const Exercise = require("../Exercise/model");
+const Reward = require("../Reward/model");
 const Family = require("../Family/model");
-const exerciseController = require("../Exercise/controller");
+const rewardController = require("../Reward/controller");
 
-describe("Exercise Controller ", () => {
+describe("Reward Controller ", () => {
   before((done) => {
     const DB = process.env.TEST_DATABASE.replace(
       "<PASSWORD>",
@@ -25,10 +25,9 @@ describe("Exercise Controller ", () => {
       })
       .then(() => {
         console.log("BD CONNECTED SUCCESSFUL");
-        return Exercise.create({
-          name: "Test exercise",
-          uniqueName: "5c0f66b979af55031b34728aTest exercise",
-          completionDate: "12/12/2021",
+        return Reward.create({
+          name: "Test reward",
+          uniqueName: "5c0f66b979af55031b34728aTest reward",
           points: 12,
           _id: "5c0f66b979af55031b34728c",
         });
@@ -36,7 +35,7 @@ describe("Exercise Controller ", () => {
       .then(() => {
         return Family.create({
           name: "Test family",
-          exercises: ["5c0f66b979af55031b34728c"],
+          rewards: ["5c0f66b979af55031b34728c"],
           chat: "5c0f66b979af55031b34728b",
           _id: "5c0f66b979af55031b34728a",
         });
@@ -47,7 +46,7 @@ describe("Exercise Controller ", () => {
       .catch((err) => console.log(err));
   });
 
-  it("Test if getExercises returns list of family exercises", (done) => {
+  it("Test if getRewards returns list of family rewards", (done) => {
     const req = {
       params: {
         familyId: "5c0f66b979af55031b34728a",
@@ -62,8 +61,8 @@ describe("Exercise Controller ", () => {
         };
       },
     };
-    exerciseController
-      .getExercises(req, res, () => {})
+    rewardController
+      .getRewards(req, res, () => {})
       .then((response) => {
         expect(response).to.has.property("statusCode");
         expect(response).to.has.property("status");
@@ -80,20 +79,20 @@ describe("Exercise Controller ", () => {
       .catch((err) => console.log(err));
   });
 
-  it("Test if createExercise add newExercise to family exercises", (done) => {
+  it("Test if createRewards add newReward to family rewards", (done) => {
     const req = {
       params: {
         familyId: "5c0f66b979af55031b34728a",
       },
       body: {
-        name: "Test exercise create",
-        completionDate: "12/12/2021",
+        name: "Test reward create",
+        phot: null,
         points: 12,
         description: null,
       },
       family: {
         _id: "5c0f66b979af55031b34728a",
-        exercises: [],
+        rewards: [],
         save: () => {},
       },
     };
@@ -106,17 +105,17 @@ describe("Exercise Controller ", () => {
         };
       },
     };
-    exerciseController
-      .createExercise(req, res, () => {})
+    rewardController
+      .createReward(req, res, () => {})
       .then((response) => {
         expect(response).to.has.property("statusCode");
         expect(response).to.has.property("status");
         expect(response).to.has.property("data");
         expect(response.statusCode).to.be.equal(201);
         expect(response.status).to.be.equal("success");
-        expect(req.family.exercises.length).to.be.equal(1);
+        expect(req.family.rewards.length).to.be.equal(1);
         expect(response.data._id.toString()).to.be.equal(
-          req.family.exercises[0]._id.toString()
+          req.family.rewards[0]._id.toString()
         );
 
         done();
@@ -124,7 +123,7 @@ describe("Exercise Controller ", () => {
       .catch((err) => console.log(err));
   });
 
-  it("Test getExercise", (done) => {
+  it("Test getReward", (done) => {
     const req = {
       params: {
         id: "5c0f66b979af55031b34728c",
@@ -139,8 +138,8 @@ describe("Exercise Controller ", () => {
         };
       },
     };
-    exerciseController
-      .getExercise(req, res, () => {})
+    rewardController
+      .getReward(req, res, () => {})
       .then((response) => {
         expect(response).to.has.property("statusCode");
         expect(response).to.has.property("status");
@@ -158,7 +157,7 @@ describe("Exercise Controller ", () => {
 
   after((done) => {
     Family.deleteMany()
-      .then(() => Exercise.deleteMany())
+      .then(() => Reward.deleteMany())
       .then(() => mongoose.disconnect())
       .then(() => done());
   });
