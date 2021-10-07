@@ -8,7 +8,9 @@ exports.getCalendarEvents = catchAsync(async (req, res, next) => {
     path: "calendarEvents",
     select: "name date",
   });
-  res.status(200).json({ status: "success", data: family.calendarEvents });
+  return res
+    .status(200)
+    .json({ status: "success", data: family.calendarEvents });
 });
 
 exports.createCalendarEvent = catchAsync(async (req, res, next) => {
@@ -23,7 +25,7 @@ exports.createCalendarEvent = catchAsync(async (req, res, next) => {
   req.family.calendarEvents.push(newCalendarEvent);
   req.family.save({ validateBeforeSave: false });
 
-  res.status(201).json({ status: "success", data: newCalendarEvent });
+  return res.status(201).json({ status: "success", data: newCalendarEvent });
 });
 
 exports.getCalendarEvent = crudHandlers.getOne(CalendarEvent);
