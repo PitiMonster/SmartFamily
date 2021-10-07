@@ -6,6 +6,7 @@ const mongoSanitize = require("express-mongo-sanitize");
 const cors = require("cors");
 
 const userRouter = require("./User/routes");
+const familyRouter = require("./Family/routes");
 // const requestRouter = require("./Request/routes");
 // const chatRouter = require("./Chat/routes");
 // const acquaintanceRouter = require("./Acquaintance/routes");
@@ -44,6 +45,7 @@ app.use(cors());
 
 // 2) ROUTES
 app.use("/api/v1/users", userRouter);
+app.use("/api/v1/families", familyRouter);
 // app.use("/api/v1/requests", requestRouter);
 // app.use("/api/v1/chats", chatRouter);
 // app.use("/api/v1/acquaintance", acquaintanceRouter);

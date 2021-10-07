@@ -2,6 +2,8 @@ const mongoose = require("mongoose");
 const SHA256 = require("crypto-js/sha256");
 const validator = require("validator");
 
+// TODO dodać rodziny po ID
+
 const userSchema = new mongoose.Schema(
   {
     name: {
@@ -19,6 +21,11 @@ const userSchema = new mongoose.Schema(
       lowercase: true,
       validate: [validator.isEmail, "Please provide a valid email!"],
     },
+    sex: {
+      type: String,
+      enum: ["male", "female"],
+      required: [true, "User sex is required"],
+    },
     profilePhoto: {
       type: String,
     },
@@ -27,6 +34,17 @@ const userSchema = new mongoose.Schema(
       enum: ["parent", "child"],
       default: "parent",
     },
+    pointsCount: {
+      type: Number,
+      default: 0,
+    },
+    families: [
+      {
+        type: mongoose.Schema.ObjectId,
+        ref: "Family",
+        default: [],
+      },
+    ],
     password: {
       type: String,
       required: [true, "Password is required"],
