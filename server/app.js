@@ -7,10 +7,7 @@ const cors = require("cors");
 
 const userRouter = require("./User/routes");
 const familyRouter = require("./Family/routes");
-// const requestRouter = require("./Request/routes");
-// const chatRouter = require("./Chat/routes");
-// const acquaintanceRouter = require("./Acquaintance/routes");
-// const AppError = require("./utils/appError");
+const AppError = require("./utils/appError");
 const globalErrorHandler = require("./controllers/errorController");
 
 const app = express();
@@ -50,9 +47,9 @@ app.use("/api/v1/families", familyRouter);
 // app.use("/api/v1/chats", chatRouter);
 // app.use("/api/v1/acquaintance", acquaintanceRouter);
 
-// app.use("*", (req, res, next) =>
-//   next(new AppError(`Can't find ${req.originalUrl} on this server`, 404))
-// );
+app.use("*", (req, res, next) =>
+  next(new AppError(`Can't find ${req.originalUrl} on this server`, 404))
+);
 
 app.use(globalErrorHandler);
 

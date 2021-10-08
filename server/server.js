@@ -5,8 +5,7 @@ const dotenv = require("dotenv");
 dotenv.config({ path: "./config.env" });
 
 const app = require("./app");
-
-// const runSockets = require("./Websockets");W
+const runSockets = require("./Websockets");
 
 const DB = process.env.DATABASE.replace(
   "<PASSWORD>",
@@ -58,4 +57,4 @@ const port = process.env.PORT || 8080;
 const server = app.listen(port, () => {
   console.log(`App running on port ${port}`);
 });
-// runSockets(server);
+runSockets(server);
