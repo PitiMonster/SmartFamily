@@ -9,7 +9,7 @@ exports.getShoppingItems = catchAsync(async (req, res, next) => {
     select: "name count authorName",
   });
 
-  res.status(200).json({ status: "success", data: family.shoppingList });
+  return res.status(200).json({ status: "success", data: family.shoppingList });
 });
 
 exports.createShoppingItem = catchAsync(async (req, res, next) => {
@@ -25,7 +25,7 @@ exports.createShoppingItem = catchAsync(async (req, res, next) => {
   req.family.shoppingList.push(newShoppingItem);
   req.family.save({ validateBeforeSave: false });
 
-  res.status(201).json({ status: "success", data: newShoppingItem });
+  return res.status(201).json({ status: "success", data: newShoppingItem });
 });
 
 exports.getOneShoppingItem = crudHandlers.getOne(ShoppingItem);

@@ -24,7 +24,7 @@ describe("Auth Controller ", () => {
       })
       .then(() => {
         console.log("BD CONNECTED SUCCESSFUL");
-        const user = new User({
+        return User.create({
           email: "test@test.com",
           name: "testes",
           surname: "tester",
@@ -34,7 +34,6 @@ describe("Auth Controller ", () => {
           passwordConfirm: "tester1234",
           _id: "5c0f66b979af55031b34728a",
         });
-        return user.save();
       })
       .then(() => {
         done();
@@ -201,6 +200,7 @@ describe("Auth Controller ", () => {
       .protect(req, {}, next)
       .then(() => {
         expect(req).to.has.property("user");
+        jwt.verify.restore();
         done();
       })
       .catch((err) => console.log(err));

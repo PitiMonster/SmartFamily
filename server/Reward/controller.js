@@ -8,7 +8,7 @@ exports.getRewards = catchAsync(async (req, res, next) => {
     path: "rewards",
     select: "name photo points",
   });
-  res.status(200).json({ status: "success", data: family.rewards });
+  return res.status(200).json({ status: "success", data: family.rewards });
 });
 
 exports.createReward = catchAsync(async (req, res, next) => {
@@ -24,7 +24,7 @@ exports.createReward = catchAsync(async (req, res, next) => {
   req.family.rewards.push(newReward);
   req.family.save({ validateBeforeSave: false });
 
-  res.status(201).json({ status: "success", data: newReward });
+  return res.status(201).json({ status: "success", data: newReward });
 });
 
 exports.getReward = crudHandlers.getOne(Reward);

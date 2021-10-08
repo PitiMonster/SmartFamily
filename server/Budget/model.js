@@ -5,12 +5,6 @@ const expenseSchema = mongoose.Schema({
     type: String,
     required: [true, "Expense name is required"],
   },
-  uniqueName: {
-    type: String,
-    required: [true, "Unique expense name is required"],
-    unique: true,
-    select: false,
-  },
   value: {
     type: Number,
     required: [true, "Expense value is required"],
@@ -18,7 +12,7 @@ const expenseSchema = mongoose.Schema({
       validator: function (val) {
         return val > 0;
       },
-      message: "Expense value cannot be non-positive",
+      message: "Expense value must be positive",
     },
   },
   description: {
@@ -31,6 +25,12 @@ const budgetSchema = mongoose.Schema({
     type: String,
     required: [true, "Budget name is required"],
   },
+  uniqueName: {
+    type: String,
+    required: [true, "Unique budget name is required"],
+    unique: true,
+    select: false,
+  },
   budgetValue: {
     type: Number,
     required: [true, "Budget value is required"],
@@ -41,7 +41,7 @@ const budgetSchema = mongoose.Schema({
       default: [],
     },
   ],
-  renewalData: {
+  renewalDate: {
     type: Date,
   },
 });

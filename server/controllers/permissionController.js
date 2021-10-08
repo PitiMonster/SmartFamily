@@ -3,7 +3,6 @@ const Family = require("../Family/model");
 const AppError = require("../utils/appError");
 
 exports.isFamilyMember = catchAsync(async (req, res, next) => {
-  console.log(req.params);
   const family = await Family.findById(req.params.familyId);
 
   if (!family) {

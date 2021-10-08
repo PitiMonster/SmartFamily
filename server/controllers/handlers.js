@@ -61,7 +61,7 @@ exports.getOne = (Model, ...popObjects) =>
       return next(new AppError("No document found with that id", 404));
     }
 
-    res.status(200).json({ status: "success", data: { data: doc } });
+    return res.status(200).json({ status: "success", data: doc });
   });
 
 // get all objects of given Model
