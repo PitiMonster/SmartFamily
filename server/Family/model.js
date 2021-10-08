@@ -42,10 +42,10 @@ const familySchema = new mongoose.Schema(
         default: [],
       },
     ],
-    exercises: [
+    tasks: [
       {
         type: mongoose.Schema.ObjectId,
-        ref: "Exercise",
+        ref: "Task",
         default: [],
       },
     ],

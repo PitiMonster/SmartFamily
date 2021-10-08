@@ -5,7 +5,7 @@ const permissionController = require("../controllers/permissionController");
 
 const budgetRouter = require("../Budget/routes");
 const calendarRouter = require("../CalendarEvent/routes");
-const exerciseRouter = require("../Exercise/routes");
+const taskRouter = require("../Task/routes");
 const rewardRouter = require("../Reward/routes");
 const shoppingItemRouter = require("../ShoppingItem/routes");
 
@@ -15,7 +15,7 @@ router.use(authController.protect);
 
 router.use("/:familyId/budgets", budgetRouter);
 router.use("/:familyId/calendar", calendarRouter);
-router.use("/:familyId/exercises", exerciseRouter);
+router.use("/:familyId/tasks", taskRouter);
 router.use("/:familyId/rewards", rewardRouter);
 router.use("/:familyId/shopping", shoppingItemRouter);
 

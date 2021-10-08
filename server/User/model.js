@@ -80,8 +80,8 @@ const userSchema = new mongoose.Schema(
   }
 );
 
-userSchema.virtual("myExercises", {
-  ref: "Exercise",
+userSchema.virtual("myTasks", {
+  ref: "Task",
   localField: "_id",
   foreignField: "child",
 });

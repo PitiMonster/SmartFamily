@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const exerciseSchema = mongoose.Schema({
+const taskSchema = mongoose.Schema({
   name: {
     type: String,
     required: [true, "Exercise name is required"],
@@ -35,7 +35,12 @@ const exerciseSchema = mongoose.Schema({
       message: "Exercise points value must be positive",
     },
   },
-  child: {
+  principal: {
+    type: mongoose.Schema.ObjectId,
+    ref: "User",
+    required: [true, "Exercise child is required"],
+  },
+  contractor: {
     type: mongoose.Schema.ObjectId,
     ref: "User",
     required: [true, "Exercise child is required"],
@@ -43,6 +48,6 @@ const exerciseSchema = mongoose.Schema({
   description: String,
 });
 
-const Exercise = mongoose.model("Exercise", exerciseSchema);
+const Task = mongoose.model("Task", taskSchema);
 
-module.exports = Exercise;
+module.exports = Task;
