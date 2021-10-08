@@ -35,6 +35,11 @@ const exerciseSchema = mongoose.Schema({
       message: "Exercise points value must be positive",
     },
   },
+  child: {
+    type: mongoose.Schema.ObjectId,
+    ref: "User",
+    required: [true, "Exercise child is required"],
+  },
   description: String,
 });
 

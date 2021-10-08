@@ -80,6 +80,12 @@ const userSchema = new mongoose.Schema(
   }
 );
 
+userSchema.virtual("myExercises", {
+  ref: "Exercise",
+  localField: "_id",
+  foreignField: "child",
+});
+
 // encrypt the user's password with SHA256 algorithm
 userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) return next();
