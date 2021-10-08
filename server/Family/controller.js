@@ -9,7 +9,7 @@ exports.getFamilies = catchAsync(async (req, res, next) => {
     path: "families",
     select: "name photos",
   });
-  res.status(200).json({
+  return res.status(200).json({
     status: "success",
     data: user.families,
   });
@@ -27,13 +27,13 @@ exports.createFamily = catchAsync(async (req, res, next) => {
     name: req.body.name,
     members: [req.user.id],
     chat: newChat._id,
-    photo: req.body.photo ?? "",
+    photo: req.body.photo,
   });
 
   user.families.push(newFamily._id);
   user.save({ validateBeforeSave: false });
 
-  res.status(201).json({ status: "success", data: newFamily });
+  return res.status(201).json({ status: "success", data: newFamily });
 });
 
 exports.getOneFamily = crudHandlers.getOne(Family);
