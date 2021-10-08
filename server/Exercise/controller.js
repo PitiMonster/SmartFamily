@@ -12,12 +12,13 @@ exports.getExercises = catchAsync(async (req, res, next) => {
 });
 
 exports.createExercise = catchAsync(async (req, res, next) => {
-  const { name, completionDate, points, description } = req.body;
+  const { name, completionDate, points, description, child } = req.body;
   const newExercise = await Exercise.create({
     name,
     uniqueName: req.family._id.toString() + name.toString(),
     completionDate,
     points,
+    child,
     description,
   });
 
