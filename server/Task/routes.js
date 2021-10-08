@@ -8,11 +8,8 @@ const router = express.Router({ mergeParams: true });
 router.use(authController.protect);
 router.use(permissionController.isFamilyMember);
 
-router
-  .route("/")
-  .get(exerciseController.getTasks)
-  .post(exerciseController.createTask);
+router.route("/").get(taskController.getTasks).post(taskController.createTask);
 
-router.route("/:id").get(exerciseController.getTask);
+router.route("/:id").get(taskController.getTask);
 
 module.exports = router;
