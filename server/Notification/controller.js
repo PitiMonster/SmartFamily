@@ -10,8 +10,7 @@ const emitNotification = require("../Websockets/notifications");
 
 const createCalendarEventNotification = catchAsync(async (req, next) => {
   const { calendarEvent, receiver } = req.notificationData;
-  const calendarEventDocument = CalendarEvent.findById(calendarEvent);
-
+  const calendarEventDocument = await CalendarEvent.findById(calendarEvent);
   if (!calendarEventDocument) {
     return next(
       new AppError("CalendarEvent document with provided id not found!", 404)
@@ -30,7 +29,9 @@ const createCalendarEventNotification = catchAsync(async (req, next) => {
 });
 const createInvitationNotification = catchAsync(async (req, next) => {
   const { invitation, receiver } = req.notificationData;
-  const invitationDocument = Invitation.findById(invitation).populate("family");
+  const invitationDocument = await Invitation.findById(invitation).populate(
+    "family"
+  );
 
   if (!invitationDocument) {
     return next(
@@ -38,7 +39,7 @@ const createInvitationNotification = catchAsync(async (req, next) => {
     );
   }
 
-  const text = `${req.user.name} ${req.user.surname} wysłał Ci zaproszenie do rodziny ${invitation.family.name}`;
+  const text = `${req.user.name} ${req.user.surname} wysłał Ci zaproszenie do rodziny ${invitationDocument.family.name}`;
 
   return await Notification.create({
     type: "invitation",
@@ -50,7 +51,7 @@ const createInvitationNotification = catchAsync(async (req, next) => {
 });
 const createNewTaskNotification = catchAsync(async (req, next) => {
   const { task, receiver } = req.notificationData;
-  const newTaskDocument = Task.findById(task);
+  const newTaskDocument = await Task.findById(task);
 
   if (!newTaskDocument) {
     return next(new AppError("Task document with provided id not found!", 404));
@@ -68,7 +69,7 @@ const createNewTaskNotification = catchAsync(async (req, next) => {
 });
 const createTaskCompletedNotification = catchAsync(async (req, next) => {
   const { task, receiver } = req.notificationData;
-  const taskCompletedDocument = Task.findById(task);
+  const taskCompletedDocument = await Task.findById(task);
 
   if (!taskCompletedDocument) {
     return next(new AppError("Task document with provided id not found!", 404));
@@ -95,8 +96,9 @@ exports.getNotifications = catchAsync(async (req, res, next) => {
 exports.createNotification = catchAsync(async (req, next) => {
   const { type, receiver } = req.notificationData;
 
-  const receiverDocument = User.findById(receiver);
-
+  const receiverDocument = await User.findById(receiver).populate(
+    "notifications"
+  );
   if (!receiverDocument) {
     return next(new AppError("Receiver with that id does not exist!", 404));
   }
@@ -119,12 +121,20 @@ exports.createNotification = catchAsync(async (req, next) => {
     default:
       return next(new AppError("Uknown type of notification provided!", 400));
   }
-
   if (!newNotification instanceof Notification) {
     return next(
       new AppError("Created notification is not a Notification model instance")
     );
   }
 
+  if (newNotification instanceof AppError) {
+    return newNotification;
+  }
+
+  receiverDocument.notifications.push(newNotification);
+  await receiverDocument.save({ validateBeforeSave: false });
+
   emitNotification(newNotification);
+
+  return newNotification;
 });

@@ -40,7 +40,7 @@ exports.createTask = catchAsync(async (req, res, next) => {
 
   req.notificationData = {
     type: "newTask",
-    receiver,
+    receiver: contractor,
     task: newTask._id,
   };
 
