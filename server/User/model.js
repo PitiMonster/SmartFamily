@@ -45,6 +45,13 @@ const userSchema = new mongoose.Schema(
         default: [],
       },
     ],
+    notifications: [
+      {
+        type: mongoose.Schema.ObjectId,
+        ref: "Notification",
+        default: [],
+      },
+    ],
     password: {
       type: String,
       required: [true, "Password is required"],
@@ -84,6 +91,12 @@ userSchema.virtual("myTasks", {
   ref: "Task",
   localField: "_id",
   foreignField: "child",
+});
+
+userSchema.virtual("myInvitations", {
+  ref: "Invitation",
+  localField: "_id",
+  foreignField: "receiver",
 });
 
 // encrypt the user's password with SHA256 algorithm

@@ -7,6 +7,7 @@ const cors = require("cors");
 
 const userRouter = require("./User/routes");
 const familyRouter = require("./Family/routes");
+const invitationRouter = require("./Invitation/routes");
 const AppError = require("./utils/appError");
 const globalErrorHandler = require("./controllers/errorController");
 
@@ -43,6 +44,7 @@ app.use(cors());
 // 2) ROUTES
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/families", familyRouter);
+app.use("/api/v1/invitations", invitationRouter);
 // app.use("/api/v1/requests", requestRouter);
 // app.use("/api/v1/chats", chatRouter);
 // app.use("/api/v1/acquaintance", acquaintanceRouter);
