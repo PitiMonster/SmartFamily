@@ -86,6 +86,12 @@ userSchema.virtual("myTasks", {
   foreignField: "child",
 });
 
+userSchema.virtual("myInvitations", {
+  ref: "Invitation",
+  localField: "_id",
+  foreignField: "receiver",
+});
+
 // encrypt the user's password with SHA256 algorithm
 userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) return next();

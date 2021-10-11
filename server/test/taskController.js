@@ -27,8 +27,8 @@ describe("Task Controller ", () => {
       .then(() => {
         console.log("BD CONNECTED SUCCESSFUL");
         return Task.create({
-          name: "Test exercise",
-          uniqueName: "5c0f66b979af55031b34728aTest exercise",
+          name: "Test task",
+          uniqueName: "5c0f66b979af55031b34728aTest task",
           completionDate: "12/12/2021",
           points: 12,
           principal: "5c0f66b979af55031b34728d",
