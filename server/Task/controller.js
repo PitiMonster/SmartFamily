@@ -5,6 +5,8 @@ const catchAsync = require("../utils/catchAsync");
 const crudHandlers = require("../controllers/handlers");
 const AppError = require("../utils/appError");
 
+const notificationController = require("../Notification/controller");
+
 exports.getTasks = catchAsync(async (req, res, next) => {
   const family = await Family.findById(req.params.familyId).populate({
     path: "tasks",
@@ -36,8 +38,16 @@ exports.createTask = catchAsync(async (req, res, next) => {
     description,
   });
 
+  req.notificationData = {
+    type: "newTask",
+    receiver: contractor,
+    task: newTask._id,
+  };
+
   req.family.tasks.push(newTask);
   req.family.save({ validateBeforeSave: false });
+
+  await notificationController.createNotification(req, next);
 
   return res.status(201).json({ status: "success", data: newTask });
 });
