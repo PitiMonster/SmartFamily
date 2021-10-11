@@ -45,6 +45,13 @@ const userSchema = new mongoose.Schema(
         default: [],
       },
     ],
+    notifications: [
+      {
+        type: mongoose.Schema.ObjectId,
+        ref: "Notification",
+        default: [],
+      },
+    ],
     password: {
       type: String,
       required: [true, "Password is required"],

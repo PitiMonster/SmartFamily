@@ -4,7 +4,7 @@ const notificationSchema = new mongoose.Schema({
   type: {
     type: String,
     enum: ["calendarEvent", "invitation", "newTask", "taskCompleted"],
-    required: [true, "Notfication must have a type!"],
+    required: [true, "Notification must have a type!"],
   },
   text: String,
   photo: String,
