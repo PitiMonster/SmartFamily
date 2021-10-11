@@ -5,6 +5,8 @@ const catchAsync = require("../utils/catchAsync");
 const crudHandlers = require("../controllers/handlers");
 const AppError = require("../utils/appError");
 
+const notificationController = require("../Notification/controller");
+
 exports.getInvitations = catchAsync(async (req, res, next) => {
   const user = await User.findById(req.user.id).populate({
     path: "myInvitations",
@@ -54,6 +56,14 @@ exports.createInvitation = catchAsync(async (req, res, next) => {
     receiver,
     family,
   });
+
+  req.notificationData = {
+    type: "invitation",
+    receiver,
+    invitation: newInvitation._id,
+  };
+
+  await notificationController.createNotification(req, next);
 
   return res.status(201).json({ status: "success", data: newInvitation });
 });

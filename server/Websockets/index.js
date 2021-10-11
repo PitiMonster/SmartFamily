@@ -13,3 +13,5 @@ const runSockets = (server) => {
     runNotificationsSockets(io, socket);
   });
 };
+
+module.exports = runSockets;

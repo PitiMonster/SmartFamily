@@ -9,7 +9,7 @@ const AppError = require("../utils/appError");
 const emitNotification = require("../Websockets/notifications");
 
 const createCalendarEventNotification = catchAsync(async (req, next) => {
-  const { calendarEvent, receiver } = req.body;
+  const { calendarEvent, receiver } = req.notificationData;
   const calendarEventDocument = CalendarEvent.findById(calendarEvent);
 
   if (!calendarEventDocument) {
@@ -29,7 +29,7 @@ const createCalendarEventNotification = catchAsync(async (req, next) => {
   });
 });
 const createInvitationNotification = catchAsync(async (req, next) => {
-  const { invitation, receiver } = req.body;
+  const { invitation, receiver } = req.notificationData;
   const invitationDocument = Invitation.findById(invitation).populate("family");
 
   if (!invitationDocument) {
@@ -49,7 +49,7 @@ const createInvitationNotification = catchAsync(async (req, next) => {
   });
 });
 const createNewTaskNotification = catchAsync(async (req, next) => {
-  const { task, receiver } = req.body;
+  const { task, receiver } = req.notificationData;
   const newTaskDocument = Task.findById(task);
 
   if (!newTaskDocument) {
@@ -67,7 +67,7 @@ const createNewTaskNotification = catchAsync(async (req, next) => {
   });
 });
 const createTaskCompletedNotification = catchAsync(async (req, next) => {
-  const { task, receiver } = req.body;
+  const { task, receiver } = req.notificationData;
   const taskCompletedDocument = Task.findById(task);
 
   if (!taskCompletedDocument) {
@@ -93,7 +93,7 @@ exports.getNotifications = catchAsync(async (req, res, next) => {
 });
 
 exports.createNotification = catchAsync(async (req, next) => {
-  const { type, receiver } = req.body;
+  const { type, receiver } = req.notificationData;
 
   const receiverDocument = User.findById(receiver);
 
