@@ -6,7 +6,8 @@ const Task = require("../Task/model");
 const catchAsync = require("../utils/catchAsync");
 const AppError = require("../utils/appError");
 
-const emitNotification = require("../Websockets/notifications");
+const emitNotification =
+  require("../Websockets/notifications").emitNotification;
 
 const createCalendarEventNotification = catchAsync(async (req, next) => {
   const { calendarEvent, receiver } = req.notificationData;

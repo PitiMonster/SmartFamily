@@ -1,7 +1,7 @@
 const Message = require("../Message/model");
 const Chat = require("../Chat/model");
 
-const runSockets = (io, socket) => {
+exports.runSockets = (io, socket) => {
   socket.on("send message", async (data) => {
     console.log("sending msg to chat ", data);
     const { chatId, message, authorId } = data;
@@ -33,5 +33,3 @@ const runSockets = (io, socket) => {
     }
   });
 };
-
-module.exports = runSockets;
