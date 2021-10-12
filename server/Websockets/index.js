@@ -1,7 +1,7 @@
 const { Server } = require("socket.io");
 
-const runChatSockets = require("./chat");
-const runNotificationsSockets = require("./notifications");
+const runChatSockets = require("./chat").runSockets;
+const runNotificationsSockets = require("./notifications").runSockets;
 
 const runSockets = (server) => {
   io = new Server(server);

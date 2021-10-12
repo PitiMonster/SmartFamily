@@ -1,18 +1,22 @@
 const Message = require("../Message/model");
 const Chat = require("../Chat/model");
+const AppError = require("../utils/appError");
 
-const runSockets = (io, socket) => {
+exports.runSockets = (io, socket) => {
   socket.on("send message", async (data) => {
-    console.log("sending msg to chat ", data);
     const { chatId, message, authorId } = data;
-    const chat = await Chat.findById(chatId);
 
+    const chat = await Chat.findById(chatId);
     if (!chat) {
-      return next(new AppError("No chat exists with that ID", 404));
+      return socket.emit("error occured", {
+        error: { message: "No chat exists with that ID", statusCode: 404 },
+      });
     }
 
     if (!message) {
-      return next(new AppError("No message to send provied", 404));
+      return socket.emit("error occured", {
+        error: { message: "No message to send provied", statusCode: 404 },
+      });
     }
 
     const newMessage = await Message.create({
@@ -33,5 +37,3 @@ const runSockets = (io, socket) => {
     }
   });
 };
-
-module.exports = runSockets;
