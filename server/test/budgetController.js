@@ -10,7 +10,7 @@ const Budget = require("../Budget/model");
 const Family = require("../Family/model");
 const budgetController = require("../Budget/controller");
 
-describe("CalendarEvent Controller ", () => {
+describe("Budget Controller ", () => {
   before((done) => {
     const DB = process.env.TEST_DATABASE.replace(
       "<PASSWORD>",
@@ -153,6 +153,66 @@ describe("CalendarEvent Controller ", () => {
         done();
       })
       .catch((err) => console.log(err));
+  });
+
+  describe("Test addExpenseToBudget", () => {
+    it("Test incorrect budget id provided error", (done) => {
+      const req = {
+        body: { name: "test expense", price: 1, description: null },
+        params: {
+          id: "5c0f66b979af55031b34728a",
+        },
+      };
+
+      const next = (err) => err;
+
+      budgetController
+        .addExpenseToBudget(req, {}, next)
+        .then((res) => {
+          expect(res).to.be.an("error");
+          expect(res).to.has.property("statusCode");
+          expect(res).to.has.property("message");
+          expect(res.message).to.equal("Budget with provided ID not found!");
+          expect(res.statusCode).to.equal(404);
+
+          done();
+        })
+        .catch((err) => console.log(err));
+    });
+    it("Test if expense added to budget", (done) => {
+      const req = {
+        body: { name: "test expense", price: 1, description: null },
+        params: {
+          id: "5c0f66b979af55031b34728c",
+        },
+      };
+
+      const res = {
+        status: (val) => {
+          return {
+            json: (object) => {
+              return { ...object, statusCode: val };
+            },
+          };
+        },
+      };
+      budgetController
+        .addExpenseToBudget(req, res, () => {})
+        .then((response) => {
+          expect(response).to.has.property("statusCode");
+          expect(response).to.has.property("status");
+          expect(response).to.has.property("data");
+          expect(response.statusCode).to.be.equal(201);
+          expect(response.status).to.be.equal("success");
+          expect(response.data).to.has.property("expenses");
+          expect(response.data.expenses).to.be.an("array");
+          expect(response.data.expenses.length).to.equal(1);
+          expect(response.data.expenses[0].name).to.equal(req.body.name);
+
+          done();
+        })
+        .catch((err) => console.log(err));
+    });
   });
 
   after((done) => {
