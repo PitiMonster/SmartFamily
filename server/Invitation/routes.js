@@ -12,5 +12,8 @@ router
   .post(invitationController.createInvitation);
 
 router.route("/:id").get(invitationController.getOneInvitation);
+router
+  .route("/:id/:response(accept|reject)")
+  .post(invitationController.responseToInvitation);
 
 module.exports = router;

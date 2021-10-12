@@ -68,4 +68,35 @@ exports.createInvitation = catchAsync(async (req, res, next) => {
   return res.status(201).json({ status: "success", data: newInvitation });
 });
 
+exports.responseToInvitation = catchAsync(async (req, res, next) => {
+  const { response, id } = req.params;
+
+  const invitation = await Invitation.findById(id).populate({
+    path: "family",
+    select: "members",
+  });
+
+  if (!invitation) {
+    return next(new AppError("Invitation with that id not found!", 404));
+  }
+
+  switch (response.toString()) {
+    case "accept":
+      invitation.family.members.push(invitation.receiver);
+      await invitation.family.save({ validateBeforeSave: false });
+      await Invitation.deleteOne(invitation);
+
+      // send notification - "Dołączył nowy członek rodziny!"
+
+      break;
+    case "reject":
+      await Invitation.deleteOne(invitation);
+      break;
+    default:
+      break;
+  }
+
+  return res.status(204);
+});
+
 exports.getOneInvitation = crudHandlers.getOne(Invitation);

@@ -312,6 +312,102 @@ describe("Invitation Controller ", () => {
     });
   });
 
+  describe("Test responseToInvitation", () => {
+    it("Test incorrect invtitation id provided error", (done) => {
+      const req = {
+        params: { response: "accept", id: "5c0f66b979af55031b34728a" },
+      };
+      const next = (err) => err;
+
+      invitationController
+        .responseToInvitation(req, {}, next)
+        .then((res) => {
+          expect(res).to.be.an("error");
+          expect(res).to.has.property("statusCode");
+          expect(res).to.has.property("message");
+          expect(res.statusCode).to.equal(404);
+          expect(res.message).to.equal("Invitation with that id not found!");
+          done();
+        })
+        .catch((err) => console.log(err));
+    });
+
+    it("Test accept invitation", (done) => {
+      const req = {
+        params: { response: "accept", id: "5c0f66b979af55031b34728c" },
+      };
+
+      const res = {
+        status: (val) => {
+          return { statusCode: val };
+        },
+      };
+
+      invitationController
+        .responseToInvitation(req, res, () => {})
+        .then((response) => {
+          expect(response).to.has.property("statusCode");
+          expect(response.statusCode).to.equal(204);
+
+          Family.findById("5c0f66b979af55031b34728a")
+            .populate("members")
+            .then((family) => {
+              expect(family).to.has.property("members");
+              expect(family.members).to.be.an("array");
+              expect(family.members.length).to.equal(2);
+              expect(family.members[1]._id.toString()).to.equal(
+                "5c0f66b979af55031b34728e"
+              );
+              return Invitation.findById(req.params.id);
+            })
+            .then((invitation) => {
+              expect(invitation).to.be.a("null");
+
+              return Invitation.create({
+                family: "5c0f66b979af55031b34728a",
+                sender: "5c0f66b979af55031b34728d",
+                receiver: "5c0f66b979af55031b34728e",
+                _id: "5c0f66b979af55031b34728c",
+              });
+            })
+            .then(() => done())
+            .catch((err) => console.log(err));
+        });
+    });
+    it("Test reject invitation", (done) => {
+      const req = {
+        params: { response: "reject", id: "5c0f66b979af55031b34728c" },
+      };
+
+      const res = {
+        status: (val) => {
+          return { statusCode: val };
+        },
+      };
+
+      invitationController
+        .responseToInvitation(req, res, () => {})
+        .then((response) => {
+          expect(response).to.has.property("statusCode");
+          expect(response.statusCode).to.equal(204);
+
+          return Invitation.findById(req.params.id);
+        })
+        .then((invitation) => {
+          expect(invitation).to.be.a("null");
+
+          return Invitation.create({
+            family: "5c0f66b979af55031b34728a",
+            sender: "5c0f66b979af55031b34728d",
+            receiver: "5c0f66b979af55031b34728e",
+            _id: "5c0f66b979af55031b34728c",
+          });
+        })
+        .then(() => done())
+        .catch((err) => console.log(err));
+    });
+  });
+
   it("Test getOneInvitation", (done) => {
     const req = {
       params: {
