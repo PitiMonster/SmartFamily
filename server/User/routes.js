@@ -28,8 +28,10 @@ router.patch("/updatePassword");
 
 // router.route('/').post(userController.createUser);
 
-router.route("/:id").get(userController.getUser);
-//   .patch(userController.filterFieldsToUpdate, userController.updateUser);
+router
+  .route("/:id")
+  .get(userController.getUser)
+  .patch(userController.filterFieldsToUpdate, userController.updateUser);
 //   .delete(userController.deleteUser);
 
 module.exports = router;
