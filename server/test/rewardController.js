@@ -8,9 +8,12 @@ dotenv.config({ path: "./config.env" });
 
 const Reward = require("../Reward/model");
 const Family = require("../Family/model");
+const User = require("../User/model");
 const rewardController = require("../Reward/controller");
 
 describe("Reward Controller ", () => {
+  let user;
+
   before((done) => {
     const DB = process.env.TEST_DATABASE.replace(
       "<PASSWORD>",
@@ -40,7 +43,19 @@ describe("Reward Controller ", () => {
           _id: "5c0f66b979af55031b34728a",
         });
       })
-      .then(() => {
+      .then(async () => {
+        user = await User.create({
+          email: "test@test.com",
+          name: "test",
+          surname: "tester",
+          sex: "male",
+          role: "child",
+          pointsCount: 20,
+          families: ["5c0f66b979af55031b34728a"],
+          password: "tester1234",
+          passwordConfirm: "tester1234",
+          _id: "5c0f66b979af55031b34728d",
+        });
         done();
       })
       .catch((err) => console.log(err));
@@ -188,9 +203,132 @@ describe("Reward Controller ", () => {
       .catch((err) => console.log(err));
   });
 
+  describe("Test purchaseReward", () => {
+    it("Test error: Only child is permitted to buy reward!", (done) => {
+      const req = {
+        params: {
+          id: "",
+        },
+        user: {
+          role: "parent",
+        },
+      };
+      const next = (err) => err;
+
+      rewardController
+        .purchaseReward(req, {}, next)
+        .then((res) => {
+          expect(res).to.be.an("error");
+          expect(res).to.has.property("statusCode");
+          expect(res).to.has.property("message");
+          expect(res.statusCode).to.equal(403);
+          expect(res.message).to.equal(
+            "Only child is permitted to buy reward!"
+          );
+          done();
+        })
+        .catch((err) => console.log(err));
+    });
+    it("Test error: No reward document found with provided id", (done) => {
+      const req = {
+        params: {
+          id: "5c0f66b979af55031b34728a",
+        },
+        user: {
+          role: "child",
+        },
+      };
+      const next = (err) => err;
+
+      rewardController
+        .purchaseReward(req, {}, next)
+        .then((res) => {
+          expect(res).to.be.an("error");
+          expect(res).to.has.property("statusCode");
+          expect(res).to.has.property("message");
+          expect(res.statusCode).to.equal(404);
+          expect(res.message).to.equal(
+            "No reward document found with provided id"
+          );
+          done();
+        })
+        .catch((err) => console.log(err));
+    });
+    it("Test error: You do not have enough points to purchase this reward!", (done) => {
+      const req = {
+        params: {
+          id: "5c0f66b979af55031b34728c",
+        },
+        user: {
+          role: "child",
+          pointsCount: 0,
+        },
+      };
+      const next = (err) => err;
+
+      rewardController
+        .purchaseReward(req, {}, next)
+        .then((res) => {
+          expect(res).to.be.an("error");
+          expect(res).to.has.property("statusCode");
+          expect(res).to.has.property("message");
+          expect(res.statusCode).to.equal(400);
+          expect(res.message).to.equal(
+            "You do not have enough points to purchase this reward!"
+          );
+          done();
+        })
+        .catch((err) => console.log(err));
+    });
+    it("Test reward purchased correctly", (done) => {
+      const req = {
+        params: {
+          id: "5c0f66b979af55031b34728c",
+        },
+        user,
+      };
+
+      const res = {
+        status: (val) => {
+          return { statusCode: val };
+        },
+      };
+
+      rewardController
+        .purchaseReward(req, res, () => {})
+        .then((response) => {
+          expect(response).to.has.property("statusCode");
+          expect(response.statusCode).to.equal(204);
+
+          return User.findById(user._id);
+        })
+        .then((user) => {
+          expect(user.pointsCount).to.equal(8);
+
+          user.ponitsCountr = 20;
+          user.save({ validateBeforeSave: false });
+
+          return Reward.findById(req.params.id);
+        })
+        .then((reward) => {
+          expect(reward).to.be.a("null");
+
+          return Reward.create({
+            name: "Test reward",
+            uniqueName: "5c0f66b979af55031b34728aTest reward",
+            points: 12,
+            _id: "5c0f66b979af55031b34728c",
+          });
+        })
+        .then(() => done())
+        .catch((err) => console.log(err));
+    });
+  });
+
   after((done) => {
     Family.deleteMany()
       .then(() => Reward.deleteMany())
+      .then(() => User.deleteMany())
       .then(() => mongoose.disconnect())
       .then(() => done());
   });

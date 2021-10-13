@@ -14,6 +14,6 @@ router
   .post(authController.restrictTo("parent"), rewardController.createReward);
 
 router.route("/:id").get(rewardController.getReward);
-router.route("/:id/buy").delete();
+router.route("/:id/purchase").delete(rewardController.purchaseReward);
 
 module.exports = router;
