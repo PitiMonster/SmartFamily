@@ -22,7 +22,6 @@ exports.deleteOne = (Model) =>
 // update object of given Model assigned to req.params.id with req.body data
 exports.updateOne = (Model) =>
   catchAsync(async (req, res, next) => {
-    console.log(req.body);
     const doc = await Model.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
       runValidators: true,
@@ -32,7 +31,7 @@ exports.updateOne = (Model) =>
       return next(new AppError("No document found with that id", 404));
     }
 
-    res.status(200).json({ status: "success", data: { data: doc } });
+    return res.status(200).json({ status: "success", data: doc });
   });
 
 // create object of given Model with req.body data
@@ -67,18 +66,12 @@ exports.getOne = (Model, ...popObjects) =>
 // get all objects of given Model
 exports.getAll = (Model, ...popObjects) =>
   catchAsync(async (req, res, next) => {
-    let filter = {};
-    // create filter object based on provided url params
-    if (req.params.userId) filter["author"] = req.params.userId;
-    if (req.params.requestStatus) {
-      if (req.params.requestStatus === "sent") filter["sender"] = req.user.id;
-      else filter["receiver"] = req.user.id;
-    }
-    const features = new QueryFeatures(Model.find(filter), req.query)
+    const features = new QueryFeatures(Model.find(), req.query)
       .filter()
       .limitFields()
       .sort()
       .paginate();
+
     let docs;
     if (popObjects.length > 0) {
       for (const popObject of popObjects) {
@@ -86,5 +79,5 @@ exports.getAll = (Model, ...popObjects) =>
       }
       docs = await features.query;
     } else docs = await features.query;
-    res.status(200).json({ status: "success", data: { data: docs } });
+    return res.status(200).json({ status: "success", data: docs });
   });
