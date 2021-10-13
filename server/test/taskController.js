@@ -235,6 +235,78 @@ describe("Task Controller ", () => {
     });
   });
 
+  describe("Test completeTask", () => {
+    it("Test incorrect task id provided error", (done) => {
+      req = {
+        params: {
+          id: "5c0f66b979af55031b34728a",
+        },
+      };
+      const next = (err) => err;
+
+      taskController
+        .completeTask(req, {}, next)
+        .then((res) => {
+          expect(res).to.be.an("error");
+          expect(res).to.has.property("statusCode");
+          expect(res).to.has.property("message");
+          expect(res.statusCode).to.equal(404);
+          expect(res.message).to.equal(
+            "Task document with provided ID not found!"
+          );
+          done();
+        })
+        .catch((err) => console.log(err));
+    });
+
+    it("Test task completed correctly", (done) => {
+      req = {
+        params: {
+          id: "5c0f66b979af55031b34728c",
+        },
+        user: {
+          name: "test Child",
+          surname: "test",
+        },
+      };
+
+      const res = {
+        status: (val) => {
+          return { statusCode: val };
+        },
+      };
+
+      taskController
+        .completeTask(req, res, () => {})
+        .then((response) => {
+          expect(response).to.has.property("statusCode");
+          expect(response.statusCode).to.equal(204);
+
+          return User.findById("5c0f66b979af55031b34728e");
+        })
+        .then((user) => {
+          expect(user.pointsCount).to.equal(12);
+
+          return Task.findById(req.params.id);
+        })
+        .then((task) => {
+          expect(task).to.be.a("null");
+
+          return Task.create({
+            name: "Test task",
+            uniqueName: "5c0f66b979af55031b34728aTest task",
+            completionDate: "12/12/2021",
+            points: 12,
+            principal: "5c0f66b979af55031b34728d",
+            contractor: "5c0f66b979af55031b34728e",
+            _id: "5c0f66b979af55031b34728c",
+          });
+        })
+        .then(() => done())
+        .catch((err) => console.log(err));
+    });
+  });
+
   it("Test getTask", (done) => {
     const req = {
       params: {

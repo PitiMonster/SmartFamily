@@ -11,5 +11,6 @@ router.use(permissionController.isFamilyMember);
 router.route("/").get(taskController.getTasks).post(taskController.createTask);
 
 router.route("/:id").get(taskController.getTask);
+router.route("/:id/complete").delete(taskController.completeTask);
 
 module.exports = router;
