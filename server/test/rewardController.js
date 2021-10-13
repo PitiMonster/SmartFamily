@@ -79,6 +79,36 @@ describe("Reward Controller ", () => {
       .catch((err) => console.log(err));
   });
 
+  it("Test error: only parent is permitted to create reward", (done) => {
+    const req = {
+      body: {
+        name: "Test reward create",
+        photo: null,
+        points: 12,
+        description: null,
+      },
+      user: {
+        role: "child",
+      },
+    };
+
+    const next = (err) => err;
+
+    rewardController
+      .createReward(req, {}, next)
+      .then((res) => {
+        expect(res).to.be.an("error");
+        expect(res).to.has.property("statusCode");
+        expect(res).to.has.property("message");
+        expect(res.message).to.equal(
+          "Only parent member is permitted to create reward!"
+        );
+        expect(res.statusCode).to.equal(403);
+        done();
+      })
+      .catch((err) => console.log(err));
+  });
+
   it("Test if createRewards add newReward to family rewards", (done) => {
     const req = {
       params: {
@@ -94,6 +124,9 @@ describe("Reward Controller ", () => {
         _id: "5c0f66b979af55031b34728a",
         rewards: [],
         save: () => {},
+      },
+      user: {
+        role: "parent",
       },
     };
     const res = {
