@@ -52,4 +52,33 @@ exports.createTask = catchAsync(async (req, res, next) => {
   return res.status(201).json({ status: "success", data: newTask });
 });
 
+exports.completeTask = catchAsync(async (req, res, next) => {
+  const { id } = req.params;
+
+  const task = await Task.findById(id).populate({
+    path: "contractor",
+    select: "pointsCount",
+  });
+
+  if (!task) {
+    return next(new AppError("Task document with provided ID not found!", 404));
+  }
+
+  task.contractor.pointsCount += task.points;
+  task.contractor.save({ validateBeforeSave: false });
+  const userPoints = task.contractor.pointsCount;
+
+  req.notificationData = {
+    type: "taskCompleted",
+    receiver: task.principal,
+    task: id,
+  };
+
+  await notificationController.createNotification(req, next);
+
+  await Task.deleteOne({ _id: id });
+
+  return res.status(204);
+});
+
 exports.getTask = crudHandlers.getOne(Task);
