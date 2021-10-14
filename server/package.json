@@ -4,7 +4,7 @@
   "description": "Serwer do pracy inżynierskiej",
   "main": "server.js",
   "scripts": {
-    "test": "mocha --timeout 5000",
+    "test": "NODE_ENV=test mocha --timeout 5000",
     "start": "nodemon -L server.js"
   },
   "author": "Piotr Szymański",

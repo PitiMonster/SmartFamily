@@ -34,6 +34,8 @@ module.exports = class Email {
 
   // Send the actual email
   async send(template, subject) {
+    if (process.env.NODE_ENV === "test") return;
+
     // 1) Render HTML based on a pug template
     const html = pug.renderFile(`${__dirname}/../views/email/${template}.pug`, {
       firstName: this.firstName,
