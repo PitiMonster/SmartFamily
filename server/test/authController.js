@@ -5,6 +5,7 @@ const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
 dotenv.config({ path: "./config.env" });
+const SHA256 = require("crypto-js/sha256");
 
 const User = require("../User/model");
 const authController = require("../controllers/authController");
@@ -316,6 +317,76 @@ describe("Auth Controller ", () => {
         done
       );
     });
+  });
+
+  describe("Test updatePassword", () => {
+    it("Test error: Your current password is wrong.", (done) => {
+      const req = {
+        user: {
+          id: "5c0f66b979af55031b34728a",
+        },
+        body: {
+          passwordCurrent: "tester1234incorrect",
+        },
+      };
+
+      testError(
+        authController.updatePassword,
+        req,
+        401,
+        "Your current password is wrong.",
+        done
+      );
+    });
+  });
+
+  it("Test is password updated", (done) => {
+    const req = {
+      user: {
+        id: "5c0f66b979af55031b34728a",
+      },
+      body: {
+        passwordCurrent: "tester1234",
+        password: "updatedpassword",
+        passwordConfirm: "updatedpassword",
+      },
+      secure: true,
+      headers: {
+        "x-forwarded-proto": "https",
+      },
+    };
+
+    const res = {
+      cookie: () => {},
+      status: (val) => {
+        return {
+          json: (object) => {
+            return { ...object, statusCode: val };
+          },
+        };
+      },
+    };
+
+    authController
+      .updatePassword(req, res, () => {})
+      .then((response) => {
+        expect(response).to.has.property("statusCode");
+        expect(response).to.has.property("status");
+        expect(response).to.has.property("data");
+        expect(response).to.has.property("token");
+        expect(response.statusCode).to.be.equal(200);
+        expect(response.status).to.be.equal("success");
+        expect(response.data).to.has.property("user");
+        expect(response.data.user._id.toString()).to.equal(req.user.id);
+
+        return User.findById(req.user.id).select("+password");
+      })
+      .then((user) => {
+        expect(user).to.to.has.property("password");
+        expect(user.password).to.equal(SHA256(req.body.password).toString());
+        done();
+      })
+      .catch((err) => console.log(err));
   });
 
   after((done) => {
