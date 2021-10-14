@@ -24,7 +24,7 @@ const createAndSendToken = (user, statusCode, req, res) => {
   // Remove password from output
   user.password = undefined;
 
-  res.status(statusCode).json({
+  return res.status(statusCode).json({
     status: "success",
     token,
     data: {
@@ -198,5 +198,5 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
   // User.findByIdAndUpdate will NOT work as intended!
 
   // 4) Log user in, send JWT
-  createAndSendToken(user, 200, req, res);
+  return createAndSendToken(user, 200, req, res);
 });
