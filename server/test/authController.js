@@ -9,6 +9,8 @@ dotenv.config({ path: "./config.env" });
 const User = require("../User/model");
 const authController = require("../controllers/authController");
 
+const testError = require("../utils/testError");
+
 describe("Auth Controller ", () => {
   before((done) => {
     const DB = process.env.TEST_DATABASE.replace(
@@ -52,25 +54,22 @@ describe("Auth Controller ", () => {
         password: "test@test.com",
       },
     };
-    const next = (err) => err;
-    authController
-      .signIn(reqEmail, {}, next)
-      .then((result) => {
-        expect(result).to.be.an("error");
-        expect(result.message).to.be.equal("Please provide email and password");
-        expect(result.statusCode).to.be.equal(400);
-      })
-      .then(() =>
-        authController.signIn(reqPass, {}, next).then((result) => {
-          expect(result).to.be.an("error");
-          expect(result.message).to.be.equal(
-            "Please provide email and password"
-          );
-          expect(result.statusCode).to.be.equal(400);
-          done();
-        })
+
+    testError(
+      authController.signIn,
+      reqEmail,
+      400,
+      "Please provide email and password",
+      () => {}
+    ).then(() =>
+      testError(
+        authController.signIn,
+        reqPass,
+        400,
+        "Please provide email and password",
+        done
       )
-      .catch((err) => console.log(err));
+    );
   });
 
   it("Chcek if user exists and email and password are correct", (done) => {
@@ -87,22 +86,21 @@ describe("Auth Controller ", () => {
       },
     };
 
-    const next = (err) => err;
-    authController
-      .signIn(reqInvalidEmail, {}, next)
-      .then((res) => {
-        expect(res).to.be.an("error");
-        expect(res.message).to.be.equal("Incorrect email or password provided");
-        expect(res.statusCode).to.be.equal(401);
-        return;
-      })
-      .then(() => authController.signIn(reqInvalidPassword, {}, next))
-      .then((res) => {
-        expect(res).to.be.an("error");
-        expect(res.message).to.be.equal("Incorrect email or password provided");
-        expect(res.statusCode).to.be.equal(401);
-        done();
-      });
+    testError(
+      authController.signIn,
+      reqInvalidEmail,
+      401,
+      "Incorrect email or password provided",
+      () => {}
+    ).then(() =>
+      testError(
+        authController.signIn,
+        reqInvalidPassword,
+        401,
+        "Incorrect email or password provided",
+        done
+      )
+    );
   });
 
   it("Test no-authorization header", (done) => {
@@ -110,20 +108,13 @@ describe("Auth Controller ", () => {
       headers: {},
     };
 
-    const next = (err) => err;
-    authController
-      .protect(req, {}, next)
-      .then((res) => {
-        expect(res).to.be.an("error");
-        expect(res.message).to.be.equal(
-          "You are not logged in! Please log in to get access."
-        );
-        expect(res.statusCode).to.be.equal(401);
-        done();
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    testError(
+      authController.protect,
+      req,
+      401,
+      "You are not logged in! Please log in to get access.",
+      done
+    );
   });
 
   it("Test if jwt token is valid", (done) => {
@@ -240,6 +231,90 @@ describe("Auth Controller ", () => {
       );
       expect(response).to.has.not.property("message");
       expect(response).to.be.equal("correct");
+    });
+  });
+
+  describe("Test forgotPassword", () => {
+    it("Test error: There is no  user with email address.", (done) => {
+      const req = {
+        body: {
+          email: "incorrect@test.com",
+        },
+      };
+
+      testError(
+        authController.forgotPassword,
+        req,
+        404,
+        "There is no user with email address.",
+        done
+      );
+    });
+
+    it("Test error: There was an error sending the email. Try again later!", (done) => {
+      const req = {
+        body: {
+          email: "test@test.com",
+        },
+      };
+
+      testError(
+        authController.forgotPassword,
+        req,
+        500,
+        "There was an error sending the email. Try again later!",
+        done
+      );
+    });
+
+    it("Test resetToken correct", (done) => {
+      const req = {
+        body: {
+          email: "test@test.com",
+        },
+        protocol: "https://",
+        get: () => "",
+      };
+
+      const res = {
+        status: (val) => {
+          return {
+            json: (object) => {
+              return { ...object, statusCode: val };
+            },
+          };
+        },
+      };
+
+      authController
+        .forgotPassword(req, res, () => {})
+        .then((response) => {
+          expect(response).to.has.property("statusCode");
+          expect(response).to.has.property("status");
+          expect(response).to.has.property("message");
+          expect(response.statusCode).to.be.equal(200);
+          expect(response.status).to.be.equal("success");
+          expect(response.message).to.be.equal("Token sent to email!");
+          done();
+        })
+        .catch((err) => console.log(err));
+    });
+  });
+
+  describe("Test resetPassword", () => {
+    it("Test error: Token is invalid or has expired", (done) => {
+      const req = {
+        params: {
+          token: "test",
+        },
+      };
+      testError(
+        authController.resetPassword,
+        req,
+        400,
+        "Token is invalid or has expired",
+        done
+      );
     });
   });
 
