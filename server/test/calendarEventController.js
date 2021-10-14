@@ -29,6 +29,7 @@ describe("CalendarEvent Controller ", () => {
           name: "Test calendar event",
           uniqueName: "5c0f66b979af55031b34728aTest calendar event",
           date: "12/12/2021",
+          author: "5c0f66b979af55031b34728b",
           _id: "5c0f66b979af55031b34728c",
         });
       })
@@ -92,6 +93,9 @@ describe("CalendarEvent Controller ", () => {
         _id: "5c0f66b979af55031b34728a",
         calendarEvents: [],
         save: () => {},
+      },
+      user: {
+        _id: "5c0f66b979af55031b34728b",
       },
     };
     const res = {

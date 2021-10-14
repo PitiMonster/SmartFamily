@@ -47,6 +47,9 @@ exports.createTask = catchAsync(async (req, res, next) => {
   req.family.tasks.push(newTask);
   req.family.save({ validateBeforeSave: false });
 
+  // TODO create scheduler
+  // create notification for contractor
+
   await notificationController.createNotification(req, next);
 
   return res.status(201).json({ status: "success", data: newTask });

@@ -20,10 +20,14 @@ exports.createCalendarEvent = catchAsync(async (req, res, next) => {
     uniqueName: req.family._id.toString() + name.toString(),
     date,
     description,
+    author: req.user._id,
   });
 
   req.family.calendarEvents.push(newCalendarEvent);
   req.family.save({ validateBeforeSave: false });
+
+  // TODO create scheduler here
+  // create notification and send it to author
 
   return res.status(201).json({ status: "success", data: newCalendarEvent });
 });

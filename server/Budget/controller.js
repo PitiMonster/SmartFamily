@@ -41,5 +41,7 @@ exports.addExpenseToBudget = catchAsync(async (req, res, next) => {
   budget.expenses.push(newExpense);
   budget.save({ validateBeforeSave: false });
 
+  // send notification if left 10% or budget exceeded
+
   return res.status(201).json({ status: "success", data: budget });
 });
