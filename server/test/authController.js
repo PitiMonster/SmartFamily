@@ -318,6 +318,25 @@ describe("Auth Controller ", () => {
     });
   });
 
+  it("Test updatePassword", (done) => {
+    const req = {
+      user: {
+        id: "5c0f66b979af55031b34728a",
+      },
+      body: {
+        passwordCurrent: "tester1234incorrect",
+      },
+    };
+
+    testError(
+      authController.updatePassword,
+      req,
+      401,
+      "Your current password is wrong.",
+      done
+    );
+  });
+
   after((done) => {
     User.deleteMany()
       .then(() => mongoose.disconnect())
