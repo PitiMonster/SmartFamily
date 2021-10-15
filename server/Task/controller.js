@@ -50,17 +50,17 @@ exports.createTask = catchAsync(async (req, res, next) => {
   req.family.tasks.push(newTask);
   req.family.save({ validateBeforeSave: false });
 
-  schedule.scheduleJob(
-    moment(completionDate, "MM-DD-YYYY").subtract(1, "h").toDate(),
-    () => {
-      // create notification oneHourToCompleteTask for contractor
-    }
-  );
-  schedule.scheduleJob(moment(completionDate, "MM-DD-YYYY").toDate(), () => {
-    // create notification runOutOfTimeToCompleteTask for contractor
-  });
-
-  // TODO create scheduler
+  if (process.env.NODE_ENV !== "test")
+    schedule.scheduleJob(
+      moment(completionDate, "MM-DD-YYYY").subtract(1, "h").toDate(),
+      () => {
+        // create notification oneHourToCompleteTask for contractor
+      }
+    );
+  if (process.env.NODE_ENV !== "test")
+    schedule.scheduleJob(moment(completionDate, "MM-DD-YYYY").toDate(), () => {
+      // create notification runOutOfTimeToCompleteTask for contractor
+    });
 
   await notificationController.createNotification(req, next);
 
