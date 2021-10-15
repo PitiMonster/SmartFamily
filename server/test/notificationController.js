@@ -38,6 +38,7 @@ describe("Notification Controller ", () => {
           name: "Test calendar event",
           uniqueName: "5c0f66b979af55031b34728aTest calendar event",
           date: "12/12/2021",
+          author: "5c0f66b979af55031b34728d",
           _id: "5c0f66b979af55031b34728b",
         });
       })

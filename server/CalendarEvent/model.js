@@ -13,8 +13,14 @@ const calendarEventSchema = new mongoose.Schema({
   },
   date: {
     type: Date,
+    required: [true, "Calendar event must have date"],
   },
   description: String,
+  author: {
+    type: mongoose.Schema.ObjectId,
+    ref: "User",
+    required: [true, "Calendar event must have an author"],
+  },
 });
 
 const CalendarEvent = mongoose.model("CalendarEvent", calendarEventSchema);

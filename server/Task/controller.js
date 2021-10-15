@@ -5,6 +5,9 @@ const catchAsync = require("../utils/catchAsync");
 const crudHandlers = require("../controllers/handlers");
 const AppError = require("../utils/appError");
 
+const schedule = require("node-schedule");
+const moment = require("moment");
+
 const notificationController = require("../Notification/controller");
 
 exports.getTasks = catchAsync(async (req, res, next) => {
@@ -47,6 +50,18 @@ exports.createTask = catchAsync(async (req, res, next) => {
   req.family.tasks.push(newTask);
   req.family.save({ validateBeforeSave: false });
 
+  schedule.scheduleJob(
+    moment(completionDate, "MM-DD-YYYY").subtract(1, "h").toDate(),
+    () => {
+      // create notification oneHourToCompleteTask for contractor
+    }
+  );
+  schedule.scheduleJob(moment(completionDate, "MM-DD-YYYY").toDate(), () => {
+    // create notification runOutOfTimeToCompleteTask for contractor
+  });
+
+  // TODO create scheduler
+
   await notificationController.createNotification(req, next);
 
   return res.status(201).json({ status: "success", data: newTask });
@@ -78,6 +93,7 @@ exports.completeTask = catchAsync(async (req, res, next) => {
 
   await Task.deleteOne({ _id: id });
 
+  // TODO return user Points here
   return res.status(204);
 });
 

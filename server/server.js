@@ -6,6 +6,7 @@ dotenv.config({ path: "./config.env" });
 
 const app = require("./app");
 const runSockets = require("./Websockets");
+const runSchedulers = require("./utils/runSchedulers");
 
 const DB = process.env.DATABASE.replace(
   "<PASSWORD>",
@@ -54,7 +55,8 @@ cloudinary.config({
 // Constants
 const port = process.env.PORT || 8080;
 
-const server = app.listen(port, () => {
+const server = app.listen(port, async () => {
+  await runSchedulers();
   console.log(`App running on port ${port}`);
 });
 runSockets(server);
