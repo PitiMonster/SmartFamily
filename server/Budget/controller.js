@@ -4,6 +4,8 @@ const catchAsync = require("../utils/catchAsync");
 const crudHandlers = require("../controllers/handlers");
 const AppError = require("../utils/appError");
 
+const notificationController = require("../Notification/controller");
+
 exports.getBudgets = catchAsync(async (req, res, next) => {
   const family = await Family.findById(req.params.familyId).populate({
     path: "budgets",
@@ -40,6 +42,16 @@ exports.addExpenseToBudget = catchAsync(async (req, res, next) => {
 
   budget.expenses.push(newExpense);
   budget.save({ validateBeforeSave: false });
+
+  if (budget.countCurrentExpensesValue > budget.budgetValue) {
+    req.notificationData = {
+      type: "budgetExceeded",
+      receiver: req.user._id,
+      budget: budget._id,
+    };
+
+    await notificationController.createNotification(req, next);
+  }
 
   // send notification if left 10% or budget exceeded
 

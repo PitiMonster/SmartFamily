@@ -10,6 +10,8 @@ const CalendarEvent = require("../CalendarEvent/model");
 const Invitation = require("../Invitation/model");
 const Task = require("../Task/model");
 const Family = require("../Family/model");
+const Reward = require("../Reward/model");
+const Budget = require("../Budget/model");
 const notificationController = require("../Notification/controller");
 
 describe("Notification Controller ", () => {
@@ -66,6 +68,23 @@ describe("Notification Controller ", () => {
           principal: "5c0f66b979af55031b34728d",
           contractor: "5c0f66b979af55031b34728e",
           _id: "5c0f66b979af55031b34728e",
+        });
+      })
+      .then(() => {
+        return Reward.create({
+          name: "Test reward",
+          uniqueName: "5c0f66b979af55031b34728aTest reward",
+          points: 12,
+          _id: "5c0f66b979af55031b34721a",
+        });
+      })
+      .then(() => {
+        return Budget.create({
+          name: "Test budget",
+          uniqueName: "5c0f66b979af55031b34728aTest budget",
+          budgetValue: 5,
+          renewalDate: "12/12/2021",
+          _id: "5c0f66b979af55031b34721b",
         });
       })
       .then(() => {
@@ -424,10 +443,267 @@ describe("Notification Controller ", () => {
         .catch((err) => console.log(err));
     });
   });
+  describe("Test create taskOneHourLeft notification", () => {
+    before((done) => {
+      User.findById("5c0f66b979af55031b34728d")
+        .then((user) => {
+          user.notifications = [];
+          user.save({ validateBeforeSave: false });
+        })
+        .then(() => done());
+    });
+
+    it("Test incorrect task id", (done) => {
+      const req = {
+        notificationData: {
+          type: "taskOneHourLeft",
+          receiver: "5c0f66b979af55031b34728d",
+          task: "5c0f66b979af55031b34728b",
+        },
+      };
+      const next = (err) => err;
+      notificationController
+        .createNotification(req, next)
+        .then((res) => {
+          expect(res).to.be.an("error");
+          expect(res).to.has.property("statusCode");
+          expect(res).to.has.property("message");
+          expect(res.statusCode).to.equal(404);
+          expect(res.message).to.equal(
+            "Task document with provided id not found!"
+          );
+          done();
+        })
+        .catch((err) => console.log(err));
+    });
+    it("Test create properly", (done) => {
+      const req = {
+        notificationData: {
+          type: "taskOneHourLeft",
+          receiver: "5c0f66b979af55031b34728d",
+          task: "5c0f66b979af55031b34728e",
+        },
+      };
+      const next = (err) => err;
+      notificationController
+        .createNotification(req, next)
+        .then((response) => {
+          expect(response).to.have.property("_id");
+
+          User.findById("5c0f66b979af55031b34728d")
+            .populate("notifications")
+            .then((user) => {
+              expect(user.notifications).to.be.an("array");
+              expect(user.notifications.length).to.equal(1);
+              expect(user.notifications[0]).to.has.property("_id");
+              expect(user.notifications[0]._id.toString()).to.equal(
+                response._id.toString()
+              );
+              done();
+            })
+            .catch((err) => console.log(err));
+        })
+        .catch((err) => console.log(err));
+    });
+  });
+  describe("Test create taskTimeIsUp notification", () => {
+    before((done) => {
+      User.findById("5c0f66b979af55031b34728d")
+        .then((user) => {
+          user.notifications = [];
+          user.save({ validateBeforeSave: false });
+        })
+        .then(() => done());
+    });
+
+    it("Test incorrect task id", (done) => {
+      const req = {
+        notificationData: {
+          type: "taskTimeIsUp",
+          receiver: "5c0f66b979af55031b34728d",
+          task: "5c0f66b979af55031b34728b",
+        },
+      };
+      const next = (err) => err;
+      notificationController
+        .createNotification(req, next)
+        .then((res) => {
+          expect(res).to.be.an("error");
+          expect(res).to.has.property("statusCode");
+          expect(res).to.has.property("message");
+          expect(res.statusCode).to.equal(404);
+          expect(res.message).to.equal(
+            "Task document with provided id not found!"
+          );
+          done();
+        })
+        .catch((err) => console.log(err));
+    });
+    it("Test create properly", (done) => {
+      const req = {
+        notificationData: {
+          type: "taskTimeIsUp",
+          receiver: "5c0f66b979af55031b34728d",
+          task: "5c0f66b979af55031b34728e",
+        },
+      };
+      const next = (err) => err;
+      notificationController
+        .createNotification(req, next)
+        .then((response) => {
+          expect(response).to.have.property("_id");
+
+          User.findById("5c0f66b979af55031b34728d")
+            .populate("notifications")
+            .then((user) => {
+              expect(user.notifications).to.be.an("array");
+              expect(user.notifications.length).to.equal(1);
+              expect(user.notifications[0]).to.has.property("_id");
+              expect(user.notifications[0]._id.toString()).to.equal(
+                response._id.toString()
+              );
+              done();
+            })
+            .catch((err) => console.log(err));
+        })
+        .catch((err) => console.log(err));
+    });
+  });
+  describe("Test create rewardPurchased notification", () => {
+    before((done) => {
+      User.findById("5c0f66b979af55031b34728d")
+        .then((user) => {
+          user.notifications = [];
+          user.save({ validateBeforeSave: false });
+        })
+        .then(() => done());
+    });
+
+    it("Test incorrect task id", (done) => {
+      const req = {
+        notificationData: {
+          type: "rewardPurchased",
+          receiver: "5c0f66b979af55031b34728d",
+          task: "5c0f66b979af55031b34728b",
+        },
+      };
+      const next = (err) => err;
+      notificationController
+        .createNotification(req, next)
+        .then((res) => {
+          expect(res).to.be.an("error");
+          expect(res).to.has.property("statusCode");
+          expect(res).to.has.property("message");
+          expect(res.statusCode).to.equal(404);
+          expect(res.message).to.equal(
+            "Reward document with provided id not found!"
+          );
+          done();
+        })
+        .catch((err) => console.log(err));
+    });
+    it("Test create properly", (done) => {
+      const req = {
+        notificationData: {
+          type: "rewardPurchased",
+          receiver: "5c0f66b979af55031b34728d",
+          reward: "5c0f66b979af55031b34721a",
+        },
+        user: {
+          name: "test",
+        },
+      };
+      const next = (err) => err;
+      notificationController
+        .createNotification(req, next)
+        .then((response) => {
+          expect(response).to.have.property("_id");
+
+          User.findById("5c0f66b979af55031b34728d")
+            .populate("notifications")
+            .then((user) => {
+              expect(user.notifications).to.be.an("array");
+              expect(user.notifications.length).to.equal(1);
+              expect(user.notifications[0]).to.has.property("_id");
+              expect(user.notifications[0]._id.toString()).to.equal(
+                response._id.toString()
+              );
+              done();
+            })
+            .catch((err) => console.log(err));
+        })
+        .catch((err) => console.log(err));
+    });
+  });
+  describe("Test create budgetExceeded notification", () => {
+    before((done) => {
+      User.findById("5c0f66b979af55031b34728d")
+        .then((user) => {
+          user.notifications = [];
+          user.save({ validateBeforeSave: false });
+        })
+        .then(() => done());
+    });
+
+    it("Test incorrect task id", (done) => {
+      const req = {
+        notificationData: {
+          type: "budgetExceeded",
+          receiver: "5c0f66b979af55031b34728d",
+          task: "5c0f66b979af55031b34728b",
+        },
+      };
+      const next = (err) => err;
+      notificationController
+        .createNotification(req, next)
+        .then((res) => {
+          expect(res).to.be.an("error");
+          expect(res).to.has.property("statusCode");
+          expect(res).to.has.property("message");
+          expect(res.statusCode).to.equal(404);
+          expect(res.message).to.equal(
+            "Budget document with provided id not found!"
+          );
+          done();
+        })
+        .catch((err) => console.log(err));
+    });
+    it("Test create properly", (done) => {
+      const req = {
+        notificationData: {
+          type: "budgetExceeded",
+          receiver: "5c0f66b979af55031b34728d",
+          budget: "5c0f66b979af55031b34721b",
+        },
+      };
+      const next = (err) => err;
+      notificationController
+        .createNotification(req, next)
+        .then((response) => {
+          expect(response).to.have.property("_id");
+
+          User.findById("5c0f66b979af55031b34728d")
+            .populate("notifications")
+            .then((user) => {
+              expect(user.notifications).to.be.an("array");
+              expect(user.notifications.length).to.equal(1);
+              expect(user.notifications[0]).to.has.property("_id");
+              expect(user.notifications[0]._id.toString()).to.equal(
+                response._id.toString()
+              );
+              done();
+            })
+            .catch((err) => console.log(err));
+        })
+        .catch((err) => console.log(err));
+    });
+  });
 
   after((done) => {
     Notification.deleteMany()
       .then(() => User.deleteMany())
+      .then(() => Reward.deleteMany())
+      .then(() => Budget.deleteMany())
       .then(() => CalendarEvent.deleteMany())
       .then(() => Invitation.deleteMany())
       .then(() => Task.deleteMany())
