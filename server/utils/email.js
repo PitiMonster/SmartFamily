@@ -57,13 +57,13 @@ module.exports = class Email {
   }
 
   async sendWelcome() {
-    await this.send("welcome", "Welcome to the Smart Family!");
+    await this.send("welcome", "Witaj w Smart Family!");
   }
 
   async sendPasswordReset() {
     await this.send(
       "passwordReset",
-      "Your password reset token (valid for only 10 minutes)"
+      "Twój token do zresetowania hasła (ważny tylko przez 10 minut)"
     );
   }
 };

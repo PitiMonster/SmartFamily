@@ -3,6 +3,9 @@ const Family = require("../Family/model");
 const catchAsync = require("../utils/catchAsync");
 const crudHandlers = require("../controllers/handlers");
 
+const schedule = require("node-schedule");
+const moment = require("moment");
+
 exports.getCalendarEvents = catchAsync(async (req, res, next) => {
   const family = await Family.findById(req.params.familyId).populate({
     path: "calendarEvents",
@@ -26,8 +29,9 @@ exports.createCalendarEvent = catchAsync(async (req, res, next) => {
   req.family.calendarEvents.push(newCalendarEvent);
   req.family.save({ validateBeforeSave: false });
 
-  // TODO create scheduler here
-  // create notification and send it to author
+  schedule.scheduleJob(moment(date, "MM-DD-YYYY").toDate(), () => {
+    // create notification calendarEvent and send it to author
+  });
 
   return res.status(201).json({ status: "success", data: newCalendarEvent });
 });
