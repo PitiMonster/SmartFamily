@@ -93,8 +93,7 @@ exports.completeTask = catchAsync(async (req, res, next) => {
 
   await Task.deleteOne({ _id: id });
 
-  // TODO return user Points here
-  return res.status(204);
+  return res.status(200).json({ status: "success", data: userPoints });
 });
 
 exports.getTask = crudHandlers.getOne(Task);
