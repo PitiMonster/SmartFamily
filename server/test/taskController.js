@@ -272,7 +272,11 @@ describe("Task Controller ", () => {
 
       const res = {
         status: (val) => {
-          return { statusCode: val };
+          return {
+            json: (object) => {
+              return { ...object, statusCode: val };
+            },
+          };
         },
       };
 
@@ -280,7 +284,11 @@ describe("Task Controller ", () => {
         .completeTask(req, res, () => {})
         .then((response) => {
           expect(response).to.has.property("statusCode");
-          expect(response.statusCode).to.equal(204);
+          expect(response).to.has.property("status");
+          expect(response).to.has.property("data");
+          expect(response.statusCode).to.equal(200);
+          expect(response.status).to.equal("success");
+          expect(response.data).to.equal(12);
 
           return User.findById("5c0f66b979af55031b34728e");
         })
