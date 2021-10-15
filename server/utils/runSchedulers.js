@@ -12,6 +12,10 @@ const runSchedulers = async () => {
     date: { $gt: moment().toDate() },
   }).select("date name");
 
+  const next = (err) => {
+    throw err;
+  };
+
   for (const task of allFutureTasks) {
     if (
       moment(task.completionDate, "MM-DD-YYYY").subtract(1, "h") >=
@@ -36,10 +40,22 @@ const runSchedulers = async () => {
   }
 
   for (const event of allFutureCalendarEvents) {
-    schedule.scheduleJob(moment(event.date, "MM-DD-YYYY").toDate(), () => {
-      console.log(`${event.name}: calendar event notification`);
-      // create notification calendarEvent and send it to author
-    });
+    schedule.scheduleJob(
+      moment(event.date, "MM-DD-YYYY").toDate(),
+      async () => {
+        console.log(`${event.name}: calendar event notification`);
+        // create notification calendarEvent and send it to author
+        const req = {
+          notificationData: {
+            type: "calendarEvent",
+            receiver: event.author,
+            calendarEvent: newCalendarEvent._id,
+          },
+        };
+
+        await notificationController.createNotification(req, next);
+      }
+    );
   }
 };
 

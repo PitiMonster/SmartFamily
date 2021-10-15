@@ -29,8 +29,15 @@ exports.createCalendarEvent = catchAsync(async (req, res, next) => {
   req.family.calendarEvents.push(newCalendarEvent);
   req.family.save({ validateBeforeSave: false });
 
-  schedule.scheduleJob(moment(date, "MM-DD-YYYY").toDate(), () => {
+  schedule.scheduleJob(moment(date, "MM-DD-YYYY").toDate(), async () => {
     // create notification calendarEvent and send it to author
+    req.notificationData = {
+      type: "calendarEvent",
+      receiver: req.user._id,
+      calendarEvent: newCalendarEvent._id,
+    };
+
+    await notificationController.createNotification(req, next);
   });
 
   return res.status(201).json({ status: "success", data: newCalendarEvent });
