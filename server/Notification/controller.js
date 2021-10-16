@@ -1,10 +1,13 @@
+const catchAsync = require("../utils/catchAsync");
+const AppError = require("../utils/appError");
+
 const Notification = require("./model");
 const User = require("../User/model");
 const CalendarEvent = require("../CalendarEvent/model");
 const Invitation = require("../Invitation/model");
 const Task = require("../Task/model");
-const catchAsync = require("../utils/catchAsync");
-const AppError = require("../utils/appError");
+const Reward = require("../Reward/model");
+const Budget = require("../Budget/model");
 
 const emitNotification =
   require("../Websockets/notifications").emitNotification;
@@ -87,6 +90,90 @@ const createTaskCompletedNotification = catchAsync(async (req, next) => {
   });
 });
 
+const createTaskOneHourLeftNotification = catchAsync(async (req, next) => {
+  const { task, receiver } = req.notificationData;
+
+  const taskDocument = await Task.findById(task);
+
+  if (!taskDocument) {
+    return next(new AppError("Task document with provided id not found!", 404));
+  }
+
+  text = `Pozostała jedna godzina na wykonanie zadania ${taskDocument.name}`;
+
+  return await Notification.create({
+    type: "taskOneHourLeft",
+    text,
+    photo: null,
+    task,
+    receiver,
+  });
+});
+
+const createTaskTimeIsUpNotification = catchAsync(async (req, next) => {
+  const { task, receiver } = req.notificationData;
+
+  const taskDocument = await Task.findById(task);
+
+  if (!taskDocument) {
+    return next(new AppError("Task document with provided id not found!", 404));
+  }
+
+  const text = `Skończył się czas na wykonanie zadania ${taskDocument.name}`;
+
+  return await Notification.create({
+    type: "taskTimeIsUp",
+    text,
+    photo: null,
+    task,
+    receiver,
+  });
+});
+
+const createRewardPurchasedNotification = catchAsync(async (req, next) => {
+  const { reward, receiver } = req.notificationData;
+
+  const rewardDocument = await Reward.findById(reward);
+
+  if (!rewardDocument) {
+    return next(
+      new AppError("Reward document with provided id not found!", 404)
+    );
+  }
+
+  const text = `${req.user.name} has purchased a reward ${rewardDocument.name}`;
+
+  return await Notification.create({
+    type: "rewardPurchased",
+    text,
+    photo: null,
+    reward,
+    receiver,
+  });
+});
+
+const createBudgetValueExceededNotification = catchAsync(async (req, next) => {
+  const { budget, receiver } = req.notificationData;
+
+  const budgetDocument = await Budget.findById(budget);
+
+  if (!budgetDocument) {
+    return next(
+      new AppError("Budget document with provided id not found!", 404)
+    );
+  }
+
+  const text = `Budget ${budgetDocument.name} has been exceeded`;
+
+  return await Notification.create({
+    type: "budgetExceeded",
+    text,
+    photo: null,
+    budget,
+    receiver,
+  });
+});
+
 exports.getNotifications = catchAsync(async (req, res, next) => {
   const user = await User.findById(req.user.id).populate({
     path: "notifications",
@@ -118,6 +205,18 @@ exports.createNotification = catchAsync(async (req, next) => {
       break;
     case "taskCompleted":
       newNotification = await createTaskCompletedNotification(req, next);
+      break;
+    case "taskOneHourLeft":
+      newNotification = await createTaskOneHourLeftNotification(req, next);
+      break;
+    case "taskTimeIsUp":
+      newNotification = await createTaskTimeIsUpNotification(req, next);
+      break;
+    case "rewardPurchased":
+      newNotification = await createRewardPurchasedNotification(req, next);
+      break;
+    case "budgetExceeded":
+      newNotification = await createBudgetValueExceededNotification(req, next);
       break;
     default:
       return next(new AppError("Uknown type of notification provided!", 400));

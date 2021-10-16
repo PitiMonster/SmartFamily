@@ -59,8 +59,6 @@ exports.purchaseReward = catchAsync(async (req, res, next) => {
   req.user.pointsCount -= reward.points;
   req.user.save({ validateBeforeSave: false });
 
-  // TODO powiadomienie rodzica o zdobyciu nagrody przez dziecko
-
   await Reward.deleteOne({ _id: id });
 
   return res.status(204);

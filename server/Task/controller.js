@@ -53,14 +53,31 @@ exports.createTask = catchAsync(async (req, res, next) => {
   if (process.env.NODE_ENV !== "test")
     schedule.scheduleJob(
       moment(completionDate, "MM-DD-YYYY").subtract(1, "h").toDate(),
-      () => {
+      async () => {
         // create notification oneHourToCompleteTask for contractor
+        req.notificationData = {
+          type: "taskOneHourLeft",
+          receiver: contractor,
+          task: newTask._id,
+        };
+
+        await notificationController.createNotification(req, next);
       }
     );
   if (process.env.NODE_ENV !== "test")
-    schedule.scheduleJob(moment(completionDate, "MM-DD-YYYY").toDate(), () => {
-      // create notification runOutOfTimeToCompleteTask for contractor
-    });
+    schedule.scheduleJob(
+      moment(completionDate, "MM-DD-YYYY").toDate(),
+      async () => {
+        // create notification runOutOfTimeToCompleteTask for contractor
+        req.notificationData = {
+          type: "taskTimeIsUp",
+          receiver: contractor,
+          task: newTask._id,
+        };
+
+        await notificationController.createNotification(req, next);
+      }
+    );
 
   await notificationController.createNotification(req, next);
 

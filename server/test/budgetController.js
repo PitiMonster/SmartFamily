@@ -8,6 +8,7 @@ dotenv.config({ path: "./config.env" });
 
 const Budget = require("../Budget/model");
 const Family = require("../Family/model");
+const User = require("../User/model");
 const budgetController = require("../Budget/controller");
 
 describe("Budget Controller ", () => {
@@ -34,8 +35,22 @@ describe("Budget Controller ", () => {
         });
       })
       .then(() => {
+        return User.create({
+          email: "test@test.com",
+          name: "testParent",
+          surname: "tester",
+          sex: "male",
+          role: "parent",
+          families: ["5c0f66b979af55031b34728a"],
+          password: "tester1234",
+          passwordConfirm: "tester1234",
+          _id: "5c0f66b979af55031b34728d",
+        });
+      })
+      .then(() => {
         return Family.create({
           name: "Test family",
+          members: ["5c0f66b979af55031b34728d"],
           budgets: ["5c0f66b979af55031b34728c"],
           chat: "5c0f66b979af55031b34728b",
           _id: "5c0f66b979af55031b34728a",
@@ -208,7 +223,54 @@ describe("Budget Controller ", () => {
           expect(response.data.expenses).to.be.an("array");
           expect(response.data.expenses.length).to.equal(1);
           expect(response.data.expenses[0].name).to.equal(req.body.name);
+          response.data.expenses = [];
 
+          done();
+        })
+        .catch((err) => console.log(err));
+    });
+    it("Test if notification budgetExceeded was created if budget expenses value is greater than budget value", (done) => {
+      const req = {
+        body: { name: "test expense", price: 10, description: null },
+        params: {
+          id: "5c0f66b979af55031b34728c",
+        },
+        user: {
+          _id: "5c0f66b979af55031b34728d",
+        },
+      };
+
+      const res = {
+        status: (val) => {
+          return {
+            json: (object) => {
+              return { ...object, statusCode: val };
+            },
+          };
+        },
+      };
+      budgetController
+        .addExpenseToBudget(req, res, () => {})
+        .then((response) => {
+          expect(response).to.has.property("statusCode");
+          expect(response).to.has.property("status");
+          expect(response).to.has.property("data");
+          expect(response.statusCode).to.be.equal(201);
+          expect(response.status).to.be.equal("success");
+          expect(response.data).to.has.property("expenses");
+          expect(response.data.expenses).to.be.an("array");
+          expect(response.data.expenses.length).to.equal(1);
+          expect(response.data.expenses[0].name).to.equal(req.body.name);
+
+          return User.findById("5c0f66b979af55031b34728d").populate(
+            "notifications"
+          );
+        })
+        .then((user) => {
+          expect(user).to.has.property("notifications");
+          expect(user.notifications).to.be.an("array");
+          expect(user.notifications.length).to.equal(1);
+          expect(user.notifications[0].type).to.equal("budgetExceeded");
           done();
         })
         .catch((err) => console.log(err));
@@ -218,6 +280,7 @@ describe("Budget Controller ", () => {
   after((done) => {
     Family.deleteMany()
       .then(() => Budget.deleteMany())
+      .then(() => User.deleteMany())
       .then(() => mongoose.disconnect())
       .then(() => done());
   });
