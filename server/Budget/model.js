@@ -47,7 +47,7 @@ const budgetSchema = mongoose.Schema({
 });
 
 budgetSchema.methods.countCurrentExpensesValue = function () {
-  let result;
+  let result = 0;
   for (expense of this.expenses) {
     result += expense.value;
   }

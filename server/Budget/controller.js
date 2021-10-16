@@ -43,7 +43,7 @@ exports.addExpenseToBudget = catchAsync(async (req, res, next) => {
   budget.expenses.push(newExpense);
   budget.save({ validateBeforeSave: false });
 
-  if (budget.countCurrentExpensesValue > budget.budgetValue) {
+  if (budget.countCurrentExpensesValue() > budget.budgetValue) {
     req.notificationData = {
       type: "budgetExceeded",
       receiver: req.user._id,
