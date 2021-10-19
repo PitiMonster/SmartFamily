@@ -37,8 +37,10 @@ exports.signUp = catchAsync(async (req, res, next) => {
   const newUser = await User.create({
     name: req.body.name,
     surname: req.body.surname,
+    username: req.body.username,
     email: req.body.email,
     role: req.body.role,
+    birthDate: req.body.birthDate,
     sex: req.body.sex,
     profilePhoto: req.body.profilePhoto ?? "",
     password: req.body.password,
