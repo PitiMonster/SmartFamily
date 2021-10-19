@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const SHA256 = require("crypto-js/sha256");
 const validator = require("validator");
 
-// TODO dodać rodziny po ID
+const moment = require("moment");
 
 const userSchema = new mongoose.Schema(
   {
@@ -22,6 +22,11 @@ const userSchema = new mongoose.Schema(
       lowercase: true,
       validate: [validator.isEmail, "Please provide a valid email!"],
     },
+    username: {
+      type: String,
+      required: [true, "User username is required"],
+      unique: true,
+    },
     sex: {
       type: String,
       enum: ["male", "female"],
@@ -34,6 +39,19 @@ const userSchema = new mongoose.Schema(
       type: String,
       enum: ["parent", "child"],
       default: "parent",
+    },
+    birthDate: {
+      type: Date,
+      required: [true, "User birth date is required"],
+      validate: {
+        validator: function (val) {
+          if (this.role === "parent") {
+            const diffYears = moment(Date.now()).diff(val, "years");
+            return diffYears >= 18;
+          }
+        },
+        message: "The parent must be at least 18 years of age",
+      },
     },
     pointsCount: {
       type: Number,
