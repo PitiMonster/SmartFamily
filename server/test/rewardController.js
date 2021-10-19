@@ -48,6 +48,8 @@ describe("Reward Controller ", () => {
           email: "test@test.com",
           name: "test",
           surname: "tester",
+          username: "test1",
+          birthDate: "06/03/1999",
           sex: "male",
           role: "child",
           pointsCount: 20,

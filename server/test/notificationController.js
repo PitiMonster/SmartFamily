@@ -92,6 +92,8 @@ describe("Notification Controller ", () => {
           email: "test@test.com",
           name: "test",
           surname: "tester",
+          username: "test1",
+          birthDate: "06/03/1999",
           sex: "male",
           role: "parent",
           notifications: ["5c0f66b979af55031b34728c"],

@@ -53,10 +53,6 @@ const userSchema = new mongoose.Schema(
         message: "The parent must be at least 18 years of age",
       },
     },
-    pointsCount: {
-      type: Number,
-      default: 0,
-    },
     families: [
       {
         type: mongoose.Schema.ObjectId,
@@ -71,6 +67,14 @@ const userSchema = new mongoose.Schema(
         default: [],
       },
     ],
+    parent: {
+      type: mongoose.Schema.ObjectId,
+      ref: "User",
+    },
+    pointsCount: {
+      type: Number,
+      default: 0,
+    },
     password: {
       type: String,
       required: [true, "Password is required"],
@@ -89,6 +93,11 @@ const userSchema = new mongoose.Schema(
     passwordChangedAt: Date,
     passwordResetToken: String,
     passwordResetExpires: Date,
+    parentCode: String,
+    attemptsLeft: {
+      type: Number,
+      default: 3,
+    },
     active: {
       type: Boolean,
       default: true,
