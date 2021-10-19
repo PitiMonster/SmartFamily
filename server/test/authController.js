@@ -31,11 +31,28 @@ describe("Auth Controller ", () => {
           email: "test@test.com",
           name: "testes",
           surname: "tester",
+          username: "test1",
+          birthDate: "06/03/1999",
           sex: "male",
           role: "parent",
           password: "tester1234",
           passwordConfirm: "tester1234",
+          childCode: "234567",
           _id: "5c0f66b979af55031b34728a",
+        });
+      })
+      .then(() => {
+        return User.create({
+          email: "test@child.com",
+          name: "testes",
+          surname: "tester",
+          username: "child",
+          birthDate: "06/03/1999",
+          sex: "male",
+          role: "child",
+          password: "tester1234",
+          passwordConfirm: "tester1234",
+          _id: "5c0f66b979af55031b34728b",
         });
       })
       .then(() => {
@@ -387,6 +404,261 @@ describe("Auth Controller ", () => {
         done();
       })
       .catch((err) => console.log(err));
+  });
+
+  describe("Test sendAcceptChildCodeToParent", () => {
+    it("Test error: No parent found with provided email address - wrong email", (done) => {
+      const req = {
+        body: { email: "wrongemail", childFullName: "Test Test" },
+      };
+
+      testError(
+        authController.sendAcceptChildCodeToParent,
+        req,
+        404,
+        "No parent found with provided email address",
+        done
+      );
+    });
+    it("Test error: No parent found with provided email address - wrong role", (done) => {
+      const req = {
+        body: { email: "test@test.com", childFullName: "Test Test" },
+      };
+
+      User.findById("5c0f66b979af55031b34728a")
+        .then((user) => {
+          user.role = "child";
+          return user.save({ validateBeforeSave: false });
+        })
+        .then((user) => {
+          return testError(
+            authController.sendAcceptChildCodeToParent,
+            req,
+            404,
+            "No parent found with provided email address",
+            async () => {
+              user.role = "parent";
+              await user.save({ validateBeforeSave: false });
+              done();
+            }
+          );
+        })
+        .catch((err) => console.log(err));
+    });
+    it("Test correct execution", (done) => {
+      const req = {
+        body: { email: "test@test.com", childFullName: "Test Test" },
+      };
+
+      const res = {
+        cookie: () => {},
+        status: (val) => {
+          return {
+            json: (object) => {
+              return { ...object, statusCode: val };
+            },
+          };
+        },
+      };
+
+      authController
+        .sendAcceptChildCodeToParent(req, res, () => {})
+        .then((response) => {
+          expect(response).to.has.property("statusCode");
+          expect(response).to.has.property("status");
+          expect(response.statusCode).to.be.equal(200);
+          expect(response.status).to.be.equal("success");
+
+          done();
+        })
+        .catch((err) => console.log(err));
+    });
+  });
+
+  describe("Test verifyChildCodeToParent", () => {
+    it("Test error: No parent found with provided email address - incorrect email", (done) => {
+      const req = {
+        body: {
+          childCode: "",
+          parentEmail: "incorrecttest@test.com",
+          childId: "5c0f66b979af55031b34728b",
+        },
+      };
+      testError(
+        authController.verifyChildCodeToParent,
+        req,
+        404,
+        "No parent found with provided email address",
+        done
+      );
+    });
+
+    it("Test error: No parent found with provided email address - incorrect role", (done) => {
+      const req = {
+        body: {
+          childCode: "",
+          parentEmail: "test@child.com",
+          childId: "5c0f66b979af55031b34728b",
+        },
+      };
+      testError(
+        authController.verifyChildCodeToParent,
+        req,
+        404,
+        "No parent found with provided email address",
+        done
+      );
+    });
+
+    it("Test error: No child found with provided id - incorrect id", (done) => {
+      const req = {
+        body: {
+          childCode: "",
+          parentEmail: "test@test.com",
+          childId: "5c0f66b979af55031b34728a",
+        },
+      };
+      testError(
+        authController.verifyChildCodeToParent,
+        req,
+        404,
+        "No not verified child found with provided id",
+        done
+      );
+    });
+    it("Test error: No child found with provided id - is active", (done) => {
+      const req = {
+        body: {
+          childCode: "",
+          parentEmail: "test@test.com",
+          childId: "5c0f66b979af55031b34728b",
+        },
+      };
+      User.findById(req.body.childId)
+        .then((user) => {
+          user.active = true;
+          return user.save({ validateBeforeSave: false });
+        })
+        .then((user) => {
+          testError(
+            authController.verifyChildCodeToParent,
+            req,
+            404,
+            "No not verified child found with provided id",
+            async () => {
+              user.active = false;
+              await user.save({ validateBeforeSave: false });
+              done();
+            }
+          );
+        });
+    });
+    it("Test error: Wrong code provided. New code sent to your email", (done) => {
+      const req = {
+        body: {
+          childCode: "123456",
+          parentEmail: "test@test.com",
+          childId: "5c0f66b979af55031b34728b",
+        },
+      };
+      User.findOne({ email: req.body.parentEmail })
+        .then((user) => {
+          user.attemptsLeft = 1;
+          return user.save({ validateBeforeSave: false });
+        })
+        .then((user) => {
+          testError(
+            authController.verifyChildCodeToParent,
+            req,
+            400,
+            "Wrong code provided. New code sent to your email",
+            async () => {
+              user.attemptsLeft = 3;
+              await user.save({ validateBeforeSave: false });
+              done();
+            }
+          );
+        });
+    });
+    it("Test error: Wrong code provided. `Number` attempts left", (done) => {
+      const req = {
+        body: {
+          childCode: "123456",
+          parentEmail: "test@test.com",
+          childId: "5c0f66b979af55031b34728b",
+        },
+      };
+
+      testError(
+        authController.verifyChildCodeToParent,
+        req,
+        400,
+        "Wrong code provided. 2 attempts left",
+        () => {}
+      )
+        .then(() => {
+          return testError(
+            authController.verifyChildCodeToParent,
+            req,
+            400,
+            "Wrong code provided. 1 attempts left",
+            () => {}
+          );
+        })
+        .then(() => {
+          return testError(
+            authController.verifyChildCodeToParent,
+            req,
+            400,
+            "Wrong code provided. New code sent to your email",
+            done
+          );
+        });
+    });
+
+    it("Test correct execution", (done) => {
+      const req = {
+        body: {
+          childCode: "234567",
+          parentEmail: "test@test.com",
+          childId: "5c0f66b979af55031b34728b",
+        },
+      };
+
+      const res = {
+        cookie: () => {},
+        status: (val) => {
+          return {
+            json: (object) => {
+              return { ...object, statusCode: val };
+            },
+          };
+        },
+      };
+
+      User.findOne({ email: req.body.parentEmail })
+        .then((user) => {
+          user.parentCode = "234567";
+          return user.save({ validateBeforeSave: false });
+        })
+        .then(() => {
+          return authController.verifyChildCodeToParent(req, res, () => {});
+        })
+        .then((response) => {
+          expect(response).to.has.property("statusCode");
+          expect(response).to.has.property("status");
+          expect(response).to.has.property("data");
+          expect(response.statusCode).to.be.equal(200);
+          expect(response.status).to.be.equal("success");
+          expect(response.data._id.toString()).to.be.equal(req.body.childId);
+          expect(response.data.parent.toString()).to.equal(
+            "5c0f66b979af55031b34728a"
+          );
+          expect(response.data.active).to.equal(true);
+          done();
+        })
+        .catch((err) => console.log(err));
+    });
   });
 
   after((done) => {

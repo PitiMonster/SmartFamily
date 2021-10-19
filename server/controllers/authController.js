@@ -34,24 +34,43 @@ const createAndSendToken = (user, statusCode, req, res) => {
 };
 
 exports.signUp = catchAsync(async (req, res, next) => {
+  const {
+    name,
+    surname,
+    username,
+    email,
+    role,
+    birthDate,
+    sex,
+    profilePhoto,
+    password,
+    passwordConfirm,
+  } = req.body;
+
+  const active = role === "parent";
+
   const newUser = await User.create({
-    name: req.body.name,
-    surname: req.body.surname,
-    username: req.body.username,
-    email: req.body.email,
-    role: req.body.role,
-    birthDate: req.body.birthDate,
-    sex: req.body.sex,
-    profilePhoto: req.body.profilePhoto ?? "",
-    password: req.body.password,
-    passwordConfirm: req.body.passwordConfirm,
+    name,
+    surname,
+    username,
+    email,
+    role,
+    birthDate,
+    sex,
+    profilePhoto,
+    password,
+    passwordConfirm,
+    active,
   });
 
-  const url = `${req.protocol}://${req.get("host")}/me`;
-  // console.log(url);
-  await new Email(newUser, url).sendWelcome();
-
-  createAndSendToken(newUser, 201, req, res);
+  if (role === "parent") {
+    const url = `${req.protocol}://${req.get("host")}/me`;
+    // console.log(url);
+    await new Email(newUser, url).sendWelcome();
+    createAndSendToken(newUser, 201, req, res);
+  } else {
+    res.status(201).json({ status: "success", data: newUser });
+  }
 });
 
 exports.signIn = catchAsync(async (req, res, next) => {
@@ -61,9 +80,18 @@ exports.signIn = catchAsync(async (req, res, next) => {
     return next(new AppError("Please provide email and password", 400));
   }
   // 2) Check if user exists and password is correct
-  const user = await User.findOne({ email: email }).select("+password");
+  const user = await User.findOne({ email: email }).select("+password +active");
   if (!user || !user.correctPassword(password, user.password)) {
     return next(new AppError("Incorrect email or password provided", 401));
+  }
+  console.log(user);
+  if (!user.active) {
+    return next(
+      new AppError(
+        "Your account is not vierified. Verify your account by clicking the link sent to you in the email",
+        400
+      )
+    );
   }
 
   createAndSendToken(user, 200, req, res);
@@ -201,4 +229,85 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
 
   // 4) Log user in, send JWT
   return createAndSendToken(user, 200, req, res);
+});
+
+exports.sendAcceptChildCodeToParent = catchAsync(async (req, res, next) => {
+  const { email, childFullName } = req.body;
+
+  const user = await User.findOne({ email, role: "parent" });
+
+  if (!user) {
+    return next(
+      new AppError("No parent found with provided email address", 404)
+    );
+  }
+
+  const parentCode = (((Math.random() * 1000000) | 0) + "").padStart(6, "0");
+
+  user.parentCode = parentCode;
+  user.save({ validateBeforeSave: false });
+
+  const emailData = {
+    childFullName,
+    parentCode,
+  };
+  await new Email(user, "", emailData).sendChildCodeToParent();
+
+  return res.status(200).json({ status: "success" });
+});
+
+exports.verifyChildCodeToParent = catchAsync(async (req, res, next) => {
+  const { childCode, childId, parentEmail } = req.body;
+
+  const parent = await User.findOne({ email: parentEmail, role: "parent" });
+  const child = await User.findOne({ _id: childId, active: false });
+
+  if (!parent) {
+    return next(
+      new AppError("No parent found with provided email address", 404)
+    );
+  }
+  if (!child) {
+    return next(
+      new AppError("No not verified child found with provided id", 404)
+    );
+  }
+  if (parent.parentCode !== childCode) {
+    parent.attemptsLeft -= 1;
+    if (parent.attemptsLeft === 0) {
+      const parentCode = (((Math.random() * 1000000) | 0) + "").padStart(
+        6,
+        "0"
+      );
+
+      parent.parentCode = parentCode;
+      parent.attemptsLeft = 3;
+      parent.save({ validateBeforeSave: false });
+
+      const emailData = {
+        childFullName: `${child.name} ${child.surname}`,
+        parentCode,
+      };
+      await new Email(parent, "", emailData).sendChildCodeToParent();
+
+      return next(
+        new AppError("Wrong code provided. New code sent to your email", 400)
+      );
+    } else {
+      await parent.save({ validateBeforeSave: false });
+      return next(
+        new AppError(
+          `Wrong code provided. ${parent.attemptsLeft} attempts left`,
+          400
+        )
+      );
+    }
+  }
+  parent.parentCode = "";
+  parent.attemptsLeft = 3;
+  child.parent = parent._id;
+  child.active = true;
+  await parent.save({ validateBeforeSave: false });
+  await child.save({ validateBeforeSave: false });
+  return res.status(200).json({ status: "success", data: child });
 });

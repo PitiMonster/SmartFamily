@@ -29,6 +29,8 @@ describe("Permission Controller ", () => {
           email: "test@test.com",
           name: "testes",
           surname: "tester",
+          username: "test1",
+          birthDate: "06/03/1999",
           sex: "male",
           role: "parent",
           password: "tester1234",

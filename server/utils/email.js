@@ -3,10 +3,11 @@ const pug = require("pug");
 const htmlToText = require("html-to-text");
 
 module.exports = class Email {
-  constructor(user, url) {
+  constructor(user, url, data = {}) {
     this.to = user.email;
     this.firstName = user.name.split(" ")[0];
     this.url = url;
+    this.data = data;
     this.from = `Piotr Szymanski <${process.env.EMAIL_FROM}>`;
   }
 
@@ -41,6 +42,7 @@ module.exports = class Email {
       firstName: this.firstName,
       url: this.url,
       subject,
+      data: this.data,
     });
 
     // 2) Define email options
@@ -64,6 +66,12 @@ module.exports = class Email {
     await this.send(
       "passwordReset",
       "Twój token do zresetowania hasła (ważny tylko przez 10 minut)"
+    );
+  }
+  async sendChildCodeToParent() {
+    await this.send(
+      "childCodeToParent",
+      "Jednorazowy kod do aktywacji konta Twojego dziecka"
     );
   }
 };
