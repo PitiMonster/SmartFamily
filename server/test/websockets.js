@@ -11,6 +11,7 @@ const chatWS = require("../Websockets/chat");
 const mongoose = require("mongoose");
 const Chat = require("../Chat/model");
 const User = require("../User/model");
+const Message = require("../Message/model");
 
 describe("Test websockets", () => {
   let io, serverSocket, clientSocket;
@@ -211,6 +212,7 @@ describe("Test websockets", () => {
     after((done) => {
       Chat.deleteMany()
         .then(() => User.deleteMany())
+        .then(() => Message.deleteMany())
         .then(() => mongoose.disconnect())
         .then(() => done());
     });

@@ -9,6 +9,7 @@ dotenv.config({ path: "./config.env" });
 const Task = require("../Task/model");
 const Family = require("../Family/model");
 const User = require("../User/model");
+const Notification = require("../Notification/model");
 const taskController = require("../Task/controller");
 
 const testError = require("../utils/testError");
@@ -452,6 +453,7 @@ describe("Task Controller ", () => {
     Family.deleteMany()
       .then(() => Task.deleteMany())
       .then(() => User.deleteMany())
+      .then(() => Notification.deleteMany())
       .then(() => mongoose.disconnect())
       .then(() => done());
   });

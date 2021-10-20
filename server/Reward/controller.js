@@ -4,6 +4,8 @@ const catchAsync = require("../utils/catchAsync");
 const crudHandlers = require("../controllers/handlers");
 const AppError = require("../utils/appError");
 
+const notificationController = require("../Notification/controller");
+
 exports.getRewards = catchAsync(async (req, res, next) => {
   const family = await Family.findById(req.params.familyId).populate({
     path: "rewards",
@@ -57,11 +59,18 @@ exports.purchaseReward = catchAsync(async (req, res, next) => {
   }
 
   req.user.pointsCount -= reward.points;
-  req.user.save({ validateBeforeSave: false });
+  req.user.purchasedRewards.push(id);
+  await req.user.save({ validateBeforeSave: false });
 
-  await Reward.deleteOne({ _id: id });
+  req.notificationData = {
+    type: "rewardPurchased",
+    reward: id,
+    receiver: req.user.parent,
+  };
 
-  return res.status(204);
+  await notificationController.createNotification(req, next);
+
+  return res.status(200).json({ status: "success", data: reward });
 });
 
 exports.getReward = crudHandlers.getOne(Reward);

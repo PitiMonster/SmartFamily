@@ -9,6 +9,7 @@ dotenv.config({ path: "./config.env" });
 const Invitation = require("../Invitation/model");
 const Family = require("../Family/model");
 const User = require("../User/model");
+const Notification = require("../Notification/model");
 const invitationController = require("../Invitation/controller");
 
 describe("Invitation Controller ", () => {
@@ -450,6 +451,7 @@ describe("Invitation Controller ", () => {
     Family.deleteMany()
       .then(() => Invitation.deleteMany())
       .then(() => User.deleteMany())
+      .then(() => Notification.deleteMany())
       .then(() => mongoose.disconnect())
       .then(() => done());
   });

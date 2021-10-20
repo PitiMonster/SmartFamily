@@ -9,6 +9,7 @@ dotenv.config({ path: "./config.env" });
 const Reward = require("../Reward/model");
 const Family = require("../Family/model");
 const User = require("../User/model");
+const Notification = require("../Notification/model");
 const rewardController = require("../Reward/controller");
 
 describe("Reward Controller ", () => {
@@ -292,7 +293,11 @@ describe("Reward Controller ", () => {
 
       const res = {
         status: (val) => {
-          return { statusCode: val };
+          return {
+            json: (object) => {
+              return { ...object, statusCode: val };
+            },
+          };
         },
       };
 
@@ -300,27 +305,24 @@ describe("Reward Controller ", () => {
         .purchaseReward(req, res, () => {})
         .then((response) => {
           expect(response).to.has.property("statusCode");
-          expect(response.statusCode).to.equal(204);
+          expect(response).to.has.property("status");
+          expect(response).to.has.property("data");
+          expect(response.statusCode).to.be.equal(200);
+          expect(response.status).to.be.equal("success");
+          expect(response.data._id.toString()).to.equal(req.params.id);
 
           return User.findById(user._id);
         })
         .then((user) => {
           expect(user.pointsCount).to.equal(8);
+          expect(user.purchasedRewards.length).to.equal(1);
+          expect(user.purchasedRewards[0]._id.toString()).to.equal(
+            req.params.id
+          );
 
           user.ponitsCountr = 20;
-          user.save({ validateBeforeSave: false });
-
-          return Reward.findById(req.params.id);
-        })
-        .then((reward) => {
-          expect(reward).to.be.a("null");
-
-          return Reward.create({
-            name: "Test reward",
-            uniqueName: "5c0f66b979af55031b34728aTest reward",
-            points: 12,
-            _id: "5c0f66b979af55031b34728c",
-          });
+          user.purchasedRewards = [];
+          return user.save({ validateBeforeSave: false });
         })
         .then(() => done())
         .catch((err) => console.log(err));
@@ -331,6 +333,7 @@ describe("Reward Controller ", () => {
     Family.deleteMany()
       .then(() => Reward.deleteMany())
       .then(() => User.deleteMany())
+      .then(() => Notification.deleteMany())
       .then(() => mongoose.disconnect())
       .then(() => done());
   });
