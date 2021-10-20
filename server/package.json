@@ -5,6 +5,7 @@
   "main": "server.js",
   "scripts": {
     "test": "NODE_ENV=test mocha --timeout 5000",
+    "test-cover": "NODE_ENV=test nyc --reporter=text mocha --timeout 5000",
     "start": "nodemon -L server.js"
   },
   "author": "Piotr Szymański",
@@ -47,6 +48,7 @@
     "eslint-plugin-react": "^7.24.0",
     "eslint-plugin-react-hooks": "^4.2.0",
     "mocha": "^9.1.1",
+    "nyc": "^15.1.0",
     "prettier": "^2.3.2",
     "sinon": "^11.1.2"
   }

@@ -104,8 +104,6 @@ exports.completeTask = catchAsync(async (req, res, next) => {
 
   await notificationController.createNotification(req, next);
 
-  // await Task.deleteOne({ _id: id });
-
   return res.status(200).json({ status: "success", data: task });
 });
 
