@@ -12,5 +12,8 @@ router.route("/").get(taskController.getTasks).post(taskController.createTask);
 
 router.route("/:id").get(taskController.getTask);
 router.route("/:id/complete").delete(taskController.completeTask);
+router
+  .route("/:id/response/:response(done|todo)")
+  .patch(taskController.responseTask);
 
 module.exports = router;

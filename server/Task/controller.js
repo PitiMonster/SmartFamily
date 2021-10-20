@@ -87,18 +87,14 @@ exports.createTask = catchAsync(async (req, res, next) => {
 exports.completeTask = catchAsync(async (req, res, next) => {
   const { id } = req.params;
 
-  const task = await Task.findById(id).populate({
-    path: "contractor",
-    select: "pointsCount",
-  });
+  const task = await Task.findOne({ _id: id, status: "todo" });
 
   if (!task) {
     return next(new AppError("Task document with provided ID not found!", 404));
   }
 
-  task.contractor.pointsCount += task.points;
-  task.contractor.save({ validateBeforeSave: false });
-  const userPoints = task.contractor.pointsCount;
+  task.status = "tocheck";
+  task.save({ validateBeforeSave: false });
 
   req.notificationData = {
     type: "taskCompleted",
@@ -108,9 +104,32 @@ exports.completeTask = catchAsync(async (req, res, next) => {
 
   await notificationController.createNotification(req, next);
 
-  await Task.deleteOne({ _id: id });
+  // await Task.deleteOne({ _id: id });
 
-  return res.status(200).json({ status: "success", data: userPoints });
+  return res.status(200).json({ status: "success", data: task });
+});
+
+exports.responseTask = catchAsync(async (req, res, next) => {
+  const { response, id } = req.params;
+
+  const task = await Task.findOne({ _id: id, status: "tocheck" }).populate({
+    path: "contractor",
+    select: "pointsCount",
+  });
+
+  if (!task) {
+    return next(new AppError("No task document found with provided id", 404));
+  }
+
+  if (response === "done") {
+    task.contractor.pointsCount += task.points;
+    await task.contractor.save({ validateBeforeSave: false });
+  }
+
+  task.status = response;
+  await task.save({ validateBeforeSave: false });
+
+  return res.status(200).json({ status: "success", data: task });
 });
 
 exports.getTask = crudHandlers.getOne(Task);

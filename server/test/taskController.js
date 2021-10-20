@@ -11,6 +11,8 @@ const Family = require("../Family/model");
 const User = require("../User/model");
 const taskController = require("../Task/controller");
 
+const testError = require("../utils/testError");
+
 describe("Task Controller ", () => {
   before((done) => {
     const DB = process.env.TEST_DATABASE.replace(
@@ -292,29 +294,124 @@ describe("Task Controller ", () => {
           expect(response).to.has.property("data");
           expect(response.statusCode).to.equal(200);
           expect(response.status).to.equal("success");
-          expect(response.data).to.equal(12);
+          expect(response.data._id.toString()).to.equal(req.params.id);
+          expect(response.data.status).to.equal("tocheck");
 
           return User.findById("5c0f66b979af55031b34728e");
         })
         .then((user) => {
+          // expect(user.pointsCount).to.equal(12);
+
+          done();
+        })
+        .catch((err) => console.log(err));
+    });
+  });
+
+  describe("Test responseTask", () => {
+    it("Test error: No task document found with provided id", (done) => {
+      const req = {
+        params: {
+          response: "done",
+          id: "5c0f66b979af55031b34728a",
+        },
+      };
+      Task.findById("5c0f66b979af55031b34728c")
+        .then((task) => {
+          task.status = "tocheck";
+          return task.save({ validateBeforeSave: false });
+        })
+        .then(() => {
+          return testError(
+            taskController.responseTask,
+            req,
+            404,
+            "No task document found with provided id",
+            done
+          );
+        })
+        .catch((err) => console.log(err));
+    });
+    it("Test response (done) task correctly", (done) => {
+      req = {
+        params: {
+          response: "done",
+          id: "5c0f66b979af55031b34728c",
+        },
+      };
+
+      const res = {
+        status: (val) => {
+          return {
+            json: (object) => {
+              return { ...object, statusCode: val };
+            },
+          };
+        },
+      };
+
+      taskController
+        .responseTask(req, res, () => {})
+        .then((response) => {
+          expect(response).to.has.property("statusCode");
+          expect(response).to.has.property("status");
+          expect(response).to.has.property("data");
+          expect(response.statusCode).to.equal(200);
+          expect(response.status).to.equal("success");
+          expect(response.data._id.toString()).to.equal(req.params.id);
+          expect(response.data.status).to.equal("done");
+
+          response.data.status = "tocheck";
+          return response.data.save({ validateBeforeSave: false });
+        })
+        .then(() => User.findById("5c0f66b979af55031b34728e"))
+        .then((user) => {
           expect(user.pointsCount).to.equal(12);
 
-          return Task.findById(req.params.id);
+          user.pointsCount = 0;
+          return user.save({ validateBeforeSave: false });
         })
-        .then((task) => {
-          expect(task).to.be.a("null");
+        .then(() => {
+          done();
+        })
+        .catch((err) => console.log(err));
+    });
+    it("Test response (todo) task correctly", (done) => {
+      req = {
+        params: {
+          response: "todo",
+          id: "5c0f66b979af55031b34728c",
+        },
+      };
 
-          return Task.create({
-            name: "Test task",
-            uniqueName: "5c0f66b979af55031b34728aTest task",
-            completionDate: "12/12/2021",
-            points: 12,
-            principal: "5c0f66b979af55031b34728d",
-            contractor: "5c0f66b979af55031b34728e",
-            _id: "5c0f66b979af55031b34728c",
-          });
+      const res = {
+        status: (val) => {
+          return {
+            json: (object) => {
+              return { ...object, statusCode: val };
+            },
+          };
+        },
+      };
+
+      taskController
+        .responseTask(req, res, () => {})
+        .then((response) => {
+          expect(response).to.has.property("statusCode");
+          expect(response).to.has.property("status");
+          expect(response).to.has.property("data");
+          expect(response.statusCode).to.equal(200);
+          expect(response.status).to.equal("success");
+          expect(response.data._id.toString()).to.equal(req.params.id);
+          expect(response.data.status).to.equal("todo");
+
+          return User.findById("5c0f66b979af55031b34728e");
         })
-        .then(() => done())
+        .then((user) => {
+          expect(user.pointsCount).to.equal(0);
+
+          done();
+        })
         .catch((err) => console.log(err));
     });
   });
