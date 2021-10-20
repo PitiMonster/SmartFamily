@@ -67,6 +67,13 @@ const userSchema = new mongoose.Schema(
         default: [],
       },
     ],
+    purchasedRewards: [
+      {
+        type: mongoose.Schema.ObjectId,
+        ref: "Reward",
+        default: [],
+      },
+    ],
     parent: {
       type: mongoose.Schema.ObjectId,
       ref: "User",
