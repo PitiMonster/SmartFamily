@@ -45,6 +45,11 @@ const taskSchema = mongoose.Schema({
     ref: "User",
     required: [true, "Exercise child is required"],
   },
+  status: {
+    type: String,
+    enum: ["todo", "tocheck", "done"],
+    default: "todo",
+  },
   description: String,
 });
 
