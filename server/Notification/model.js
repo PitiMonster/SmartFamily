@@ -12,6 +12,8 @@ const notificationSchema = new mongoose.Schema({
       "taskTimeIsUp",
       "rewardPurchased",
       "budgetExceeded",
+      "taskApproved",
+      "taskRejected",
     ],
     required: [true, "Notification must have a type!"],
   },

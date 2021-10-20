@@ -119,10 +119,48 @@ const createTaskTimeIsUpNotification = catchAsync(async (req, next) => {
     return next(new AppError("Task document with provided id not found!", 404));
   }
 
-  const text = `Skończył się czas na wykonanie zadania ${taskDocument.name}`;
+  const text = `Skończył się czas na wykonanie zadania: ${taskDocument.name}`;
 
   return await Notification.create({
     type: "taskTimeIsUp",
+    text,
+    photo: null,
+    task,
+    receiver,
+  });
+});
+const createTaskApprovedNotification = catchAsync(async (req, next) => {
+  const { task, receiver } = req.notificationData;
+
+  const taskDocument = await Task.findById(task);
+
+  if (!taskDocument) {
+    return next(new AppError("Task document with provided id not found!", 404));
+  }
+
+  const text = `Potwierdzono wykonanie zadania: ${taskDocument.name}`;
+
+  return await Notification.create({
+    type: "taskApproved",
+    text,
+    photo: null,
+    task,
+    receiver,
+  });
+});
+const createTaskRejectedNotification = catchAsync(async (req, next) => {
+  const { task, receiver } = req.notificationData;
+
+  const taskDocument = await Task.findById(task);
+
+  if (!taskDocument) {
+    return next(new AppError("Task document with provided id not found!", 404));
+  }
+
+  const text = `Odrzucono wykonanie zadania: ${taskDocument.name}`;
+
+  return await Notification.create({
+    type: "taskRejected",
     text,
     photo: null,
     task,
@@ -212,6 +250,12 @@ exports.createNotification = catchAsync(async (req, next) => {
     case "taskTimeIsUp":
       newNotification = await createTaskTimeIsUpNotification(req, next);
       break;
+    case "taskApproved":
+      newNotification = await createTaskApprovedNotification(req, next);
+      break;
+    case "taskRejected":
+      newNotification = await createTaskRejectedNotification(req, next);
+      break;
     case "rewardPurchased":
       newNotification = await createRewardPurchasedNotification(req, next);
       break;
@@ -221,6 +265,7 @@ exports.createNotification = catchAsync(async (req, next) => {
     default:
       return next(new AppError("Uknown type of notification provided!", 400));
   }
+
   if (!newNotification instanceof Notification) {
     return next(
       new AppError("Created notification is not a Notification model instance")

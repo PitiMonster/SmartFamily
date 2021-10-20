@@ -121,13 +121,23 @@ exports.responseTask = catchAsync(async (req, res, next) => {
     return next(new AppError("No task document found with provided id", 404));
   }
 
+  req.notificationData = {
+    receiver: task.contractor._id,
+    task: id,
+  };
+
   if (response === "done") {
     task.contractor.pointsCount += task.points;
     await task.contractor.save({ validateBeforeSave: false });
+    req.notificationData.type = "taskApproved";
+  } else {
+    req.notificationData.type = "taskRejected";
   }
 
   task.status = response;
   await task.save({ validateBeforeSave: false });
+
+  await notificationController.createNotification(req, next);
 
   return res.status(200).json({ status: "success", data: task });
 });

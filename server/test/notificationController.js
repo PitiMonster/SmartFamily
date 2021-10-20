@@ -571,7 +571,7 @@ describe("Notification Controller ", () => {
         .catch((err) => console.log(err));
     });
   });
-  describe("Test create rewardPurchased notification", () => {
+  describe("Test create taskApproved notification", () => {
     before((done) => {
       User.findById("5c0f66b979af55031b34728d")
         .then((user) => {
@@ -582,6 +582,132 @@ describe("Notification Controller ", () => {
     });
 
     it("Test incorrect task id", (done) => {
+      const req = {
+        notificationData: {
+          type: "taskApproved",
+          receiver: "5c0f66b979af55031b34728d",
+          task: "5c0f66b979af55031b34728b",
+        },
+      };
+      const next = (err) => err;
+      notificationController
+        .createNotification(req, next)
+        .then((res) => {
+          expect(res).to.be.an("error");
+          expect(res).to.has.property("statusCode");
+          expect(res).to.has.property("message");
+          expect(res.statusCode).to.equal(404);
+          expect(res.message).to.equal(
+            "Task document with provided id not found!"
+          );
+          done();
+        })
+        .catch((err) => console.log(err));
+    });
+    it("Test create properly", (done) => {
+      const req = {
+        notificationData: {
+          type: "taskApproved",
+          receiver: "5c0f66b979af55031b34728d",
+          task: "5c0f66b979af55031b34728e",
+        },
+      };
+      const next = (err) => err;
+      notificationController
+        .createNotification(req, next)
+        .then((response) => {
+          expect(response).to.have.property("_id");
+
+          User.findById("5c0f66b979af55031b34728d")
+            .populate("notifications")
+            .then((user) => {
+              expect(user.notifications).to.be.an("array");
+              expect(user.notifications.length).to.equal(1);
+              expect(user.notifications[0]).to.has.property("_id");
+              expect(user.notifications[0]._id.toString()).to.equal(
+                response._id.toString()
+              );
+              done();
+            })
+            .catch((err) => console.log(err));
+        })
+        .catch((err) => console.log(err));
+    });
+  });
+  describe("Test create taskRejected notification", () => {
+    before((done) => {
+      User.findById("5c0f66b979af55031b34728d")
+        .then((user) => {
+          user.notifications = [];
+          user.save({ validateBeforeSave: false });
+        })
+        .then(() => done());
+    });
+
+    it("Test incorrect task id", (done) => {
+      const req = {
+        notificationData: {
+          type: "taskRejected",
+          receiver: "5c0f66b979af55031b34728d",
+          task: "5c0f66b979af55031b34728b",
+        },
+      };
+      const next = (err) => err;
+      notificationController
+        .createNotification(req, next)
+        .then((res) => {
+          expect(res).to.be.an("error");
+          expect(res).to.has.property("statusCode");
+          expect(res).to.has.property("message");
+          expect(res.statusCode).to.equal(404);
+          expect(res.message).to.equal(
+            "Task document with provided id not found!"
+          );
+          done();
+        })
+        .catch((err) => console.log(err));
+    });
+    it("Test create properly", (done) => {
+      const req = {
+        notificationData: {
+          type: "taskRejected",
+          receiver: "5c0f66b979af55031b34728d",
+          task: "5c0f66b979af55031b34728e",
+        },
+      };
+      const next = (err) => err;
+      notificationController
+        .createNotification(req, next)
+        .then((response) => {
+          expect(response).to.have.property("_id");
+
+          User.findById("5c0f66b979af55031b34728d")
+            .populate("notifications")
+            .then((user) => {
+              expect(user.notifications).to.be.an("array");
+              expect(user.notifications.length).to.equal(1);
+              expect(user.notifications[0]).to.has.property("_id");
+              expect(user.notifications[0]._id.toString()).to.equal(
+                response._id.toString()
+              );
+              done();
+            })
+            .catch((err) => console.log(err));
+        })
+        .catch((err) => console.log(err));
+    });
+  });
+  describe("Test create rewardPurchased notification", () => {
+    before((done) => {
+      User.findById("5c0f66b979af55031b34728d")
+        .then((user) => {
+          user.notifications = [];
+          user.save({ validateBeforeSave: false });
+        })
+        .then(() => done());
+    });
+
+    it("Test incorrect reward id", (done) => {
       const req = {
         notificationData: {
           type: "rewardPurchased",
@@ -647,7 +773,7 @@ describe("Notification Controller ", () => {
         .then(() => done());
     });
 
-    it("Test incorrect task id", (done) => {
+    it("Test incorrect budget id", (done) => {
       const req = {
         notificationData: {
           type: "budgetExceeded",
