@@ -1,0 +1,46 @@
+@import "../../../constants/constants.module.scss";
+
+.container {
+  display: flex;
+  flex-direction: column;
+  row-gap: 2rem;
+  align-items: center;
+
+  .title {
+    font-family: "Mali";
+    margin: 0;
+    text-transform: uppercase;
+    font-weight: 400;
+    font-size: 2.5rem;
+  }
+
+  .inputs {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .forgotPassword {
+    display: block;
+    margin: 0.5rem;
+    color: $gray;
+  }
+
+  .toRegister {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    & > * {
+      font-family: "Open Sans";
+      margin: 0;
+    }
+
+    &__label {
+      color: $gray;
+    }
+
+    &__link {
+      color: $main-green;
+    }
+  }
+}
