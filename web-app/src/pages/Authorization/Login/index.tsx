@@ -9,6 +9,7 @@ import PasswordInput from "../../../components/inputs/PasswordInput";
 import TextInput from "../../../components/inputs/TextInput";
 import MainButton from "../../../components/buttons/MainButton";
 import { mainTheme } from "../../../themes";
+import EmailIcon from "@mui/icons-material/Email";
 
 const LoginPage: React.FC = () => {
   const [password, setPassword] = useState<string>("");
@@ -25,7 +26,12 @@ const LoginPage: React.FC = () => {
               variant="standard"
               color="primary"
             >
-              <TextInput text={text} setText={setText} label="Email" />
+              <TextInput
+                text={text}
+                setText={setText}
+                label="Email"
+                icon={<EmailIcon />}
+              />
             </FormControl>
             <div className={classes.passwordContainer}>
               <FormControl
@@ -46,9 +52,9 @@ const LoginPage: React.FC = () => {
           </div>
         </ThemeProvider>
         <MainButton isOutline={false} text="Zaloguj się" onClick={() => {}} />
-        <div className={classes.toRegister}>
-          <p className={classes.toRegister__label}>Nie posiadasz konta?</p>
-          <a href="#" className={classes.toRegister__link}>
+        <div className={classes.changeAuth}>
+          <p className={classes.changeAuth__label}>Nie posiadasz konta?</p>
+          <a href="#" className={classes.changeAuth__link}>
             Dołącz już teraz!
           </a>
         </div>

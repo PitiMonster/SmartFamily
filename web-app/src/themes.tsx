@@ -35,6 +35,7 @@ const mainTheme = createTheme({
     primary: {
       main: "#01dd24",
       darker: "#5db075",
+      contrastText: "#fff",
     },
     neutral: {
       main: "#01dd24",
