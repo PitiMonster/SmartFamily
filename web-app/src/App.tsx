@@ -6,6 +6,7 @@ import LoginPage from "./pages/Authorization/Login";
 import RegisterPage from "./pages/Authorization/Register";
 import AdditionalDataPage from "./pages/Authorization/AdditionalData";
 import AddPhotoPage from "./pages/Authorization/AddPhoto";
+import ChooseRolePage from "./pages/Authorization/ChooseRole";
 
 import { setUpCloudinary } from "./utils/cloudinary";
 
@@ -16,7 +17,7 @@ const App = () => {
 
   return (
     <div>
-      <AddPhotoPage />
+      <ChooseRolePage />
     </div>
   );
 };
