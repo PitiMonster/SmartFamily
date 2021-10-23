@@ -31,8 +31,14 @@ const PasswordInput: React.FC<{
 
   return (
     <>
-      <InputLabel htmlFor="standard-adornment-password">{label}</InputLabel>
+      <InputLabel
+        htmlFor="standard-adornment-password"
+        sx={{ fontSize: "1.2rem" }}
+      >
+        {label}
+      </InputLabel>
       <Input
+        sx={{ fontSize: "1.2rem" }}
         id="standard-adornment-password"
         type={showPassword ? "text" : "password"}
         value={password}

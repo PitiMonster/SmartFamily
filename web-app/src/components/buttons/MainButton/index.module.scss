@@ -16,9 +16,18 @@
   background-color: transparent;
   color: $main-green;
   transition: all 0.2s ease-in;
+
+  &:disabled {
+    color: $disabled-green;
+    border-color: $disabled-green;
+  }
 }
 .filled {
   border: none;
   background-color: $main-green;
   color: white;
+
+  &:disabled {
+    background-color: $disabled-green;
+  }
 }

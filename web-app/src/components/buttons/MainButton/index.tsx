@@ -6,8 +6,9 @@ const MainButton: React.FC<{
   isOutline: boolean;
   text: string;
   onClick: () => any;
+  disabled?: boolean;
   style?: Object;
-}> = ({ isOutline, text, onClick, style }) => {
+}> = ({ isOutline, text, onClick, disabled = false, style }) => {
   return (
     <button
       className={[
@@ -16,6 +17,7 @@ const MainButton: React.FC<{
       ].join(" ")}
       onClick={() => onClick()}
       style={style}
+      disabled={disabled}
     >
       {text}
     </button>
