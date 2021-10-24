@@ -1,0 +1,33 @@
+@import "../../../constants/constants.module.scss";
+
+.button {
+  width: 15.5rem;
+  height: 3rem;
+  font-size: 1.2rem;
+  font-family: "Open Sans";
+  text-transform: uppercase;
+  cursor: pointer;
+  font-weight: 500;
+  border-radius: 5px;
+}
+
+.outline {
+  border: 1px solid $main-green;
+  background-color: transparent;
+  color: $main-green;
+  transition: all 0.2s ease-in;
+
+  &:disabled {
+    color: $disabled-green;
+    border-color: $disabled-green;
+  }
+}
+.filled {
+  border: none;
+  background-color: $main-green;
+  color: white;
+
+  &:disabled {
+    background-color: $disabled-green;
+  }
+}

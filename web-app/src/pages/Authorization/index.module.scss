@@ -1,0 +1,35 @@
+@import "../../constants/constants.module.scss";
+
+.container {
+  .logo {
+    position: absolute;
+    top: 1rem;
+    left: 2rem;
+    display: flex;
+    align-items: center;
+    column-gap: 1rem;
+
+    &__image {
+      height: 3rem;
+      transform: rotate(25deg);
+    }
+    &__name {
+      margin: 0;
+      font-size: 1.6rem;
+      font-family: "Mali", cursive;
+      font-weight: 500;
+      color: $main-green;
+    }
+  }
+
+  .children {
+    position: absolute;
+    top: 45%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    row-gap: 2rem;
+    align-items: center;
+  }
+}
