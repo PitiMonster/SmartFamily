@@ -10,6 +10,9 @@ import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 
+import { History } from "history";
+import { useHistory } from "react-router-dom";
+
 import AuthLayout from "../";
 import classes from "./index.module.scss";
 import TextInput from "../../../components/inputs/TextInput";
@@ -18,6 +21,8 @@ import { mainTheme } from "../../../themes";
 import PersonIcon from "@mui/icons-material/Person";
 
 const AdditionalDataPage: React.FC = () => {
+  const history = useHistory<History>();
+
   const [name, setName] = useState<string>("");
   const [surname, setSurname] = useState<string>("");
   const [username, setUsername] = useState<string>("");
@@ -111,7 +116,13 @@ const AdditionalDataPage: React.FC = () => {
             </RadioGroup>
           </FormControl>
         </ThemeProvider>
-        <MainButton isOutline={false} text="Zatwierdź" onClick={() => {}} />
+        <MainButton
+          isOutline={false}
+          text="Zatwierdź"
+          onClick={() => {
+            history.push(`/signup/choose-photo`);
+          }}
+        />
       </form>
     </AuthLayout>
   );
