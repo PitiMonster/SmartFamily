@@ -2,6 +2,8 @@ import { useEffect } from "react";
 
 import classes from "./App.module.scss";
 
+import { Switch, Route } from "react-router-dom";
+
 import AuthorizationLayout from "./pages/Authorization";
 
 import LoginPage from "./pages/Authorization/Login";
@@ -13,6 +15,7 @@ import ParentCodePage from "./pages/Authorization/ParentCode";
 import WelcomePage from "./pages/Authorization/Welcome";
 
 import { setUpCloudinary } from "./utils/cloudinary";
+import AuthRouter from "./pages/Authorization/Router";
 
 const App = () => {
   useEffect(() => {
@@ -21,7 +24,7 @@ const App = () => {
 
   return (
     <div className={classes.container}>
-      <WelcomePage />
+      <AuthRouter />
     </div>
   );
 };

@@ -3,6 +3,8 @@ import React, { useState } from "react";
 import FormControl from "@mui/material/FormControl";
 import { ThemeProvider } from "@mui/material/styles";
 
+import { Link } from "react-router-dom";
+
 import AuthLayout from "../";
 import classes from "./index.module.scss";
 import PasswordInput from "../../../components/inputs/PasswordInput";
@@ -65,9 +67,9 @@ const Register: React.FC = () => {
         />
         <div className={classes.changeAuth}>
           <p className={classes.changeAuth__label}>Posiadasz już konto?</p>
-          <a href="#" className={classes.changeAuth__link}>
+          <Link to="/signin" className={classes.changeAuth__link}>
             Zaloguj się!
-          </a>
+          </Link>
         </div>
       </form>
     </AuthLayout>
