@@ -5,6 +5,9 @@ import { thumbnail } from "@cloudinary/url-gen/actions/resize";
 import { max } from "@cloudinary/url-gen/actions/roundCorners";
 import { GravityQualifier } from "@cloudinary/url-gen/qualifiers/gravity/GravityQualifier";
 
+import { History } from "history";
+import { useHistory } from "react-router-dom";
+
 import classes from "./index.module.scss";
 
 import AuthLayout from "../";
@@ -12,6 +15,8 @@ import { cloudinaryUploadWidget, cld } from "../../../utils/cloudinary";
 import MainButton from "../../../components/buttons/MainButton";
 
 const AddPhotoPage: React.FC = () => {
+  const history = useHistory<History>();
+
   const [cloudinaryWidget, setCloudinaryWidget] = useState<any>(null);
   const [profilePhotoId, setProfilePhotoId] = useState<string>(
     "SmartFamily/default_person"
@@ -67,10 +72,18 @@ const AddPhotoPage: React.FC = () => {
           <MainButton
             isOutline={false}
             text="Pomiń"
-            onClick={() => {}}
+            onClick={() => {
+              history.push("/signup/choose-role");
+            }}
             style={{ backgroundColor: "#6f6f6f" }}
           />
-          <MainButton isOutline={false} text="Zatwierdź" onClick={() => {}} />
+          <MainButton
+            isOutline={false}
+            text="Zatwierdź"
+            onClick={() => {
+              history.push("/signup/choose-role");
+            }}
+          />
         </div>
       </div>
     </AuthLayout>

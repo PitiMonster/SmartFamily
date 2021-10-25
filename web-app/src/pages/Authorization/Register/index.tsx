@@ -3,7 +3,8 @@ import React, { useState } from "react";
 import FormControl from "@mui/material/FormControl";
 import { ThemeProvider } from "@mui/material/styles";
 
-import { Link } from "react-router-dom";
+import { History } from "history";
+import { Link, useHistory } from "react-router-dom";
 
 import AuthLayout from "../";
 import classes from "./index.module.scss";
@@ -14,6 +15,8 @@ import { mainTheme } from "../../../themes";
 import EmailIcon from "@mui/icons-material/Email";
 
 const Register: React.FC = () => {
+  const history = useHistory<History>();
+
   const [password, setPassword] = useState<string>("");
   const [passwordConfirm, setPasswordConfirm] = useState<string>("");
   const [text, setText] = useState<string>("");
@@ -63,7 +66,9 @@ const Register: React.FC = () => {
         <MainButton
           isOutline={false}
           text="Zarejestruj się"
-          onClick={() => {}}
+          onClick={() => {
+            history.push(`${history.location.pathname}/fill-data`);
+          }}
         />
         <div className={classes.changeAuth}>
           <p className={classes.changeAuth__label}>Posiadasz już konto?</p>

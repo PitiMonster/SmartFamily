@@ -6,6 +6,8 @@ import { ThemeProvider } from "@mui/material/styles";
 import FormControl from "@mui/material/FormControl";
 import FormControlLabel from "@mui/material/FormControlLabel";
 
+import { useHistory } from "react-router-dom";
+
 import classes from "./index.module.scss";
 import parentsPath from "../../../assets/images/parents.png";
 import sonPath from "../../../assets/images/son.png";
@@ -15,6 +17,8 @@ import { mainTheme } from "../../../themes";
 import MainButton from "../../../components/buttons/MainButton";
 
 const ChooseRolePage: React.FC = () => {
+  const history = useHistory<History>();
+
   const [role, setRole] = useState<string>("");
 
   const handleRoleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -57,7 +61,13 @@ const ChooseRolePage: React.FC = () => {
           </RadioGroup>
         </FormControl>
       </ThemeProvider>
-      <MainButton isOutline={false} text="Zatwierdź" onClick={() => {}} />
+      <MainButton
+        isOutline={false}
+        text="Zatwierdź"
+        onClick={() => {
+          history.push("/signup/parent-code");
+        }}
+      />
     </AuthLayout>
   );
 };

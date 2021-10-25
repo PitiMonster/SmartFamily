@@ -6,6 +6,7 @@ import RegisterPage from "./Register";
 import AdditionalDataPage from "./AdditionalData";
 import AddPhotoPage from "./AddPhoto";
 import ParentCode from "./ParentCode";
+import ChooseRolePage from "./ChooseRole";
 
 const Router: React.FC = () => {
   return (
@@ -25,6 +26,9 @@ const Router: React.FC = () => {
         </Route>
         <Route path="/signup/choose-photo">
           <AddPhotoPage />
+        </Route>
+        <Route path="/signup/choose-role">
+          <ChooseRolePage />
         </Route>
         <Route path="/signup/parent-code">
           <ParentCode />
