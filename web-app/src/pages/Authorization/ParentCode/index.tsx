@@ -5,7 +5,6 @@ import { ThemeProvider } from "@mui/material/styles";
 
 import AuthLayout from "..";
 import classes from "./index.module.scss";
-import PasswordInput from "../../../components/inputs/PasswordInput";
 import TextInput from "../../../components/inputs/TextInput";
 import TextButtonInput from "../../../components/inputs/TextButtonInput";
 import MainButton from "../../../components/buttons/MainButton";

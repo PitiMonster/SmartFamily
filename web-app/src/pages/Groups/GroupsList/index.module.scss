@@ -1,0 +1,13 @@
+.container {
+  position: relative;
+  height: 80vh;
+  width: 60vw;
+  margin: auto;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  column-gap: 2rem;
+
+  padding: 6rem 0;
+}
