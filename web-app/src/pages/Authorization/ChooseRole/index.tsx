@@ -12,7 +12,7 @@ import classes from "./index.module.scss";
 import parentsPath from "../../../assets/images/parents.png";
 import sonPath from "../../../assets/images/son.png";
 
-import AuthLayout from "../";
+import AuthLayout from "..";
 import { mainTheme } from "../../../themes";
 import MainButton from "../../../components/buttons/MainButton";
 

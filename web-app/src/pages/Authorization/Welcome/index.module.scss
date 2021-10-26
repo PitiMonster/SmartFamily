@@ -1,4 +1,5 @@
-@import "../../../common/_variables.scss";
+@import "../../../common/variables";
+@import "../../../common/mixins";
 
 .container {
   margin: 0;
@@ -9,31 +10,44 @@
   position: relative;
 
   .backgroundImage {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    transform: scale(1.2);
-    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
-      url("../../../assets/images/familyWelcomePage.jpg") no-repeat bottom
-        center fixed;
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-    -o-background-size: cover;
-    background-size: cover;
-    z-index: 0;
+    display: none;
+
+    @include respond(tab-port) {
+      display: block;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+        url("../../../assets/images/familyWelcomePage.jpg") no-repeat bottom
+          center fixed;
+      -webkit-background-size: cover;
+      -moz-background-size: cover;
+      -o-background-size: cover;
+      background-size: cover;
+      z-index: 0;
+    }
+
+    @include respond(tab-land) {
+      transform: scale(1.2);
+    }
   }
 
   .elements {
-    padding: 4rem 0;
     position: relative;
     width: 100%;
-    height: 80%;
+    height: 100%;
     display: flex;
-    justify-content: space-between;
+    justify-content: space-evenly;
     flex-direction: column;
     align-items: center;
+
+    @include respond(tab-port) {
+      padding: 4rem 0;
+      height: 80%;
+      justify-content: space-between;
+    }
 
     &__logo {
       display: flex;
@@ -41,22 +55,39 @@
       align-items: center;
 
       &__img {
-        height: 10rem;
+        height: 17rem;
+
+        @include respond(tab-large-mobile) {
+          height: 20rem;
+        }
+        @include respond(tab-port) {
+          height: 10rem;
+        }
       }
 
       &__text {
         margin: 0;
-        font-size: 6rem;
+        font-size: 3rem;
         font-family: "Mali", cursive;
         font-weight: 500;
         color: $main-green;
+
+        @include respond(tab-port) {
+          font-size: 6rem;
+        }
       }
     }
     &__buttons {
       position: relative;
       display: flex;
       justify-content: center;
-      column-gap: 4rem;
+      flex-direction: column;
+      row-gap: 2rem;
+
+      @include respond(tab-port) {
+        flex-direction: row;
+        column-gap: 4rem;
+      }
     }
   }
 }

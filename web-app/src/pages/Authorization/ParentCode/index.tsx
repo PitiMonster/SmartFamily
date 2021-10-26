@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import FormControl from "@mui/material/FormControl";
 import { ThemeProvider } from "@mui/material/styles";
 
-import AuthLayout from "../";
+import AuthLayout from "..";
 import classes from "./index.module.scss";
 import PasswordInput from "../../../components/inputs/PasswordInput";
 import TextInput from "../../../components/inputs/TextInput";
@@ -48,7 +48,7 @@ const ParentCode: React.FC = () => {
           </FormControl>
         </div>
       </ThemeProvider>
-      <MainButton isOutline={false} text="Zaloguj się" onClick={() => {}} />
+      <MainButton isOutline={false} text="Zatwierdź" onClick={() => {}} />
     </AuthLayout>
   );
 };
