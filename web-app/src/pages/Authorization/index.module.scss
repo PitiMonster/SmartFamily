@@ -1,4 +1,5 @@
-@import "../../constants/constants.module.scss";
+@import "../../common/variables";
+@import "../../common/mixins";
 
 .container {
   .logo {
@@ -23,13 +24,18 @@
   }
 
   .children {
+    width: 90vw;
     position: absolute;
     top: 45%;
     left: 50%;
     transform: translate(-50%, -50%);
     display: flex;
     flex-direction: column;
-    row-gap: 2rem;
+    row-gap: 3rem;
     align-items: center;
+
+    @include respond(tab-large-mobile) {
+      row-gap: 4rem;
+    }
   }
 }

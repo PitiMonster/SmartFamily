@@ -4,6 +4,8 @@ import Input from "@mui/material/Input";
 import InputLabel from "@mui/material/InputLabel";
 import InputAdornment from "@mui/material/InputAdornment";
 
+import classes from "./styles.module.scss";
+
 const TextInput: React.FC<{
   text: string;
   setText: React.Dispatch<React.SetStateAction<string>>;
@@ -18,12 +20,12 @@ const TextInput: React.FC<{
     <>
       <InputLabel
         htmlFor="standard-adornment-password"
-        sx={{ fontSize: "1.2rem" }}
+        className={classes.input}
       >
         {label}
       </InputLabel>
       <Input
-        sx={{ fontSize: "1.2rem" }}
+        className={classes.input}
         id="standard-adornment-password"
         type="text"
         value={text}

@@ -44,7 +44,7 @@ const AdditionalDataPage: React.FC = () => {
         <ThemeProvider theme={mainTheme}>
           <div className={classes.inputs}>
             <FormControl
-              sx={{ m: 1, width: "50ch" }}
+              className={classes.input}
               variant="standard"
               color="primary"
             >
@@ -56,7 +56,7 @@ const AdditionalDataPage: React.FC = () => {
               />
             </FormControl>
             <FormControl
-              sx={{ m: 1, width: "50ch" }}
+              className={classes.input}
               variant="standard"
               color="primary"
             >
@@ -68,7 +68,7 @@ const AdditionalDataPage: React.FC = () => {
               />
             </FormControl>
             <FormControl
-              sx={{ m: 1, width: "50ch" }}
+              className={classes.input}
               variant="standard"
               color="primary"
             >
@@ -88,7 +88,7 @@ const AdditionalDataPage: React.FC = () => {
                 renderInput={(params) => (
                   <TextField
                     variant="standard"
-                    sx={{ m: 1, width: "50ch" }}
+                    className={classes.input}
                     {...params}
                   />
                 )}

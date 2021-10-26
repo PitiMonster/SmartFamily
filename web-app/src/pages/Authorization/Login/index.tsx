@@ -24,9 +24,9 @@ const LoginPage: React.FC = () => {
         <ThemeProvider theme={mainTheme}>
           <div className={classes.inputs}>
             <FormControl
-              sx={{ m: 1, width: "50ch" }}
               variant="standard"
               color="primary"
+              className={classes.input}
             >
               <TextInput
                 text={text}
@@ -37,7 +37,7 @@ const LoginPage: React.FC = () => {
             </FormControl>
             <div className={classes.passwordContainer}>
               <FormControl
-                sx={{ m: 1, width: "50ch" }}
+                className={classes.input}
                 variant="standard"
                 color="primary"
               >

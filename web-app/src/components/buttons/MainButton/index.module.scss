@@ -1,14 +1,21 @@
-@import "../../../constants/constants.module.scss";
+@import "../../../common/variables";
+@import "../../../common/mixins";
 
 .button {
-  width: 15.5rem;
-  height: 3rem;
-  font-size: 1.2rem;
+  width: 10rem;
+  height: 2.5rem;
+  font-size: 1.05rem;
   font-family: "Open Sans";
   text-transform: uppercase;
   cursor: pointer;
   font-weight: 500;
   border-radius: 5px;
+
+  @include respond(tab-large-mobile) {
+    width: 15.5rem;
+    height: 3rem;
+    font-size: 1.2rem;
+  }
 }
 
 .outline {

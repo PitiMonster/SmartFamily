@@ -1,21 +1,38 @@
+@import "../../../common/mixins";
+
 .title {
   font-family: "Mali";
   margin: 0;
   text-transform: uppercase;
   font-weight: 400;
-  font-size: 2.5rem;
+  font-size: 2rem;
   text-align: center;
+
+  @include respond(tab-large-mobile) {
+    font-size: 2.5rem;
+  }
 }
 
-.role {
-  display: flex;
-  flex-direction: column;
-  row-gap: 2rem;
-  align-items: center;
-  justify-content: center;
-  margin: 2rem 4rem;
+.roles {
+  column-gap: 2rem;
 
-  &__image {
-    width: 10rem;
+  @include respond(tab-large-mobile) {
+    column-gap: 4rem;
+  }
+
+  .role {
+    display: flex;
+    flex-direction: column;
+    row-gap: 2rem;
+    align-items: center;
+    justify-content: center;
+
+    &__image {
+      width: 5rem;
+
+      @include respond(tab-large-mobile) {
+        width: 8rem;
+      }
+    }
   }
 }

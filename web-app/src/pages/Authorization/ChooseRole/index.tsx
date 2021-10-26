@@ -32,11 +32,9 @@ const ChooseRolePage: React.FC = () => {
         <FormControl component="fieldset" color="primary">
           <RadioGroup
             row
-            aria-label="role"
-            name="row-radio-buttons-group"
             value={role}
             onChange={handleRoleChange}
-            sx={{ alignItems: "center", justifyContent: "center" }}
+            className={classes.roles}
           >
             <div className={classes.role}>
               <img

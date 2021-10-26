@@ -1,12 +1,12 @@
 import * as React from "react";
-import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import Input from "@mui/material/Input";
 import InputLabel from "@mui/material/InputLabel";
 import InputAdornment from "@mui/material/InputAdornment";
-import FormControl from "@mui/material/FormControl";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
+
+import classes from "./styles.module.scss";
 
 const PasswordInput: React.FC<{
   password: string;
@@ -33,12 +33,12 @@ const PasswordInput: React.FC<{
     <>
       <InputLabel
         htmlFor="standard-adornment-password"
-        sx={{ fontSize: "1.2rem" }}
+        className={classes.input}
       >
         {label}
       </InputLabel>
       <Input
-        sx={{ fontSize: "1.2rem" }}
+        className={classes.input}
         id="standard-adornment-password"
         type={showPassword ? "text" : "password"}
         value={password}

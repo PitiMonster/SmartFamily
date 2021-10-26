@@ -1,13 +1,29 @@
+@import "../../../common/mixins";
+
 .title {
   font-family: "Mali";
   margin: 0;
   text-transform: uppercase;
   font-weight: 400;
-  font-size: 2.5rem;
+  font-size: 2rem;
   text-align: center;
+
+  @include respond(tab-large-mobile) {
+    font-size: 2.5rem;
+  }
 }
 
 .inputs {
   display: flex;
   flex-direction: column;
+
+  .input {
+    margin: 1;
+    width: 40ch;
+
+    @include respond(tab-large-mobile) {
+      margin: 1;
+      width: 50ch;
+    }
+  }
 }
