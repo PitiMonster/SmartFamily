@@ -1,3 +1,5 @@
+@import "../../../../../common/mixins";
+
 .container {
   display: flex;
   flex-direction: column;
@@ -5,12 +7,30 @@
   cursor: pointer;
 
   .image {
-    width: 12rem;
-    height: 12rem;
+    width: 7rem;
+    height: 7rem;
     background-size: contain;
+
+    @include respond(tab-large-mobile) {
+      width: 10rem;
+      height: 10rem;
+    }
+
+    @include respond(tab-port) {
+      width: 12rem;
+      height: 12rem;
+    }
   }
 
   .name {
-    font-size: 1.5rem;
+    font-size: 1.1rem;
+
+    @include respond(tab-large-mobile) {
+      font-size: 1.3rem;
+    }
+
+    @include respond(tab-port) {
+      font-size: 1.5rem;
+    }
   }
 }

@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import FormControl from "@mui/material/FormControl";
 import { ThemeProvider } from "@mui/material/styles";
 
-import AuthLayout from "..";
+import AuthLayout from "../../../layout/AuthLayout";
 import classes from "./index.module.scss";
 import TextInput from "../../../components/inputs/TextInput";
 import TextButtonInput from "../../../components/inputs/TextButtonInput";
@@ -18,35 +18,33 @@ const ParentCode: React.FC = () => {
   return (
     <AuthLayout>
       <p className={classes.title}>Dodaj swojego rodzica</p>
-      <ThemeProvider theme={mainTheme}>
-        <div className={classes.inputs}>
-          <FormControl
-            className={classes.input}
-            variant="standard"
-            color="primary"
-          >
-            <TextButtonInput
-              text={parentId}
-              setText={setParentId}
-              label="Identyfikator rodzica"
-              buttonText="Wyślij kod"
-              buttonAction={() => {}}
-            />
-          </FormControl>
-          <FormControl
-            className={classes.input}
-            variant="standard"
-            color="primary"
-          >
-            <TextInput
-              text={emailCode}
-              setText={setEmailCode}
-              label="Kod z email rodzica"
-              icon={<CreateIcon />}
-            />
-          </FormControl>
-        </div>
-      </ThemeProvider>
+      <div className={classes.inputs}>
+        <FormControl
+          className={classes.input}
+          variant="standard"
+          color="primary"
+        >
+          <TextButtonInput
+            text={parentId}
+            setText={setParentId}
+            label="Identyfikator rodzica"
+            buttonText="Wyślij kod"
+            buttonAction={() => {}}
+          />
+        </FormControl>
+        <FormControl
+          className={classes.input}
+          variant="standard"
+          color="primary"
+        >
+          <TextInput
+            text={emailCode}
+            setText={setEmailCode}
+            label="Kod z email rodzica"
+            icon={<CreateIcon />}
+          />
+        </FormControl>
+      </div>
       <MainButton isOutline={false} text="Zatwierdź" onClick={() => {}} />
     </AuthLayout>
   );

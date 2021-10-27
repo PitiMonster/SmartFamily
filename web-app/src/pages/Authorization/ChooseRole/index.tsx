@@ -12,7 +12,7 @@ import classes from "./index.module.scss";
 import parentsPath from "../../../assets/images/parents.png";
 import sonPath from "../../../assets/images/son.png";
 
-import AuthLayout from "..";
+import AuthLayout from "../../../layout/AuthLayout";
 import { mainTheme } from "../../../themes";
 import MainButton from "../../../components/buttons/MainButton";
 
@@ -28,37 +28,35 @@ const ChooseRolePage: React.FC = () => {
   return (
     <AuthLayout>
       <p className={classes.title}>Wybierz rolę użytkownika</p>
-      <ThemeProvider theme={mainTheme}>
-        <FormControl component="fieldset" color="primary">
-          <RadioGroup
-            row
-            value={role}
-            onChange={handleRoleChange}
-            className={classes.roles}
-          >
-            <div className={classes.role}>
-              <img
-                className={classes.role__image}
-                src={parentsPath}
-                alt="parents"
-              />
-              <FormControlLabel
-                value="Rodzic"
-                control={<Radio />}
-                label="Rodzic"
-              />
-            </div>
-            <div className={classes.role}>
-              <img className={classes.role__image} src={sonPath} alt="son" />
-              <FormControlLabel
-                value="Dziecko"
-                control={<Radio />}
-                label="Dziecko"
-              />
-            </div>
-          </RadioGroup>
-        </FormControl>
-      </ThemeProvider>
+      <FormControl component="fieldset" color="primary">
+        <RadioGroup
+          row
+          value={role}
+          onChange={handleRoleChange}
+          className={classes.roles}
+        >
+          <div className={classes.role}>
+            <img
+              className={classes.role__image}
+              src={parentsPath}
+              alt="parents"
+            />
+            <FormControlLabel
+              value="Rodzic"
+              control={<Radio />}
+              label="Rodzic"
+            />
+          </div>
+          <div className={classes.role}>
+            <img className={classes.role__image} src={sonPath} alt="son" />
+            <FormControlLabel
+              value="Dziecko"
+              control={<Radio />}
+              label="Dziecko"
+            />
+          </div>
+        </RadioGroup>
+      </FormControl>
       <MainButton
         isOutline={false}
         text="Zatwierdź"

@@ -5,7 +5,7 @@ import { ThemeProvider } from "@mui/material/styles";
 
 import { Link } from "react-router-dom";
 
-import AuthLayout from "../";
+import AuthLayout from "../../../layout/AuthLayout";
 import classes from "./index.module.scss";
 import PasswordInput from "../../../components/inputs/PasswordInput";
 import TextInput from "../../../components/inputs/TextInput";
@@ -21,38 +21,36 @@ const LoginPage: React.FC = () => {
     <AuthLayout>
       <form className={classes.container}>
         <p className={classes.title}>Zaloguj się</p>
-        <ThemeProvider theme={mainTheme}>
-          <div className={classes.inputs}>
+        <div className={classes.inputs}>
+          <FormControl
+            variant="standard"
+            color="primary"
+            className={classes.input}
+          >
+            <TextInput
+              text={text}
+              setText={setText}
+              label="Email"
+              icon={<EmailIcon />}
+            />
+          </FormControl>
+          <div className={classes.passwordContainer}>
             <FormControl
+              className={classes.input}
               variant="standard"
               color="primary"
-              className={classes.input}
             >
-              <TextInput
-                text={text}
-                setText={setText}
-                label="Email"
-                icon={<EmailIcon />}
+              <PasswordInput
+                password={password}
+                setPassword={setPassword}
+                label="Hasło"
               />
             </FormControl>
-            <div className={classes.passwordContainer}>
-              <FormControl
-                className={classes.input}
-                variant="standard"
-                color="primary"
-              >
-                <PasswordInput
-                  password={password}
-                  setPassword={setPassword}
-                  label="Hasło"
-                />
-              </FormControl>
-              <a href="#" className={classes.forgotPassword}>
-                Zapomniałem hasła
-              </a>
-            </div>
+            <a href="#" className={classes.forgotPassword}>
+              Zapomniałem hasła
+            </a>
           </div>
-        </ThemeProvider>
+        </div>
         <MainButton isOutline={false} text="Zaloguj się" onClick={() => {}} />
         <div className={classes.changeAuth}>
           <p className={classes.changeAuth__label}>Nie posiadasz konta?</p>
