@@ -1,4 +1,12 @@
-.logo__image {
-  height: 3rem;
-  transform: rotate(25deg);
+.container {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  display: grid;
+  grid-template-rows: 1fr 10fr;
+  grid-template-areas: "appBar" "content";
+
+  .content {
+    grid-area: "content";
+  }
 }

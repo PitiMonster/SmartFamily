@@ -1,6 +1,7 @@
 .container {
   position: relative;
-  height: 80vh;
+  top: 50%;
+  transform: translateY(-50%);
   width: 60vw;
   margin: auto;
   display: flex;
