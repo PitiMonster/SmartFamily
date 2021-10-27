@@ -1,0 +1,22 @@
+@import "../../../common/mixins";
+
+.container {
+  width: 100%;
+  margin: auto;
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  column-gap: 1.5rem;
+  row-gap: 1.5rem;
+  flex-wrap: wrap;
+
+  @include respond(tab-large-mobile) {
+    top: 45%;
+    transform: translateY(-50%);
+    column-gap: 3rem;
+    row-gap: 3rem;
+  }
+}

@@ -1,9 +1,10 @@
-@import "../../../../../common/mixins";
+@import "../../../../common/mixins";
 
 .container {
   display: flex;
   flex-direction: column;
   align-items: center;
+  row-gap: 1rem;
   cursor: pointer;
 
   .image {
@@ -24,6 +25,7 @@
 
   .name {
     font-size: 1.1rem;
+    margin: 0;
 
     @include respond(tab-large-mobile) {
       font-size: 1.3rem;
@@ -32,5 +34,15 @@
     @include respond(tab-port) {
       font-size: 1.5rem;
     }
+  }
+}
+
+.border {
+  border: 1px solid #e2e2e2;
+  padding: 1rem 1.5rem;
+  transition: border 0.2s ease-out;
+
+  &:hover {
+    border-color: #999;
   }
 }

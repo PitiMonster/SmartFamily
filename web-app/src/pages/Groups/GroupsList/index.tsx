@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 import classes from "./index.module.scss";
 
-import GroupBlock from "./components/GroupBlock";
+import GroupBlock from "../components/GroupBlock";
 import ContentLayout from "../../../layout/ContentLayout";
 
 const GroupsListPage: React.FC = () => {
