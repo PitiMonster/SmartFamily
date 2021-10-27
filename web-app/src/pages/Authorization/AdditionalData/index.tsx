@@ -13,7 +13,7 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import { History } from "history";
 import { useHistory } from "react-router-dom";
 
-import AuthLayout from "../";
+import AuthLayout from "../../../layout/AuthLayout";
 import classes from "./index.module.scss";
 import TextInput from "../../../components/inputs/TextInput";
 import MainButton from "../../../components/buttons/MainButton";
@@ -41,81 +41,79 @@ const AdditionalDataPage: React.FC = () => {
     <AuthLayout>
       <form className={classes.container}>
         <p className={classes.title}>Uzupełnij swoje dane</p>
-        <ThemeProvider theme={mainTheme}>
-          <div className={classes.inputs}>
-            <FormControl
-              className={classes.input}
-              variant="standard"
-              color="primary"
-            >
-              <TextInput
-                text={name}
-                setText={setName}
-                label="Imię"
-                icon={<PersonIcon />}
-              />
-            </FormControl>
-            <FormControl
-              className={classes.input}
-              variant="standard"
-              color="primary"
-            >
-              <TextInput
-                text={surname}
-                setText={setSurname}
-                label="Nazwisko"
-                icon={<PersonIcon />}
-              />
-            </FormControl>
-            <FormControl
-              className={classes.input}
-              variant="standard"
-              color="primary"
-            >
-              <TextInput
-                text={username}
-                setText={setUsername}
-                label="Pseudonim"
-                icon={<PersonIcon />}
-              />
-            </FormControl>
-            <LocalizationProvider dateAdapter={DateAdapter}>
-              <MobileDatePicker
-                label="Wybierz datę urodzenia"
-                inputFormat="MM/dd/yyyy"
-                value={date}
-                onChange={handleDateChange}
-                renderInput={(params) => (
-                  <TextField
-                    variant="standard"
-                    className={classes.input}
-                    {...params}
-                  />
-                )}
-              />
-            </LocalizationProvider>
-          </div>
-          <FormControl component="fieldset" color="primary">
-            <RadioGroup
-              row
-              aria-label="gender"
-              name="row-radio-buttons-group"
-              value={gender}
-              onChange={handleGenderChange}
-            >
-              <FormControlLabel
-                value="Kobieta"
-                control={<Radio />}
-                label="Kobieta"
-              />
-              <FormControlLabel
-                value="Mężczyzna"
-                control={<Radio />}
-                label="Mężczyzna"
-              />
-            </RadioGroup>
+        <div className={classes.inputs}>
+          <FormControl
+            className={classes.input}
+            variant="standard"
+            color="primary"
+          >
+            <TextInput
+              text={name}
+              setText={setName}
+              label="Imię"
+              icon={<PersonIcon />}
+            />
           </FormControl>
-        </ThemeProvider>
+          <FormControl
+            className={classes.input}
+            variant="standard"
+            color="primary"
+          >
+            <TextInput
+              text={surname}
+              setText={setSurname}
+              label="Nazwisko"
+              icon={<PersonIcon />}
+            />
+          </FormControl>
+          <FormControl
+            className={classes.input}
+            variant="standard"
+            color="primary"
+          >
+            <TextInput
+              text={username}
+              setText={setUsername}
+              label="Pseudonim"
+              icon={<PersonIcon />}
+            />
+          </FormControl>
+          <LocalizationProvider dateAdapter={DateAdapter}>
+            <MobileDatePicker
+              label="Wybierz datę urodzenia"
+              inputFormat="MM/dd/yyyy"
+              value={date}
+              onChange={handleDateChange}
+              renderInput={(params) => (
+                <TextField
+                  variant="standard"
+                  className={classes.input}
+                  {...params}
+                />
+              )}
+            />
+          </LocalizationProvider>
+        </div>
+        <FormControl component="fieldset" color="primary">
+          <RadioGroup
+            row
+            aria-label="gender"
+            name="row-radio-buttons-group"
+            value={gender}
+            onChange={handleGenderChange}
+          >
+            <FormControlLabel
+              value="Kobieta"
+              control={<Radio />}
+              label="Kobieta"
+            />
+            <FormControlLabel
+              value="Mężczyzna"
+              control={<Radio />}
+              label="Mężczyzna"
+            />
+          </RadioGroup>
+        </FormControl>
         <MainButton
           isOutline={false}
           text="Zatwierdź"

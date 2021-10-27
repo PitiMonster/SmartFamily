@@ -10,7 +10,7 @@ import { useHistory } from "react-router-dom";
 
 import classes from "./index.module.scss";
 
-import AuthLayout from "../";
+import AuthLayout from "../../../layout/AuthLayout";
 import { cloudinaryUploadWidget, cld } from "../../../utils/cloudinary";
 import MainButton from "../../../components/buttons/MainButton";
 

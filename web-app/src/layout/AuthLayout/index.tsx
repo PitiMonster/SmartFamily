@@ -1,7 +1,5 @@
 import React from "react";
 
-import { Switch, Route, Link } from "react-router-dom";
-
 import classes from "./index.module.scss";
 import logoImgPath from "../../assets/icons/idea.svg";
 

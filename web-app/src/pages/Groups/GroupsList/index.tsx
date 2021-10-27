@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import classes from "./index.module.scss";
 
 import GroupBlock from "./components/GroupBlock";
+import ContentLayout from "../../../layout/ContentLayout";
 
 const GroupsListPage: React.FC = () => {
   const [groupBlocks, setGroupBlocks] = useState<
@@ -58,7 +59,11 @@ const GroupsListPage: React.FC = () => {
     setGroupBlocks(newBlockGroups);
   }, []);
 
-  return <div className={classes.container}>{groupBlocks}</div>;
+  return (
+    <ContentLayout>
+      <div className={classes.container}>{groupBlocks}</div>;
+    </ContentLayout>
+  );
 };
 
 export default GroupsListPage;

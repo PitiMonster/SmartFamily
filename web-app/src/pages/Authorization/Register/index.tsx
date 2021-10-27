@@ -6,7 +6,7 @@ import { ThemeProvider } from "@mui/material/styles";
 import { History } from "history";
 import { Link, useHistory } from "react-router-dom";
 
-import AuthLayout from "../";
+import AuthLayout from "../../../layout/AuthLayout";
 import classes from "./index.module.scss";
 import PasswordInput from "../../../components/inputs/PasswordInput";
 import TextInput from "../../../components/inputs/TextInput";
@@ -25,44 +25,42 @@ const Register: React.FC = () => {
     <AuthLayout>
       <form className={classes.container}>
         <p className={classes.title}>Zarejestruj się</p>
-        <ThemeProvider theme={mainTheme}>
-          <div className={classes.inputs}>
-            <FormControl
-              className={classes.input}
-              variant="standard"
-              color="primary"
-            >
-              <TextInput
-                text={text}
-                setText={setText}
-                label="Email"
-                icon={<EmailIcon />}
-              />
-            </FormControl>
-            <FormControl
-              className={classes.input}
-              variant="standard"
-              color="primary"
-            >
-              <PasswordInput
-                password={password}
-                setPassword={setPassword}
-                label="Hasło"
-              />
-            </FormControl>
-            <FormControl
-              className={classes.input}
-              variant="standard"
-              color="primary"
-            >
-              <PasswordInput
-                password={passwordConfirm}
-                setPassword={setPasswordConfirm}
-                label="Powtórz hasło"
-              />
-            </FormControl>
-          </div>
-        </ThemeProvider>
+        <div className={classes.inputs}>
+          <FormControl
+            className={classes.input}
+            variant="standard"
+            color="primary"
+          >
+            <TextInput
+              text={text}
+              setText={setText}
+              label="Email"
+              icon={<EmailIcon />}
+            />
+          </FormControl>
+          <FormControl
+            className={classes.input}
+            variant="standard"
+            color="primary"
+          >
+            <PasswordInput
+              password={password}
+              setPassword={setPassword}
+              label="Hasło"
+            />
+          </FormControl>
+          <FormControl
+            className={classes.input}
+            variant="standard"
+            color="primary"
+          >
+            <PasswordInput
+              password={passwordConfirm}
+              setPassword={setPasswordConfirm}
+              label="Powtórz hasło"
+            />
+          </FormControl>
+        </div>
         <MainButton
           isOutline={false}
           text="Zarejestruj się"
