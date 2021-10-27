@@ -1,8 +1,9 @@
+@import "../../../common/mixins";
+
 .container {
   position: relative;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 60vw;
+  top: 5%;
+  width: 80vw;
   margin: auto;
   display: flex;
   flex-wrap: wrap;
@@ -10,5 +11,13 @@
   align-items: center;
   column-gap: 2rem;
 
-  padding: 6rem 0;
+  @include respond(tab-large-mobile) {
+    top: 50%;
+    transform: translateY(-50%);
+    width: 70vw;
+  }
+
+  @include respond(tab-port) {
+    width: 60vw;
+  }
 }
