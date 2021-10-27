@@ -1,0 +1,23 @@
+.container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 10rem);
+  gap: 2rem;
+}
+
+.image {
+  width: 10rem;
+  height: 10rem;
+  background-size: contain;
+  cursor: pointer;
+  transform: scale(1);
+  transition: all 0.2s ease-out;
+
+  &:hover {
+    transform: scale(1.2);
+  }
+}
+
+.picked {
+  transform: scale(1.1);
+  border: 1px solid #777;
+}

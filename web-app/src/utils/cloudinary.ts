@@ -8,6 +8,7 @@ const setUpCloudinary = () => {
       cloudName: "dq7ionfvn",
     },
   });
+  console.log((window as any).cloudinary);
 };
 
 const cloudinaryUploadWidget = (
