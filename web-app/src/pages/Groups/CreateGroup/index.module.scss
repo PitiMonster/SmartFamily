@@ -1,12 +1,25 @@
 @import "../../../common/mixins";
 
 .container {
-  display: grid;
-  grid-template-columns: 2fr 4fr;
-  grid-template-areas: "left right";
-  column-gap: 1rem;
   position: relative;
-  height: 100%;
+  min-height: 100vh;
+  max-width: 100%;
+  margin: auto;
+  display: grid;
+  grid-template-rows: 50% 1fr;
+  grid-template-columns: 1fr;
+  grid-template-areas: "left" "right";
+  row-gap: 1rem;
+
+  @include respond(tab-port) {
+    row-gap: 0;
+    column-gap: 1rem;
+    min-height: 100%;
+
+    grid-template-rows: 1fr;
+    grid-template-columns: 2fr 4fr;
+    grid-template-areas: "left right";
+  }
 
   &__left {
     grid-area: left;
@@ -14,9 +27,21 @@
     flex-direction: column;
     justify-content: space-evenly;
     align-items: center;
-    border-right: 1px solid #e2e2e2;
-    padding-bottom: 1rem;
-    margin-bottom: 2rem;
+    border-bottom: 1px solid #e2e2e2;
+    position: relative;
+    width: 90%;
+    margin: 0 auto;
+
+    // @include respond(tab-large-mobile) {
+    //   padding: 0 2rem;
+    // }
+
+    @include respond(tab-port) {
+      padding: 0 2rem;
+      margin-bottom: 1rem;
+      border-bottom: none;
+      border-right: 1px solid #e2e2e2;
+    }
 
     .title {
       font-family: "Mali";
@@ -32,20 +57,29 @@
     }
 
     .photo {
-      height: 15rem;
+      height: 10rem;
+
+      @include respond(tab-port) {
+        height: 15rem;
+      }
     }
 
     .input {
-      width: 50ch;
+      width: 30ch;
+
+      @include respond(tab-large-mobile) {
+        width: 40ch;
+      }
+
+      @include respond(tab-port) {
+        width: 45ch;
+      }
     }
   }
 
   &__right {
     grid-area: right;
     position: relative;
-    height: 100%;
-    width: 100%;
-    padding: 1rem 0;
-    margin: 2rem;
+    padding-bottom: 1rem;
   }
 }

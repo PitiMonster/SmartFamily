@@ -1,14 +1,15 @@
 .container {
   position: relative;
   width: 100vw;
-  min-height: 100vh;
+  height: 100vh;
   display: grid;
-  grid-template-rows: 1fr 10fr;
+  grid-template-rows: 80px 1fr;
+  grid-template-columns: 1fr;
   grid-template-areas: "appBar" "content";
+  overflow-x: hidden;
 
   .content {
     position: relative;
     grid-area: "content";
-    overflow: hidden;
   }
 }

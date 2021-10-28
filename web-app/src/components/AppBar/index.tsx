@@ -194,7 +194,14 @@ const MyAppBar = () => {
   );
 
   return (
-    <Box sx={{ flexGrow: 1, gridArea: "appBar", position: "relative" }}>
+    <Box
+      sx={{
+        flexGrow: 1,
+        gridArea: "appBar",
+        position: "relative",
+        overflow: "hidden",
+      }}
+    >
       <AppBar position="sticky">
         <Toolbar>
           <IconButton
