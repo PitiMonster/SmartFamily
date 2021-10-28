@@ -1,0 +1,62 @@
+@import "../../../common/variables";
+
+.container {
+  position: relative;
+  height: 95%;
+  display: grid;
+  grid-template-columns: 2fr 4fr;
+  align-items: center;
+  justify-content: center;
+
+  .info {
+    height: 100%;
+    position: relative;
+    border-right: 1px solid #e2e2e2;
+
+    .selectedDay {
+      position: relative;
+      height: 50%;
+      text-align: center;
+      vertical-align: middle;
+      color: $main-green;
+      font-family: "Mali";
+      font-size: 7rem;
+      margin: 0;
+    }
+    .events {
+      position: relative;
+      height: 50%;
+    }
+  }
+}
+
+.calendarTile {
+  color: green;
+  border: none;
+  font-size: 1.5rem;
+  background-color: white;
+}
+
+.calendarContainer {
+  margin: 0 auto;
+}
+
+.myCalendarButton {
+  width: 3rem;
+  height: 3rem;
+  position: absolute;
+  background-color: transparent;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 0;
+  border-radius: 50%;
+
+  &:active {
+    background-color: $main-green;
+  }
+
+  &:hover {
+    border: 1px solid $main-green;
+  }
+}
