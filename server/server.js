@@ -52,6 +52,16 @@ cloudinary.config({
   secure: true,
 });
 
+// cloudinary.v2.api.resources(
+//   {
+//     type: "upload",
+//     prefix: "SmartFamily/GroupPhotos", // add your folder
+//   },
+//   function (error, result) {
+//     console.log(result, error);
+//   }
+// );
+
 // Constants
 const port = process.env.PORT || 8080;
 

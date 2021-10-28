@@ -1,0 +1,39 @@
+@import "../../common/mixins";
+
+.container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 7rem);
+  gap: 2rem;
+  position: relative;
+  justify-content: center;
+  width: 90%;
+  margin: auto;
+
+  @include respond(tab-large-mobile) {
+    padding: 2rem;
+    grid-template-columns: repeat(auto-fill, 10rem);
+  }
+}
+
+.image {
+  width: 7rem;
+  height: 7rem;
+  background-size: contain;
+  cursor: pointer;
+  transform: scale(1);
+  transition: all 0.2s ease-out;
+
+  &:hover {
+    transform: scale(1.2);
+  }
+
+  @include respond(tab-large-mobile) {
+    width: 10rem;
+    height: 10rem;
+  }
+}
+
+.picked {
+  transform: scale(1.1);
+  border: 1px solid #777;
+}
