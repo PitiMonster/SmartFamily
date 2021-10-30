@@ -101,8 +101,8 @@ const CalendarPage: React.FC = () => {
           </div>
           <div className={classes.events}>
             <p className={classes.events__title}>Events</p>
-            <div className={classes.listContainer}>
-              <ul className={classes.events__list}>{events}</ul>
+            <div className={classes.events__listContainer}>
+              <ul className={classes.list}>{events}</ul>
             </div>
           </div>
         </div>

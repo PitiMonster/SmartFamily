@@ -48,15 +48,17 @@
         font-size: 3rem;
         margin: 1rem 0;
       }
-      .listContainer {
+      &__listContainer {
         height: 75%;
         position: relative;
         overflow-x: hidden;
         overflow-y: auto;
-      }
-      &__list {
-        position: relative;
-        padding: 0;
+
+        .list {
+          position: relative;
+          padding: 0;
+          padding-right: 1rem;
+        }
       }
     }
   }
