@@ -2,30 +2,62 @@
 
 .container {
   position: relative;
-  height: 95%;
+  height: 90vh;
+  max-height: 90vh;
   display: grid;
   grid-template-columns: 2fr 4fr;
   align-items: center;
   justify-content: center;
 
   .info {
-    height: 100%;
     position: relative;
+    height: 100%;
     border-right: 1px solid #e2e2e2;
+    overflow-x: hidden;
+    overflow-y: auto;
 
-    .selectedDay {
+    .date {
       position: relative;
-      height: 50%;
-      text-align: center;
-      vertical-align: middle;
-      color: $main-green;
-      font-family: "Mali";
-      font-size: 7rem;
-      margin: 0;
+      height: 40%;
+
+      & > * {
+        text-align: center;
+        vertical-align: middle;
+        font-family: "Mali";
+        margin: 0;
+      }
+
+      .selectedDay {
+        font-size: 7rem;
+        color: $dark-green;
+      }
+
+      .selectedMonth {
+        font-size: 4rem;
+        color: black;
+      }
     }
     .events {
       position: relative;
-      height: 50%;
+      height: 60%;
+      margin: 0 2rem;
+      overflow-x: hidden;
+      overflow-y: auto;
+
+      &__title {
+        font-size: 3rem;
+        margin: 1rem 0;
+      }
+      .listContainer {
+        height: 75%;
+        position: relative;
+        overflow-x: hidden;
+        overflow-y: auto;
+      }
+      &__list {
+        position: relative;
+        padding: 0;
+      }
     }
   }
 }
