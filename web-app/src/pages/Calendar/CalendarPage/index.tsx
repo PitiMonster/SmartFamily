@@ -7,12 +7,18 @@ import "./calendar-styles.scss";
 
 import ContentLayout from "../../../layout/ContentLayout";
 import ListItem from "../../../components/ListItem";
+import EventModal from "./components/AddModifyEventModal";
+
+import { useAppSelector } from "../../../hooks";
 
 const calendarButton = () => {
   return <button className={classes.myCalendarButton} />;
 };
 
 const CalendarPage: React.FC = () => {
+  const [isAddModifyEventModal, setIsAddModifyEventModal] =
+    useState<boolean>(false);
+  const [selectedEventId, setSelectedEventId] = useState<string>("");
   const [value, onChange] = useState(new Date());
   const [selectedDay, setSelectedDay] = useState<String>(moment().format("DD"));
   const [selectedMonth, setSelectedMonth] = useState<String>(
@@ -26,61 +32,76 @@ const CalendarPage: React.FC = () => {
     | undefined
   >([]);
 
+  const isBackdrop = useAppSelector((state) => state.utils.isBackdrop);
+
+  useEffect(() => {
+    if (!isBackdrop) {
+      setIsAddModifyEventModal(false);
+      setSelectedEventId("");
+    }
+  }, [isBackdrop]);
+
+  useEffect(() => {
+    selectedEventId && setIsAddModifyEventModal(true);
+  }, [selectedEventId]);
+
   useEffect(() => {
     const eventsData = [
       {
+        id: "idtest",
         primaryText: "event 1",
         trailingText: "trailing 1",
-        onClick: () => {},
       },
       {
+        id: "idtest",
         primaryText: "event 1",
         trailingText: "trailing 1",
-        onClick: () => {},
       },
       {
+        id: "idtest",
         primaryText: "event 1",
         trailingText: "trailing 1",
-        onClick: () => {},
       },
       {
+        id: "idtest",
         primaryText: "event 1",
         trailingText: "trailing 1",
-        onClick: () => {},
       },
       {
+        id: "idtest",
         primaryText: "event 1",
         trailingText: "trailing 1",
-        onClick: () => {},
       },
       {
+        id: "idtest",
         primaryText: "event 1",
         trailingText: "trailing 1",
-        onClick: () => {},
       },
       {
+        id: "idtest",
         primaryText: "event 1",
         trailingText: "trailing 1",
-        onClick: () => {},
       },
       {
+        id: "idtest",
         primaryText: "event 1",
         trailingText: "trailing 1",
-        onClick: () => {},
       },
       {
+        id: "idtest",
         primaryText: "event 1",
         trailingText: "trailing 1",
-        onClick: () => {},
       },
       {
+        id: "idtest",
         primaryText: "event 1",
         trailingText: "trailing 1",
-        onClick: () => {},
       },
     ];
 
-    const newEvents = eventsData.map((event) => <ListItem {...event} />);
+    const newEvents = eventsData.map((event) => (
+      <ListItem {...event} onClick={() => setSelectedEventId(event.id)} />
+    ));
     setEvents(newEvents);
   }, []);
 
@@ -113,6 +134,7 @@ const CalendarPage: React.FC = () => {
           locale="en-GB"
         />
       </div>
+      {isAddModifyEventModal && <EventModal id={selectedEventId} />}
     </ContentLayout>
   );
 };

@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 
 import FormControl from "@mui/material/FormControl";
-import { ThemeProvider } from "@mui/material/styles";
 import TextField from "@mui/material/TextField";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import DateAdapter from "@mui/lab/AdapterDateFns";
@@ -17,7 +16,6 @@ import AuthLayout from "../../../layout/AuthLayout";
 import classes from "./index.module.scss";
 import TextInput from "../../../components/inputs/TextInput";
 import MainButton from "../../../components/buttons/MainButton";
-import { mainTheme } from "../../../themes";
 import PersonIcon from "@mui/icons-material/Person";
 
 const AdditionalDataPage: React.FC = () => {

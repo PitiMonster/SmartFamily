@@ -6,12 +6,18 @@ import { Switch, Route } from "react-router-dom";
 import { ThemeProvider } from "@mui/material/styles";
 import { mainTheme } from "./themes";
 
+import { useAppSelector } from "./hooks";
+
 import { setUpCloudinary } from "./utils/cloudinary";
 import AuthRouter from "./pages/Authorization/Router";
 import GroupsRouter from "./pages/Groups/Router";
 import CalendarRouter from "./pages/Calendar/Router";
 
+import Backdrop from "./components/ux/Backdrop";
+
 const App = () => {
+  const isBackdrop = useAppSelector((store) => store.utils.isBackdrop);
+
   useEffect(() => {
     setUpCloudinary();
   }, []);
@@ -31,6 +37,7 @@ const App = () => {
           </Route>
         </Switch>
       </ThemeProvider>
+      {isBackdrop && <Backdrop />}
     </div>
   );
 };

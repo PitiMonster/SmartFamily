@@ -116,7 +116,7 @@ abbr[title] {
 
   & > abbr {
     position: relative;
-    z-index: 1;
+    @include z-index(basic-text);
   }
 
   @include respond(tab-large-mobile) {
@@ -149,6 +149,7 @@ abbr[title] {
 }
 .react-calendar__tile--hasActive {
   background: $main-green;
+  color: white;
 }
 .react-calendar__tile--hasActive:enabled:hover,
 .react-calendar__tile--hasActive:enabled:focus {
