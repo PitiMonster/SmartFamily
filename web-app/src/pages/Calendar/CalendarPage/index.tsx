@@ -2,6 +2,9 @@ import { useState, useEffect } from "react";
 import Calendar from "react-calendar";
 import moment from "moment";
 
+import AddIcon from "@mui/icons-material/Add";
+import IconButton from "@mui/material/IconButton";
+
 import classes from "./index.module.scss";
 import "./calendar-styles.scss";
 
@@ -121,7 +124,15 @@ const CalendarPage: React.FC = () => {
             <p className={classes.selectedMonth}>{selectedMonth}</p>
           </div>
           <div className={classes.events}>
-            <p className={classes.events__title}>Events</p>
+            <div className={classes.events__label}>
+              <p className={classes.events__title}>Events</p>
+              <IconButton
+                color="primary"
+                onClick={() => setIsAddModifyEventModal(true)}
+              >
+                <AddIcon />
+              </IconButton>
+            </div>
             <div className={classes.events__listContainer}>
               <ul className={classes.list}>{events}</ul>
             </div>
