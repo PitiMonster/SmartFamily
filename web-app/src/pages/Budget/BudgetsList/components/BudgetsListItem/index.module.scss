@@ -1,4 +1,5 @@
 @import "../../../../../common/variables";
+@import "../../../../../common/mixins";
 
 .container {
   margin: 0;
@@ -9,11 +10,21 @@
   align-items: center;
   border: 1px solid $light-gray;
   border-radius: 50%;
-  width: 12rem;
-  height: 12rem;
+  width: 6rem;
+  height: 6rem;
   row-gap: 0.3rem;
   cursor: pointer;
   transition: border-color 0.2s ease-out;
+
+  @include respond(tab-large-mobile) {
+    width: 8rem;
+    height: 8rem;
+  }
+
+  @include respond(tab-port) {
+    width: 12rem;
+    height: 12rem;
+  }
 
   &:hover {
     border-color: $main-green;
@@ -26,6 +37,22 @@
   .budgetLeftValue {
     color: $dark-green;
     font-family: "Mali";
-    font-size: 3rem;
+    font-size: 1.5rem;
+
+    @include respond(tab-large-mobile) {
+      font-size: 2rem;
+    }
+
+    @include respond(tab-port) {
+      font-size: 3rem;
+    }
+  }
+
+  .budgetName {
+    font-size: 0.9rem;
+
+    @include respond(tab-large-mobile) {
+      font-size: 1rem;
+    }
   }
 }
