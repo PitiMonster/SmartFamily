@@ -90,4 +90,16 @@
       }
     }
   }
+
+  .attribiution {
+    display: none;
+
+    @include respond(tab-port) {
+      display: block;
+      position: absolute;
+      bottom: 0;
+      right: 1%;
+      color: #777;
+    }
+  }
 }

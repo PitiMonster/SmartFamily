@@ -56,6 +56,9 @@ const SpecificGroupPage: React.FC = () => {
   return (
     <ContentLayout>
       <div className={classes.container}>{funcBlocks}</div>
+      <p className={classes.attribiution}>
+        Icons made by Freepik from www.flaticon.com
+      </p>
     </ContentLayout>
   );
 };

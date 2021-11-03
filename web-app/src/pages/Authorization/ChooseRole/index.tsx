@@ -64,6 +64,9 @@ const ChooseRolePage: React.FC = () => {
           history.push("/signup/parent-code");
         }}
       />
+      <p className={classes.attribiution}>
+        Icons made by Freepik from www.flaticon.com
+      </p>
     </AuthLayout>
   );
 };

@@ -7,7 +7,12 @@ const AuthorizationPageLayout: React.FC = ({ children }) => {
   return (
     <div className={classes.container}>
       <div className={classes.logo}>
-        <img className={classes.logo__image} src={logoImgPath} alt="logo" />
+        <img
+          className={classes.logo__image}
+          src={logoImgPath}
+          alt="logo"
+          data-author-attribiution="Icon made by Freepik from www.flaticon.com"
+        />
         <p className={classes.logo__name}>Smart Family</p>
       </div>
       <div className={classes.children}>{children}</div>

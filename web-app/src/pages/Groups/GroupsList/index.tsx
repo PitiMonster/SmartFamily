@@ -62,6 +62,12 @@ const GroupsListPage: React.FC = () => {
   return (
     <ContentLayout>
       <div className={classes.container}>{groupBlocks}</div>;
+      <a
+        className={classes.attribiution}
+        href="https://www.freepik.com/vectors/logo"
+      >
+        Logo vector created by catalyststuff - www.freepik.com
+      </a>
     </ContentLayout>
   );
 };

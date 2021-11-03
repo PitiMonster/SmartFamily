@@ -24,6 +24,7 @@ const WelcomePage: React.FC = () => {
               className={classes.elements__logo__img}
               src={logoImgPath}
               alt="logo"
+              data-author-attribiution="Icon made by Freepik from www.flaticon.com"
             />
             <p className={classes.elements__logo__text}>Smart Family</p>
           </div>
@@ -33,6 +34,7 @@ const WelcomePage: React.FC = () => {
               className={classes.elements__logo__img}
               src={logoPhoneImgPath}
               alt="logo"
+              data-author-attribiution="Icon made by Freepik from www.flaticon.com"
             />
             <p className={classes.elements__logo__text}>Witaj!</p>
           </div>
@@ -54,6 +56,7 @@ const WelcomePage: React.FC = () => {
           />
         </div>
       </div>
+      <p className={classes.attribiution}>Designed by Freepik</p>
     </div>
   );
 };
