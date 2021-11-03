@@ -1,9 +1,10 @@
 @import "../../common/mixins";
+@import "../../common/variables";
 
 .container {
   position: relative;
   padding-left: 0.5rem;
-  border-bottom: 1px solid #e2e2e2;
+  border-bottom: 1px solid $light-gray;
   display: flex;
   justify-content: space-between;
   align-items: center;

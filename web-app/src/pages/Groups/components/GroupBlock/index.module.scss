@@ -1,4 +1,5 @@
 @import "../../../../common/mixins";
+@import "../../../../common/variables";
 
 .container {
   display: flex;
@@ -38,7 +39,7 @@
 }
 
 .border {
-  border: 1px solid #e2e2e2;
+  border: 1px solid $light-gray;
   padding: 1rem 1.5rem;
   transition: border 0.2s ease-out;
 

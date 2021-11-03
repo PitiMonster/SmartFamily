@@ -112,3 +112,10 @@ export type Budget = {
   expenses: Expense[] | string[];
   renewalDate?: Date;
 };
+
+export type HtmlElements =
+  | React.DetailedHTMLProps<
+      React.HTMLAttributes<HTMLDivElement>,
+      HTMLDivElement
+    >[]
+  | undefined;

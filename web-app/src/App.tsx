@@ -12,6 +12,7 @@ import { setUpCloudinary } from "./utils/cloudinary";
 import AuthRouter from "./pages/Authorization/Router";
 import GroupsRouter from "./pages/Groups/Router";
 import CalendarRouter from "./pages/Calendar/Router";
+import BudgetsRouter from "./pages/Budget/Router";
 
 import Backdrop from "./components/ux/Backdrop";
 
@@ -34,6 +35,9 @@ const App = () => {
           </Route>
           <Route path="/calendar">
             <CalendarRouter />
+          </Route>
+          <Route path="/budgets">
+            <BudgetsRouter />
           </Route>
         </Switch>
       </ThemeProvider>

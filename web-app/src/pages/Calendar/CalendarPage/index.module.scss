@@ -25,7 +25,7 @@
   .info {
     grid-area: info;
     position: relative;
-    border-top: 1px solid #e2e2e2;
+    border-top: 1px solid $light-gray;
     padding-top: 1rem;
     height: 100%;
     overflow-x: hidden;
@@ -34,7 +34,7 @@
     @include respond(tab-port) {
       padding-top: 0rem;
       border-top: none;
-      border-right: 1px solid #e2e2e2;
+      border-right: 1px solid $light-gray;
     }
 
     .date {

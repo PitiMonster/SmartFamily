@@ -1,0 +1,31 @@
+@import "../../../../../common/variables";
+
+.container {
+  margin: 0;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid $light-gray;
+  border-radius: 50%;
+  width: 12rem;
+  height: 12rem;
+  row-gap: 0.3rem;
+  cursor: pointer;
+  transition: border-color 0.2s ease-out;
+
+  &:hover {
+    border-color: $main-green;
+  }
+
+  & > p {
+    margin: 0;
+  }
+
+  .budgetLeftValue {
+    color: $dark-green;
+    font-family: "Mali";
+    font-size: 3rem;
+  }
+}
