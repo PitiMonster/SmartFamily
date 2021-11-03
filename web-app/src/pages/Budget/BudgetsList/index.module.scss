@@ -2,18 +2,40 @@
 
 .container {
   position: relative;
-  top: 40%;
+  top: 20%;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, -30%);
   display: flex;
-  flex-wrap: wrap;
-  column-gap: 2rem;
-  row-gap: 2rem;
-  justify-content: center;
-  align-items: center;
+  flex-direction: column;
+  row-gap: 3rem;
   width: 90vw;
+
+  @include respond(tab-large-mobile) {
+    top: 40%;
+    transform: translate(-50%, -50%);
+  }
 
   @include respond(tab-land) {
     width: 70vw;
+  }
+
+  .title {
+    text-align: center;
+    font-size: 3rem;
+    margin: 0;
+    margin-top: 2rem;
+
+    @include respond(tab-port) {
+      font-size: 4rem;
+    }
+  }
+
+  .budgets {
+    display: flex;
+    flex-wrap: wrap;
+    column-gap: 2rem;
+    row-gap: 2rem;
+    justify-content: center;
+    align-items: center;
   }
 }

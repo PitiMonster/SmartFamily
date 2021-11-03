@@ -44,8 +44,10 @@ const BudgetsList: React.FC = () => {
 
   return (
     <ContentLayout>
-      {" "}
-      <div className={classes.container}>{budgets}</div>
+      <div className={classes.container}>
+        <p className={classes.title}>Budżety</p>
+        <div className={classes.budgets}>{budgets}</div>
+      </div>
     </ContentLayout>
   );
 };
