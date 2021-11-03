@@ -2,17 +2,26 @@ import { useState, useEffect } from "react";
 import Calendar from "react-calendar";
 import moment from "moment";
 
+import AddIcon from "@mui/icons-material/Add";
+import IconButton from "@mui/material/IconButton";
+
 import classes from "./index.module.scss";
 import "./calendar-styles.scss";
 
 import ContentLayout from "../../../layout/ContentLayout";
 import ListItem from "../../../components/ListItem";
+import EventModal from "./components/AddModifyEventModal";
+
+import { useAppSelector } from "../../../hooks";
 
 const calendarButton = () => {
   return <button className={classes.myCalendarButton} />;
 };
 
 const CalendarPage: React.FC = () => {
+  const [isAddModifyEventModal, setIsAddModifyEventModal] =
+    useState<boolean>(false);
+  const [selectedEventId, setSelectedEventId] = useState<string>("");
   const [value, onChange] = useState(new Date());
   const [selectedDay, setSelectedDay] = useState<String>(moment().format("DD"));
   const [selectedMonth, setSelectedMonth] = useState<String>(
@@ -26,61 +35,76 @@ const CalendarPage: React.FC = () => {
     | undefined
   >([]);
 
+  const isBackdrop = useAppSelector((state) => state.utils.isBackdrop);
+
+  useEffect(() => {
+    if (!isBackdrop) {
+      setIsAddModifyEventModal(false);
+      setSelectedEventId("");
+    }
+  }, [isBackdrop]);
+
+  useEffect(() => {
+    selectedEventId && setIsAddModifyEventModal(true);
+  }, [selectedEventId]);
+
   useEffect(() => {
     const eventsData = [
       {
+        id: "idtest",
         primaryText: "event 1",
         trailingText: "trailing 1",
-        onClick: () => {},
       },
       {
+        id: "idtest",
         primaryText: "event 1",
         trailingText: "trailing 1",
-        onClick: () => {},
       },
       {
+        id: "idtest",
         primaryText: "event 1",
         trailingText: "trailing 1",
-        onClick: () => {},
       },
       {
+        id: "idtest",
         primaryText: "event 1",
         trailingText: "trailing 1",
-        onClick: () => {},
       },
       {
+        id: "idtest",
         primaryText: "event 1",
         trailingText: "trailing 1",
-        onClick: () => {},
       },
       {
+        id: "idtest",
         primaryText: "event 1",
         trailingText: "trailing 1",
-        onClick: () => {},
       },
       {
+        id: "idtest",
         primaryText: "event 1",
         trailingText: "trailing 1",
-        onClick: () => {},
       },
       {
+        id: "idtest",
         primaryText: "event 1",
         trailingText: "trailing 1",
-        onClick: () => {},
       },
       {
+        id: "idtest",
         primaryText: "event 1",
         trailingText: "trailing 1",
-        onClick: () => {},
       },
       {
+        id: "idtest",
         primaryText: "event 1",
         trailingText: "trailing 1",
-        onClick: () => {},
       },
     ];
 
-    const newEvents = eventsData.map((event) => <ListItem {...event} />);
+    const newEvents = eventsData.map((event) => (
+      <ListItem {...event} onClick={() => setSelectedEventId(event.id)} />
+    ));
     setEvents(newEvents);
   }, []);
 
@@ -100,7 +124,15 @@ const CalendarPage: React.FC = () => {
             <p className={classes.selectedMonth}>{selectedMonth}</p>
           </div>
           <div className={classes.events}>
-            <p className={classes.events__title}>Events</p>
+            <div className={classes.events__label}>
+              <p className={classes.events__title}>Events</p>
+              <IconButton
+                color="primary"
+                onClick={() => setIsAddModifyEventModal(true)}
+              >
+                <AddIcon />
+              </IconButton>
+            </div>
             <div className={classes.events__listContainer}>
               <ul className={classes.list}>{events}</ul>
             </div>
@@ -113,6 +145,7 @@ const CalendarPage: React.FC = () => {
           locale="en-GB"
         />
       </div>
+      {isAddModifyEventModal && <EventModal id={selectedEventId} />}
     </ContentLayout>
   );
 };

@@ -7,6 +7,13 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  background-color: white;
+  transition: background-color 0.2s ease-out;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #f6f6f6;
+  }
 
   @include respond(tab-land) {
     padding: 0 0.5rem;

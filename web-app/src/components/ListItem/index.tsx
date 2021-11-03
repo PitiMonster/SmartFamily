@@ -11,7 +11,7 @@ const ListItem: React.FC<{
   onClick: () => void;
 }> = ({ photo, primaryText, secondaryText, trailingText, onClick }) => {
   return (
-    <li className={classes.container}>
+    <li className={classes.container} onClick={onClick}>
       <div className={classes.beginningPart}>
         {photo && <img className={classes.photo} src={photo} alt="list item" />}
         <div className={classes.beginningPart__texts}>
