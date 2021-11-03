@@ -32,10 +32,6 @@
     width: 90%;
     margin: 0 auto;
 
-    // @include respond(tab-large-mobile) {
-    //   padding: 0 2rem;
-    // }
-
     @include respond(tab-port) {
       padding: 0 2rem;
       margin-bottom: 1rem;

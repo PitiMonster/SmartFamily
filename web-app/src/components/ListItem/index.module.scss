@@ -1,0 +1,48 @@
+@import "../../common/mixins";
+
+.container {
+  position: relative;
+  padding-left: 0.5rem;
+  border-bottom: 1px solid #e2e2e2;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  @include respond(tab-land) {
+    padding: 0 0.5rem;
+  }
+
+  .beginningPart {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    column-gap: 1rem;
+
+    &__texts {
+      .primary {
+        font-weight: 500;
+        font-size: 1.1rem;
+      }
+      .secondary {
+        font-size: 0.8rem;
+      }
+
+      @include respond(tab-large-mobile) {
+        .primary {
+          font-size: 1.2rem;
+        }
+        .secondary {
+          font-size: 0.9rem;
+        }
+      }
+    }
+  }
+  .trailingPart {
+    display: flex;
+    column-gap: 0rem;
+
+    @include respond(tab-land) {
+      column-gap: 1rem;
+    }
+  }
+}
