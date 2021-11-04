@@ -18,14 +18,17 @@ import { useAppSelector } from "../../../hooks";
 import ContentLayout from "../../../layout/ContentLayout";
 import ListItem from "../../../components/ListItem";
 import ModifyBudgetModal from "../components/AddModifyBudget";
+import AddExpenseModal from "./components/AddExpenseModal";
 
 const SpecificBudgetPage: React.FC = () => {
   const [progress, setProgress] = useState<number>(0);
   const [maxValue, setMaxValue] = useState<number>(1000);
   const [currentValue, setCurrentValue] = useState<number>(875);
+  const [expenses, setExpenses] = useState<HtmlElements>([]);
+
   const [isAddModifyBudgetModal, setIsAddModifyBudgetModal] =
     useState<boolean>(false);
-  const [expenses, setExpenses] = useState<HtmlElements>([]);
+  const [isAddExpenseModal, setIsAddExpenseModal] = useState<boolean>(false);
 
   // TODO przekzać wszystkie dane do modala modyfikacji budżetu
   const isBackdrop = useAppSelector((state) => state.utils.isBackdrop);
@@ -33,6 +36,7 @@ const SpecificBudgetPage: React.FC = () => {
   useEffect(() => {
     if (!isBackdrop) {
       setIsAddModifyBudgetModal(false);
+      setIsAddExpenseModal(false);
     }
   }, [isBackdrop]);
 
@@ -193,7 +197,12 @@ const SpecificBudgetPage: React.FC = () => {
         <div className={classes.expenses}>
           <div className={classes.header}>
             <p className={classes.expenses__title}>Wydatki</p>
-            <IconButton color="primary" onClick={() => {}}>
+            <IconButton
+              color="primary"
+              onClick={() => {
+                setIsAddExpenseModal(true);
+              }}
+            >
               <AddIcon fontSize="large" />
             </IconButton>
           </div>
@@ -201,6 +210,7 @@ const SpecificBudgetPage: React.FC = () => {
         </div>
       </div>
       {isAddModifyBudgetModal && <ModifyBudgetModal />}
+      {isAddExpenseModal && <AddExpenseModal />}
     </ContentLayout>
   );
 };
