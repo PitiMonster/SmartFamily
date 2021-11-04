@@ -13,15 +13,28 @@ import IconButton from "@mui/material/IconButton";
 
 import { HtmlElements } from "../../../types";
 
+import { useAppSelector } from "../../../hooks";
+
 import ContentLayout from "../../../layout/ContentLayout";
 import ListItem from "../../../components/ListItem";
+import ModifyBudgetModal from "../components/AddModifyBudget";
 
 const SpecificBudgetPage: React.FC = () => {
   const [progress, setProgress] = useState<number>(0);
   const [maxValue, setMaxValue] = useState<number>(1000);
   const [currentValue, setCurrentValue] = useState<number>(875);
-
+  const [isAddModifyBudgetModal, setIsAddModifyBudgetModal] =
+    useState<boolean>(false);
   const [expenses, setExpenses] = useState<HtmlElements>([]);
+
+  // TODO przekzać wszystkie dane do modala modyfikacji budżetu
+  const isBackdrop = useAppSelector((state) => state.utils.isBackdrop);
+
+  useEffect(() => {
+    if (!isBackdrop) {
+      setIsAddModifyBudgetModal(false);
+    }
+  }, [isBackdrop]);
 
   useEffect(() => {
     const data = [
@@ -166,7 +179,12 @@ const SpecificBudgetPage: React.FC = () => {
     <ContentLayout>
       <div className={classes.nameContainer}>
         <p className={classes.budgetName}>Budget name</p>
-        <IconButton color="info" onClick={() => {}}>
+        <IconButton
+          color="info"
+          onClick={() => {
+            setIsAddModifyBudgetModal(true);
+          }}
+        >
           <CreateIcon fontSize="large" />
         </IconButton>
       </div>
@@ -182,6 +200,7 @@ const SpecificBudgetPage: React.FC = () => {
           <div className={classes.expenses__list}>{expenses}</div>
         </div>
       </div>
+      {isAddModifyBudgetModal && <ModifyBudgetModal />}
     </ContentLayout>
   );
 };
