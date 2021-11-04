@@ -2,6 +2,9 @@ import { useEffect, useState } from "react";
 
 import classes from "./index.module.scss";
 
+import AddIcon from "@mui/icons-material/Add";
+import IconButton from "@mui/material/IconButton";
+
 import { HtmlElements } from "../../../types";
 
 import BudgetsListItem from "./components/BudgetsListItem";
@@ -45,7 +48,12 @@ const BudgetsList: React.FC = () => {
   return (
     <ContentLayout>
       <div className={classes.container}>
-        <p className={classes.title}>Budżety</p>
+        <div className={classes.header}>
+          <p className={classes.title}>Budgets</p>
+          <IconButton color="primary" onClick={() => {}}>
+            <AddIcon fontSize="large" />
+          </IconButton>
+        </div>
         <div className={classes.budgets}>{budgets}</div>
       </div>
     </ContentLayout>
