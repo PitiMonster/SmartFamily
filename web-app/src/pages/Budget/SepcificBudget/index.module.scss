@@ -1,0 +1,47 @@
+@import "../../../common/variables";
+@import "../../../common/mixins";
+
+.budgetName {
+  margin: 2rem 0 1rem 0;
+  text-align: center;
+  font-size: 3rem;
+}
+
+.container {
+  display: grid;
+  grid-template-areas: "progress expenses";
+  grid-template-columns: 1fr 1fr;
+  height: 80%;
+  position: relative;
+  top: 35%;
+  left: 50%;
+  transform: translate(-50%, -40%);
+
+  .progress {
+    grid-area: progress;
+    justify-content: center;
+    align-items: center;
+
+    &__textValue {
+      font-size: 3rem;
+    }
+
+    &__textProcent {
+      font-size: 1.5rem;
+      color: $gray;
+    }
+  }
+
+  .expenses {
+    grid-area: expenses;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border-left: 1px solid $light-gray;
+    padding-left: 2rem;
+
+    &__title {
+      font-size: 2rem;
+    }
+  }
+}
