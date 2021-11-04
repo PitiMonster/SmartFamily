@@ -1,0 +1,48 @@
+@import "../../../../common/mixins";
+
+.modal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 70vw;
+  height: 50vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  background-color: white;
+  padding: 1rem 2rem;
+  border-radius: 5px;
+  @include z-index(modal);
+
+  button {
+    align-self: center;
+  }
+}
+
+.input {
+  margin: 1;
+  width: 30ch;
+
+  @include respond(tab-large-mobile) {
+    margin: 1;
+    width: 50ch;
+  }
+}
+
+.period {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: center;
+
+  &__input {
+    margin: 1;
+    width: 13ch;
+
+    @include respond(tab-large-mobile) {
+      margin: 1;
+      width: 20ch;
+    }
+  }
+}

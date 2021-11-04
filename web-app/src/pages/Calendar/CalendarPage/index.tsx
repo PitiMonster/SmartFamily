@@ -14,9 +14,7 @@ import EventModal from "./components/AddModifyEventModal";
 
 import { useAppSelector } from "../../../hooks";
 
-const calendarButton = () => {
-  return <button className={classes.myCalendarButton} />;
-};
+import { HtmlElements } from "../../../types";
 
 const CalendarPage: React.FC = () => {
   const [isAddModifyEventModal, setIsAddModifyEventModal] =
@@ -27,13 +25,7 @@ const CalendarPage: React.FC = () => {
   const [selectedMonth, setSelectedMonth] = useState<String>(
     moment().format("MMMM")
   );
-  const [events, setEvents] = useState<
-    | React.DetailedHTMLProps<
-        React.HTMLAttributes<HTMLDivElement>,
-        HTMLDivElement
-      >[]
-    | undefined
-  >([]);
+  const [events, setEvents] = useState<HtmlElements>([]);
 
   const isBackdrop = useAppSelector((state) => state.utils.isBackdrop);
 

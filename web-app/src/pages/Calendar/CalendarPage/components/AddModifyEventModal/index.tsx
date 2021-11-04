@@ -42,6 +42,7 @@ const AddModifyEventModal: React.FC<{ id?: string }> = ({ id }) => {
       <LocalizationProvider dateAdapter={DateAdapter}>
         <DateTimePicker
           label="Event date time"
+          inputFormat="MM/dd/yyyy"
           value={dateTime}
           onChange={handleDateTime}
           renderInput={(params) => <TextField variant="standard" {...params} />}
