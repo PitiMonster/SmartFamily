@@ -6,38 +6,69 @@
   column-gap: 3rem;
   align-items: center;
   justify-content: center;
-  margin: 2rem 0 1rem 0;
+  margin: 1rem 0;
+
+  @include respond(tab-large-mobile) {
+    margin: 2rem 0 1rem 0;
+  }
 
   .budgetName {
     margin: 0;
     text-align: center;
-    font-size: 3rem;
+    font-size: 2rem;
+
+    @include respond(tab-large-mobile) {
+      font-size: 3rem;
+    }
   }
 }
 
 .container {
   display: grid;
-  grid-template-areas: "progress expenses";
-  grid-template-columns: 1fr 1fr;
-  height: 70vh;
+  grid-template-areas: "progress" "expenses";
+  grid-template-rows: 1fr 2fr;
+  height: 75vh;
   position: relative;
   top: 35%;
   left: 50%;
   transform: translate(-50%, -40%);
   overflow-y: auto;
 
+  @include respond(tab-port) {
+    grid-template-areas: "progress expenses";
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr;
+  }
+
   .progress {
     grid-area: progress;
     justify-content: center;
     align-items: center;
 
+    &__circle {
+      width: 200px !important;
+      height: 200px !important;
+      @include respond(tab-large-mobile) {
+        width: 300px !important;
+        height: 300px !important;
+      }
+    }
+
     &__textValue {
-      font-size: 3rem;
+      font-size: 2rem;
+
+      @include respond(tab-large-mobile) {
+        font-size: 3rem;
+      }
     }
 
     &__textProcent {
-      font-size: 1.5rem;
+      font-size: 1rem;
       color: $gray;
+
+      @include respond(tab-large-mobile) {
+        font-size: 1.5rem;
+      }
     }
   }
 

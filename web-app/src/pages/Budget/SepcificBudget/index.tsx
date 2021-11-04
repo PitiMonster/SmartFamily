@@ -114,22 +114,22 @@ const SpecificBudgetPage: React.FC = () => {
       }}
     >
       <CircularProgress
+        className={classes.progress__circle}
         variant="determinate"
         sx={{
           position: "absolute",
           color: (theme) =>
             theme.palette.grey[theme.palette.mode === "light" ? 200 : 800],
         }}
-        size={300}
         thickness={1}
         {...props}
         value={100}
       />
       <CircularProgress
+        className={classes.progress__circle}
         thickness={1}
         variant="determinate"
         {...props}
-        size={300}
         color={props.value > 100 ? "error" : "secondary"}
         value={props.value > 100 ? 100 : props.value}
       />
