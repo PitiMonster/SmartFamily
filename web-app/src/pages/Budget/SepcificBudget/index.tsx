@@ -7,13 +7,85 @@ import CircularProgress, {
 } from "@mui/material/CircularProgress";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
+import AddIcon from "@mui/icons-material/Add";
+import CreateIcon from "@mui/icons-material/Create";
+import IconButton from "@mui/material/IconButton";
+
+import { HtmlElements } from "../../../types";
 
 import ContentLayout from "../../../layout/ContentLayout";
+import ListItem from "../../../components/ListItem";
 
 const SpecificBudgetPage: React.FC = () => {
   const [progress, setProgress] = useState<number>(0);
   const [maxValue, setMaxValue] = useState<number>(1000);
   const [currentValue, setCurrentValue] = useState<number>(875);
+
+  const [expenses, setExpenses] = useState<HtmlElements>([]);
+
+  useEffect(() => {
+    const data = [
+      {
+        primaryText: "Expense name",
+        trailingText: "12",
+      },
+      {
+        primaryText: "Expense name",
+        trailingText: "12",
+      },
+      {
+        primaryText: "Expense name",
+        trailingText: "12",
+      },
+      {
+        primaryText: "Expense name",
+        trailingText: "12",
+      },
+      {
+        primaryText: "Expense name",
+        trailingText: "12",
+      },
+      {
+        primaryText: "Expense name",
+        trailingText: "12",
+      },
+      {
+        primaryText: "Expense name",
+        trailingText: "12",
+      },
+      {
+        primaryText: "Expense name",
+        trailingText: "12",
+      },
+      {
+        primaryText: "Expense name",
+        trailingText: "12",
+      },
+      {
+        primaryText: "Expense name",
+        trailingText: "12",
+      },
+      {
+        primaryText: "Expense name",
+        trailingText: "12",
+      },
+      {
+        primaryText: "Expense name",
+        trailingText: "12",
+      },
+      {
+        primaryText: "Expense name",
+        trailingText: "12",
+      },
+      {
+        primaryText: "Expense name",
+        trailingText: "12",
+      },
+    ];
+
+    const newExpenses = data.map((expense) => <ListItem {...expense} />);
+    setExpenses(newExpenses);
+  }, []);
 
   useEffect(() => {
     const temp = (currentValue / maxValue) * 100;
@@ -24,7 +96,6 @@ const SpecificBudgetPage: React.FC = () => {
           (1 / Math.pow(10, Math.round(Math.log10(temp)))) * temp
         ).toFixed(2)
       );
-      console.log(newProgress);
       newProgress = newProgress > temp ? temp : newProgress;
       setTimeout(() => {
         return setProgress(newProgress);
@@ -93,12 +164,22 @@ const SpecificBudgetPage: React.FC = () => {
 
   return (
     <ContentLayout>
-      <p className={classes.budgetName}>Budget name</p>
+      <div className={classes.nameContainer}>
+        <p className={classes.budgetName}>Budget name</p>
+        <IconButton color="info" onClick={() => {}}>
+          <CreateIcon fontSize="large" />
+        </IconButton>
+      </div>
       <div className={classes.container}>
         <CircularProgressWithLabel value={progress} />
         <div className={classes.expenses}>
-          <p className={classes.expenses__title}>Wydatki</p>
-          <div className={classes.expenses__list}></div>
+          <div className={classes.header}>
+            <p className={classes.expenses__title}>Wydatki</p>
+            <IconButton color="primary" onClick={() => {}}>
+              <AddIcon fontSize="large" />
+            </IconButton>
+          </div>
+          <div className={classes.expenses__list}>{expenses}</div>
         </div>
       </div>
     </ContentLayout>
