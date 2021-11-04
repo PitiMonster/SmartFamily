@@ -41,6 +41,16 @@ const mainTheme = createTheme({
       main: "#01dd24",
       contrastText: "#fff",
     },
+    secondary: {
+      main: "#5db075",
+      light: "#e2e2e2",
+    },
+    error: {
+      main: "#D04545",
+    },
+    info: {
+      main: "#6F6F6F",
+    },
   },
 });
 

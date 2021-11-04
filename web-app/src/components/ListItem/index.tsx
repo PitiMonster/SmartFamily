@@ -8,7 +8,7 @@ const ListItem: React.FC<{
   primaryText: string;
   secondaryText?: string;
   trailingText: string;
-  onClick: () => void;
+  onClick?: () => void;
 }> = ({ photo, primaryText, secondaryText, trailingText, onClick }) => {
   return (
     <li className={classes.container} onClick={onClick}>
@@ -23,13 +23,15 @@ const ListItem: React.FC<{
       </div>
       <div className={classes.trailingPart}>
         <p className={classes.trailingPart__text}>{trailingText}</p>
-        <IconButton
-          aria-label="toggle password visibility"
-          onClick={onClick}
-          onMouseDown={onClick}
-        >
-          <KeyboardArrowRightIcon />
-        </IconButton>
+        {onClick && (
+          <IconButton
+            aria-label="toggle password visibility"
+            onClick={onClick}
+            onMouseDown={onClick}
+          >
+            <KeyboardArrowRightIcon />
+          </IconButton>
+        )}
       </div>
     </li>
   );
