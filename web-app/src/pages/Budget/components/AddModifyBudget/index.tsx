@@ -75,7 +75,12 @@ const AddModifyBudget: React.FC<{ id?: string }> = ({ id }) => {
         label="Renew periodically"
       />
       {renewPeriodically && (
-        <Stack className={classes.period}>
+        <Stack
+          direction="row"
+          justifyContent="space-evenly"
+          alignItems="center"
+          className={classes.period}
+        >
           <FormControl
             variant="standard"
             color="primary"

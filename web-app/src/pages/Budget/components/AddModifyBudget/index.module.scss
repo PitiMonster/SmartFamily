@@ -31,11 +31,6 @@
 }
 
 .period {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-evenly;
-  align-items: center;
-
   &__input {
     margin: 1;
     width: 13ch;
