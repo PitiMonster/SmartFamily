@@ -13,12 +13,18 @@ import ContentLayout from "../../../layout/ContentLayout";
 const SpecificBudgetPage: React.FC = () => {
   const [progress, setProgress] = useState<number>(0);
   const [maxValue, setMaxValue] = useState<number>(1000);
-  const [currentValue, setCurrentValue] = useState<number>(1500);
+  const [currentValue, setCurrentValue] = useState<number>(875);
 
   useEffect(() => {
     const temp = (currentValue / maxValue) * 100;
     if (progress < temp) {
-      let newProgress = Math.round(progress + (1 / 100) * temp);
+      let newProgress = parseFloat(
+        (
+          progress +
+          (1 / Math.pow(10, Math.round(Math.log10(temp)))) * temp
+        ).toFixed(2)
+      );
+      console.log(newProgress);
       newProgress = newProgress > temp ? temp : newProgress;
       setTimeout(() => {
         return setProgress(newProgress);
@@ -53,8 +59,8 @@ const SpecificBudgetPage: React.FC = () => {
         variant="determinate"
         {...props}
         size={300}
-        color={progress > 100 ? "error" : "secondary"}
-        value={progress > 100 ? 100 : progress}
+        color={props.value > 100 ? "error" : "secondary"}
+        value={props.value > 100 ? 100 : props.value}
       />
       <Box
         sx={{
@@ -74,13 +80,13 @@ const SpecificBudgetPage: React.FC = () => {
           component="div"
           color={progress > 100 ? "error" : "secondary"}
           className={classes.progress__textValue}
-        >{`${Math.round((progress * maxValue) / 100)}zł`}</Typography>
+        >{`${((props.value * maxValue) / 100).toFixed(2)}zł`}</Typography>
         <Typography
           variant="caption"
           component="div"
           color="text.secondary"
           className={classes.progress__textProcent}
-        >{`${progress}%`}</Typography>
+        >{`${props.value}%`}</Typography>
       </Box>
     </Box>
   );
