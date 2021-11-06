@@ -13,6 +13,7 @@ import AuthRouter from "./pages/Authorization/Router";
 import GroupsRouter from "./pages/Groups/Router";
 import CalendarRouter from "./pages/Calendar/Router";
 import BudgetsRouter from "./pages/Budget/Router";
+import ShoppingListRouter from "./pages/ShoppingList/Router";
 
 import Backdrop from "./components/ux/Backdrop";
 
@@ -38,6 +39,9 @@ const App = () => {
           </Route>
           <Route path="/budgets">
             <BudgetsRouter />
+          </Route>
+          <Route path="/shopping">
+            <ShoppingListRouter />
           </Route>
         </Switch>
       </ThemeProvider>

@@ -10,6 +10,7 @@ import MobileDatePicker from "@mui/lab/MobileDatePicker";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
+import Collapse from "@mui/material/Collapse";
 
 import classes from "./index.module.scss";
 
@@ -74,7 +75,7 @@ const AddModifyBudget: React.FC<{ id?: string }> = ({ id }) => {
         }
         label="Renew periodically"
       />
-      {renewPeriodically && (
+      <Collapse in={renewPeriodically}>
         <Stack
           direction="row"
           justifyContent="space-evenly"
@@ -107,7 +108,7 @@ const AddModifyBudget: React.FC<{ id?: string }> = ({ id }) => {
             </Select>
           </FormControl>
         </Stack>
-      )}
+      </Collapse>
       <FormControlLabel
         control={
           <Switch
@@ -117,7 +118,7 @@ const AddModifyBudget: React.FC<{ id?: string }> = ({ id }) => {
         }
         label="Delete automatically"
       />
-      {autoDelete && (
+      <Collapse in={autoDelete}>
         <LocalizationProvider dateAdapter={DateAdapter}>
           <MobileDatePicker
             label="Wybierz datę urodzenia"
@@ -133,7 +134,7 @@ const AddModifyBudget: React.FC<{ id?: string }> = ({ id }) => {
             )}
           />
         </LocalizationProvider>
-      )}
+      </Collapse>
       <MainButton isOutline={true} text="Save" onClick={() => {}} />
     </div>
   );
