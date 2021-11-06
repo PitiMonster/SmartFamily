@@ -11,6 +11,7 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import Collapse from "@mui/material/Collapse";
+import { Stack } from "@mui/material";
 
 import classes from "./index.module.scss";
 
@@ -19,7 +20,6 @@ import { updateBackdrop } from "../../../../store/utils/action";
 
 import TextInput from "../../../../components/inputs/TextInput";
 import MainButton from "../../../../components/buttons/MainButton";
-import { Stack } from "@mui/material";
 
 const AddModifyBudget: React.FC<{ id?: string }> = ({ id }) => {
   const dispatch = useAppDispatch();
