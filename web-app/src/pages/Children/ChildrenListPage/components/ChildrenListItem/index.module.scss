@@ -1,0 +1,12 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+
+  .photo {
+    border-radius: 50%;
+    height: 5rem;
+    width: auto;
+  }
+}

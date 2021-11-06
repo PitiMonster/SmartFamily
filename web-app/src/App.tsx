@@ -14,6 +14,7 @@ import GroupsRouter from "./pages/Groups/Router";
 import CalendarRouter from "./pages/Calendar/Router";
 import BudgetsRouter from "./pages/Budget/Router";
 import ShoppingListRouter from "./pages/ShoppingList/Router";
+import ChildrenRouter from "./pages/Children/Router";
 
 import Backdrop from "./components/ux/Backdrop";
 
@@ -42,6 +43,9 @@ const App = () => {
           </Route>
           <Route path="/shopping">
             <ShoppingListRouter />
+          </Route>
+          <Route path="/children">
+            <ChildrenRouter />
           </Route>
         </Switch>
       </ThemeProvider>
