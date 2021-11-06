@@ -1,0 +1,79 @@
+@import "../../../common/mixins";
+@import "../../../common/variables";
+
+.container {
+  display: grid;
+  grid-template-areas: "list";
+  grid-template-columns: 1fr;
+  justify-content: center;
+  align-items: center;
+  height: 90vh;
+  overflow-y: hidden;
+  position: relative;
+
+  @include respond(tab-port) {
+    grid-template-areas: "image list";
+    grid-template-columns: 5fr 4fr;
+  }
+
+  &__image {
+    display: none;
+    grid-area: image;
+
+    @include respond(tab-port) {
+      display: flex;
+      justify-content: center;
+    }
+
+    .image {
+      width: 40vw;
+      height: auto;
+      margin: auto;
+    }
+
+    .attribution {
+      position: absolute;
+      bottom: 0;
+      left: 0.5%;
+      font-size: 0.5rem;
+      color: $gray;
+    }
+  }
+
+  &__list {
+    grid-area: list;
+    padding: 0 0.5rem;
+    position: relative;
+    height: 100%;
+    overflow-y: hidden;
+
+    @include respond(tab-port) {
+      padding: 0 1.5rem 0 0;
+    }
+
+    @include respond(tab-land) {
+      padding: 0 3rem 0 0;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      &__title {
+        font-size: 2rem;
+        font-weight: 500;
+      }
+    }
+
+    .lists {
+      height: 80%;
+      position: relative;
+      overflow-y: auto;
+
+      ul:first-of-type {
+        border-bottom: 1px solid $light-gray;
+      }
+    }
+  }
+}
