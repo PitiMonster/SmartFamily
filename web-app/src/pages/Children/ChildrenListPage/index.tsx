@@ -60,6 +60,30 @@ const ChildrenListPage: React.FC = () => {
         photo:
           "https://res.cloudinary.com/dq7ionfvn/image/upload/v1636229651/boy.png",
       },
+      {
+        id: "1234",
+        name: "Natalka",
+        photo:
+          "https://res.cloudinary.com/dq7ionfvn/image/upload/v1636229651/girl.png",
+      },
+      {
+        id: "12345",
+        name: "Igor",
+        photo:
+          "https://res.cloudinary.com/dq7ionfvn/image/upload/v1636229651/boy.png",
+      },
+      {
+        id: "1234",
+        name: "Natalka",
+        photo:
+          "https://res.cloudinary.com/dq7ionfvn/image/upload/v1636229651/girl.png",
+      },
+      {
+        id: "12345",
+        name: "Igor",
+        photo:
+          "https://res.cloudinary.com/dq7ionfvn/image/upload/v1636229651/boy.png",
+      },
     ];
 
     const newChildren = data.map((child) => <ChildrenListItem {...child} />);

@@ -6,7 +6,10 @@ const ChildrenListItem: React.FC<{ name: string; photo: string }> = ({
 }) => {
   return (
     <div className={classes.container}>
-      <img className={classes.photo} src={photo} alt={`${name}`} />
+      <div
+        className={classes.photo}
+        style={{ backgroundImage: `url(${photo})`, margin: "1px" }}
+      />
       <p className={classes.name}>{name}</p>
     </div>
   );
