@@ -1,0 +1,42 @@
+@import "../../../../../common/mixins";
+
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+
+  .photo {
+    border-radius: 50%;
+    height: 7rem;
+    width: 7rem;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    transition: all 0.2s ease-out;
+
+    @include respond(tab-large-mobile) {
+      width: 9rem;
+      height: 9rem;
+    }
+
+    @include respond(tab-port) {
+      width: 10rem;
+      height: 10rem;
+    }
+  }
+
+  .name {
+    font-size: 1.2rem;
+    margin: 0;
+
+    @include respond(tab-large-mobile) {
+      font-size: 1.5rem;
+    }
+  }
+
+  &:hover .photo {
+    transform: scale(1.05);
+  }
+}
