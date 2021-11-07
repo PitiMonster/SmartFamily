@@ -1,0 +1,59 @@
+@import "../../../common/mixins";
+@import "../../../common/variables";
+
+.container {
+  display: grid;
+  grid-template-areas: "data" "menu";
+  grid-template-rows: 1fr 1fr;
+  grid-template-columns: 1fr;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  height: 90vh;
+  margin: auto;
+
+  .data {
+    grid-area: data;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    row-gap: 2rem;
+
+    &__image {
+      width: 20rem;
+      height: 20rem;
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center;
+      border-radius: 50%;
+    }
+
+    &__name {
+      font-size: 2rem;
+      margin: 0;
+    }
+
+    &__points {
+      font-size: 2.5rem;
+      color: $main-green;
+      margin: 0;
+    }
+  }
+
+  .menu {
+    grid-area: menu;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+
+    svg {
+      height: 3rem !important;
+      width: auto !important;
+      fill: $dark-green;
+    }
+
+    span {
+      font-size: 2rem;
+    }
+  }
+}
