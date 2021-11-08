@@ -36,7 +36,7 @@ const SpecificChildPage: React.FC = () => {
             style={{ backgroundImage: `url(${image})` }}
           />
           <p className={classes.data__name}>{name}</p>
-          <p className={classes.data__points}>{points}</p>
+          <p className={classes.data__points}>{points} pts</p>
         </div>
         <div className={classes.menu}>
           <FormControlLabel

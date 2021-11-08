@@ -10,8 +10,9 @@ const TextInput: React.FC<{
   text: string;
   setText: React.Dispatch<React.SetStateAction<string>>;
   label: string;
+  disabled?: boolean;
   icon?: JSX.Element;
-}> = ({ text, setText, label, icon }) => {
+}> = ({ text, setText, label, icon, disabled = false }) => {
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setText(event.target.value);
   };
@@ -25,6 +26,7 @@ const TextInput: React.FC<{
         {label}
       </InputLabel>
       <Input
+        disabled={disabled}
         className={classes.input}
         id="standard-adornment-password"
         type="text"
