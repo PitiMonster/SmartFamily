@@ -2,6 +2,8 @@ import { Switch, Route, BrowserRouter } from "react-router-dom";
 import ChildrenListPage from "./ChildrenListPage";
 import SpecificChildPage from "./SpecificChildPage";
 
+import TasksRouter from "../Tasks/Router";
+
 const Router: React.FC = () => {
   return (
     <BrowserRouter basename="/children">
@@ -11,6 +13,9 @@ const Router: React.FC = () => {
         </Route>
         <Route path="/:id" exact={true}>
           <SpecificChildPage />
+        </Route>
+        <Route path="/:id/tasks">
+          <TasksRouter />
         </Route>
       </Switch>
     </BrowserRouter>

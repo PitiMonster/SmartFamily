@@ -23,7 +23,7 @@ import AddExpenseModal from "./components/AddExpenseModal";
 const SpecificBudgetPage: React.FC = () => {
   const [progress, setProgress] = useState<number>(0);
   const [maxValue, setMaxValue] = useState<number>(1000);
-  const [currentValue, setCurrentValue] = useState<number>(875);
+  const [currentValue, setCurrentValue] = useState<number>(1075);
   const [expenses, setExpenses] = useState<HtmlElements>([]);
 
   const [isAddModifyBudgetModal, setIsAddModifyBudgetModal] =
