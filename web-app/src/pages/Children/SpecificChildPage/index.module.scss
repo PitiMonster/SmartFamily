@@ -1,0 +1,93 @@
+@import "../../../common/mixins";
+@import "../../../common/variables";
+
+.container {
+  display: grid;
+  grid-template-areas: "data" "menu";
+  grid-template-rows: 1fr 1fr;
+  grid-template-columns: 1fr;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  height: 90vh;
+  margin: auto;
+
+  @include respond(tab-port) {
+    width: 70vw;
+  }
+
+  .data {
+    grid-area: data;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    row-gap: 2rem;
+
+    &__image {
+      width: 17rem;
+      height: 17rem;
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center;
+      border-radius: 50%;
+
+      @include respond(tab-port) {
+        width: 20rem;
+        height: 20rem;
+      }
+    }
+
+    &__name {
+      font-size: 2.5rem;
+      margin: 0;
+    }
+
+    &__points {
+      font-size: 2.5rem;
+      color: $main-green;
+      margin: 0;
+    }
+  }
+
+  .menu {
+    grid-area: menu;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    height: 80%;
+
+    @include respond(tab-large-mobile) {
+      flex-direction: row;
+    }
+
+    label {
+      margin: auto;
+      width: 200px;
+
+      &:hover {
+        svg {
+          fill: $main-green;
+        }
+      }
+    }
+
+    svg {
+      height: 2.5rem !important;
+      width: auto !important;
+      fill: $dark-green;
+      transition: all 0.2s ease-out;
+
+      @include respond(tab-port) {
+        height: 3rem;
+      }
+    }
+
+    span {
+      font-size: 1.7rem;
+
+      @include respond(tab-port) {
+        font-size: 2rem;
+      }
+    }
+  }
+}
