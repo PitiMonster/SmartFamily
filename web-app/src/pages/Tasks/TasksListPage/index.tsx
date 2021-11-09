@@ -152,11 +152,6 @@ const TaskListPage: React.FC = () => {
       sx={{ paddingLeft: 0 }}
       secondaryAction={
         <Stack direction="row" alignItems="center">
-          {/* <ListItemText
-            className={classes.deadline}
-            primary={`${moment(deadline).format("DD/MM/YYYY, hh:mm")}`}
-            sx={{ paddingRight: "1rem" }}
-          /> */}
           <IconButton
             aria-label="delete"
             title="Delete"

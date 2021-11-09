@@ -12,7 +12,7 @@ const setUpCloudinary = () => {
 };
 
 const cloudinaryUploadWidget = (
-  action: React.Dispatch<React.SetStateAction<string>>
+  action: (id: string, url: string) => void
 ): any => {
   const myWidget = (window as any).cloudinary.createUploadWidget(
     {
@@ -24,7 +24,7 @@ const cloudinaryUploadWidget = (
       if (!error && result?.event === "success") {
         console.log("Done! Here is the image info: ", result.info);
         console.log("image src", result.info.secure_url);
-        action(result.info.public_id);
+        action(result.info.public_id, result.info.secure_url);
       }
     }
   );
