@@ -3,6 +3,7 @@ import ChildrenListPage from "./ChildrenListPage";
 import SpecificChildPage from "./SpecificChildPage";
 
 import TasksRouter from "../Tasks/Router";
+import RewardsRouter from "../Rewards/Router";
 
 const Router: React.FC = () => {
   return (
@@ -16,6 +17,9 @@ const Router: React.FC = () => {
         </Route>
         <Route path="/:id/tasks">
           <TasksRouter />
+        </Route>
+        <Route path="/:id/rewards">
+          <RewardsRouter />
         </Route>
       </Switch>
     </BrowserRouter>

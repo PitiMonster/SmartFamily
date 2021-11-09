@@ -22,9 +22,16 @@ const AddPhotoPage: React.FC = () => {
     "SmartFamily/default_person"
   );
   const [userProfilePhoto, setUserProfilePhoto] = useState<any>();
+  const [photoUrl, setPhotoUrl] = useState<string>(
+    "https://res.cloudinary.com/dq7ionfvn/image/upload/v1634891263/SmartFamily/default_person.jpg"
+  );
 
   useEffect(() => {
-    setCloudinaryWidget(cloudinaryUploadWidget(setProfilePhotoId));
+    const action = (id: string, url: string) => {
+      setProfilePhotoId(id);
+      setPhotoUrl(url);
+    };
+    setCloudinaryWidget(cloudinaryUploadWidget(action));
     setProfilePhotoId("SmartFamily/default_person");
   }, []);
 
