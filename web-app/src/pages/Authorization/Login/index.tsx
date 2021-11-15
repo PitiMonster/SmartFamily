@@ -46,9 +46,9 @@ const LoginPage: React.FC = () => {
                 label="Hasło"
               />
             </FormControl>
-            <a href="#" className={classes.forgotPassword}>
+            <Link to="/forgot-password" className={classes.forgotPassword}>
               Zapomniałem hasła
-            </a>
+            </Link>
           </div>
         </div>
         <MainButton isOutline={false} text="Zaloguj się" onClick={() => {}} />

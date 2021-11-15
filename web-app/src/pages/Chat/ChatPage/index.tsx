@@ -201,7 +201,7 @@ const Chat: React.FC = () => {
       },
     ];
 
-    setMessagesData(data);
+    setMessagesData(data.reverse());
   }, []);
 
   const handleMessageInputChange = (
