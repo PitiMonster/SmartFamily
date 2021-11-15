@@ -1,0 +1,23 @@
+@import "../../../../../common/variables";
+
+.container {
+  background: $light-green;
+  border-radius: 10px;
+  padding: 0.25rem 0.75rem;
+  color: black;
+  font-size: 1.2rem;
+  max-width: 70%;
+  overflow-wrap: break-word;
+  word-break: break-all;
+  list-style: none;
+  white-space: pre-wrap;
+}
+
+.authorMe {
+  align-self: flex-end;
+}
+
+.authorYou {
+  background: $light-gray;
+  align-self: flex-start;
+}

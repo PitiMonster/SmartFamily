@@ -51,8 +51,6 @@ const AddPhotoPage: React.FC = () => {
     <AuthLayout>
       <div className={classes.container}>
         <p className={classes.title}>Dodaj swoje zdjęcie profilowe</p>
-        {console.log(profilePhotoId)}
-        {console.log(userProfilePhoto)}
         {userProfilePhoto ? (
           <AdvancedImage
             cldImg={userProfilePhoto}
