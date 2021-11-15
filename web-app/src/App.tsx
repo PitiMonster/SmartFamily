@@ -16,6 +16,7 @@ import BudgetsRouter from "./pages/Budget/Router";
 import ShoppingListRouter from "./pages/ShoppingList/Router";
 import ChildrenRouter from "./pages/Children/Router";
 import TasksRouter from "./pages/Children/Router";
+import ChatRouter from "./pages/Chat/Router";
 
 import Backdrop from "./components/ux/Backdrop";
 
@@ -50,6 +51,9 @@ const App = () => {
           </Route>
           <Route path="/children/:id/tasks">
             <TasksRouter />
+          </Route>
+          <Route path="/chats">
+            <ChatRouter />
           </Route>
         </Switch>
       </ThemeProvider>
