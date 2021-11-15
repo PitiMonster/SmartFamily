@@ -3,10 +3,14 @@
 
 .container {
   display: grid;
-  grid-template-areas: "list chat";
-  grid-template-columns: 1fr 2fr;
+  grid-template-areas: "list";
   overflow-y: hidden;
   height: 90vh;
+
+  @include respond(tab-port) {
+    grid-template-areas: "list chat";
+    grid-template-columns: 1fr 2fr;
+  }
 
   .list {
     grid-area: list;
@@ -21,9 +25,17 @@
 
     &__title {
       margin: 0;
-      font-size: 4rem;
+      font-size: 2rem;
       font-family: "Mali";
       overflow-y: hidden;
+
+      @include respond(tab-large-mobile) {
+        font-size: 3rem;
+      }
+
+      @include respond(tab-land) {
+        font-size: 4rem;
+      }
     }
 
     &__chats {
@@ -47,29 +59,38 @@
   }
 
   .chat {
+    display: none;
     grid-area: chat;
     border-left: 1px solid $light-gray;
-    display: flex;
     flex-direction: column;
     justify-content: space-between;
     overflow-y: hidden;
 
+    @include respond(tab-port) {
+      display: flex;
+    }
+
     &__name {
       margin: 0;
-      font-size: 3rem;
+      font-size: 2rem;
       padding-left: 1rem;
       padding-bottom: 0.5rem;
       border-bottom: 1px solid $light-gray;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+      @include respond(tab-land) {
+        font-size: 2.5rem;
+      }
     }
 
     &__messages {
       flex-grow: 1;
       margin: 0;
       display: flex;
-      flex-direction: column;
+      flex-direction: column-reverse;
       row-gap: 0.5rem;
-      padding-right: 5rem;
+      padding-right: 2rem;
+      padding-top: 1rem;
       overflow-y: auto;
     }
 

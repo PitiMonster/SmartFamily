@@ -7,17 +7,20 @@ import Avatar from "@mui/material/Avatar";
 import IconButton from "@mui/material/IconButton";
 import SendIcon from "@mui/icons-material/Send";
 
+import { History } from "history";
+import { useHistory } from "react-router-dom";
+
 import classes from "./index.module.scss";
 
 import ContentLayout from "../../../layout/ContentLayout";
-import Message from "./components/Message";
-import { fontWeight } from "@mui/system";
+import Message from "../components/Message";
 
 interface RenderChatItemOptions {
   name: string;
   photo: string;
   unread: boolean;
-  onClick: () => void;
+  onClick: (id: string) => void;
+  id?: string;
 }
 
 interface MessageItemOptions {
@@ -27,6 +30,8 @@ interface MessageItemOptions {
 }
 
 const Chat: React.FC = () => {
+  const history = useHistory<History>();
+
   const [chatsData, setChatsData] = useState<RenderChatItemOptions[]>([]);
   const [messagesData, setMessagesData] = useState<MessageItemOptions[]>([]);
   const [input, setInput] = useState<string>("");
@@ -44,49 +49,49 @@ const Chat: React.FC = () => {
         photo:
           "https://res.cloudinary.com/dq7ionfvn/image/upload/v1634891263/SmartFamily/default_person.jpg",
         unread: true,
-        onClick: () => {},
+        onClick: onChatItemClick,
       },
       {
         name: "test name",
         photo:
           "https://res.cloudinary.com/dq7ionfvn/image/upload/v1634891263/SmartFamily/default_person.jpg",
         unread: true,
-        onClick: () => {},
+        onClick: onChatItemClick,
       },
       {
         name: "test name",
         photo:
           "https://res.cloudinary.com/dq7ionfvn/image/upload/v1634891263/SmartFamily/default_person.jpg",
         unread: true,
-        onClick: () => {},
+        onClick: onChatItemClick,
       },
       {
         name: "test name",
         photo:
           "https://res.cloudinary.com/dq7ionfvn/image/upload/v1634891263/SmartFamily/default_person.jpg",
         unread: false,
-        onClick: () => {},
+        onClick: onChatItemClick,
       },
       {
         name: "test name",
         photo:
           "https://res.cloudinary.com/dq7ionfvn/image/upload/v1634891263/SmartFamily/default_person.jpg",
         unread: false,
-        onClick: () => {},
+        onClick: onChatItemClick,
       },
       {
         name: "test name",
         photo:
           "https://res.cloudinary.com/dq7ionfvn/image/upload/v1634891263/SmartFamily/default_person.jpg",
         unread: false,
-        onClick: () => {},
+        onClick: onChatItemClick,
       },
       {
         name: "test name",
         photo:
           "https://res.cloudinary.com/dq7ionfvn/image/upload/v1634891263/SmartFamily/default_person.jpg",
         unread: true,
-        onClick: () => {},
+        onClick: onChatItemClick,
       },
     ];
     setChatsData(data);
@@ -205,14 +210,24 @@ const Chat: React.FC = () => {
     setInput((event.target as HTMLInputElement).value);
   };
 
+  const onChatItemClick = (id: string) => {
+    if (id) {
+      // fetch data from db / redux
+      if (window.innerWidth < 900) {
+        history.push(`/:${id}`);
+      }
+    }
+  };
+
   const renderItem = ({
     name,
     photo,
     unread,
     onClick,
+    id = "tempId",
   }: RenderChatItemOptions) => (
     <ListItem
-      onClick={onClick}
+      onClick={() => onClick(id)}
       sx={{ paddingLeft: 0 }}
       className={classes.chatLI}
       secondaryAction={unread && <div className={classes.circle} />}
@@ -245,8 +260,8 @@ const Chat: React.FC = () => {
           <p className={classes.chat__name}>Nazwa rodziny</p>
           <ul className={classes.chat__messages}>
             {[
-              messagesData.map((item) => <Message {...item} />),
               <div ref={messagesEndRef} />,
+              messagesData.map((item) => <Message {...item} />),
             ]}
           </ul>
           <div className={classes.inputContainer}>
