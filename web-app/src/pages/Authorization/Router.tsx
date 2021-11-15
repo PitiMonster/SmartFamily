@@ -7,6 +7,7 @@ import AdditionalDataPage from "./AdditionalData";
 import AddPhotoPage from "./AddPhoto";
 import ParentCode from "./ParentCode";
 import ChooseRolePage from "./ChooseRole";
+import ForgotPasswordPage from "./ForgotPassword";
 
 const Router: React.FC = () => {
   return (
@@ -17,6 +18,9 @@ const Router: React.FC = () => {
         </Route>
         <Route path={`/signin`} exact={true}>
           <LoginPage />
+        </Route>
+        <Route path="/forgot-password">
+          <ForgotPasswordPage />
         </Route>
         <Route path="/signup" exact={true}>
           <RegisterPage />

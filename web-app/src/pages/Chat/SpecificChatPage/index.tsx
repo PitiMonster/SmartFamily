@@ -154,7 +154,7 @@ const SpecificChatPage: React.FC<{}> = () => {
       },
     ];
 
-    setMessagesData(data);
+    setMessagesData(data.reverse());
   }, []);
 
   return (
