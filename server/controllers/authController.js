@@ -33,6 +33,30 @@ const createAndSendToken = (user, statusCode, req, res) => {
   });
 };
 
+exports.checkEmail = catchAsync(async (req, res, next) => {
+  const { email } = req.body;
+
+  const user = await User.findOne({ email: email });
+
+  if (user) {
+    return next(new AppError("Provided email is already in use", 400));
+  }
+
+  res.status(200).json({ status: "success" });
+});
+
+exports.checkUsername = catchAsync(async (req, res, next) => {
+  const { username } = req.body;
+
+  const user = await User.findOne({ username: username });
+
+  if (user) {
+    return next(new AppError("Provided username is already in use", 400));
+  }
+
+  res.status(200).json({ status: "success" });
+});
+
 exports.signUp = catchAsync(async (req, res, next) => {
   const {
     name,
@@ -84,7 +108,6 @@ exports.signIn = catchAsync(async (req, res, next) => {
   if (!user || !user.correctPassword(password, user.password)) {
     return next(new AppError("Incorrect email or password provided", 401));
   }
-  console.log(user);
   if (!user.active) {
     return next(
       new AppError(

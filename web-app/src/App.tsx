@@ -1,12 +1,15 @@
 import { useEffect } from "react";
 
+import { toast } from "react-toastify";
+
 import classes from "./App.module.scss";
 
 import { Switch, Route } from "react-router-dom";
 import { ThemeProvider } from "@mui/material/styles";
 import { mainTheme } from "./themes";
 
-import { useAppSelector } from "./hooks";
+import { useAppSelector, useAppDispatch } from "./hooks";
+import { setAppError } from "./store/utils/action";
 
 import { setUpCloudinary } from "./utils/cloudinary";
 import AuthRouter from "./pages/Authorization/Router";
@@ -21,11 +24,31 @@ import ChatRouter from "./pages/Chat/Router";
 import Backdrop from "./components/ux/Backdrop";
 
 const App = () => {
+  const dispatch = useAppDispatch();
   const isBackdrop = useAppSelector((store) => store.utils.isBackdrop);
+  const appError = useAppSelector((store) => store.utils.error);
 
   useEffect(() => {
     setUpCloudinary();
   }, []);
+
+  useEffect(() => {
+    if (appError) {
+      toast.error(appError, {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+        onClose: () => {
+          dispatch(setAppError(""));
+        },
+      });
+    }
+  }, [appError, dispatch]);
 
   return (
     <div className={classes.container}>

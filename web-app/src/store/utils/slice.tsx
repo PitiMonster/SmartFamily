@@ -2,10 +2,12 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface UtilsState {
   isBackdrop: boolean;
+  error: string;
 }
 
 const initialState: UtilsState = {
   isBackdrop: false,
+  error: "",
 };
 
 const utilsSlice = createSlice({
@@ -20,6 +22,10 @@ const utilsSlice = createSlice({
     ) {
       const { isBackdrop } = action.payload;
       state.isBackdrop = isBackdrop;
+    },
+    setAppError(state, action: PayloadAction<{ msg: string }>) {
+      const { msg } = action.payload;
+      state.error = msg;
     },
   },
 });
