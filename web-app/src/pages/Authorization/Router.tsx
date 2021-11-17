@@ -1,4 +1,4 @@
-import { Switch, Route, BrowserRouter } from "react-router-dom";
+import { Switch, Route } from "react-router-dom";
 
 import WelcomePage from "./Welcome";
 import LoginPage from "./Login";

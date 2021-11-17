@@ -4,16 +4,16 @@ interface AuthState {
   token: string | null;
   isUserLoggedIn: boolean;
   isSingupSuccess: boolean;
-  email?: string;
-  password?: string;
-  passwordConfirm?: string;
-  name?: string;
-  surname?: string;
-  username?: string;
-  birthDate?: Date;
-  sex?: "Male" | "Female";
-  photo?: string;
-  role?: "parent" | "child";
+  // email?: string;
+  // password?: string;
+  // passwordConfirm?: string;
+  // name?: string;
+  // surname?: string;
+  // username?: string;
+  // birthDate?: Date;
+  // sex?: "male" | "female";
+  // photo?: string;
+  // role?: "parent" | "child";
   status?: "fail" | "success" | null;
   message?: string;
 }
@@ -44,28 +44,42 @@ const authSlice = createSlice({
       action: PayloadAction<{
         status: "fail" | "success" | null;
         message: string;
-        email: string;
-        password: string;
-        passwordConfirm: string;
       }>
     ) {
-      const { status, message, email, password, passwordConfirm } =
-        action.payload;
+      const { status, message } = action.payload;
 
       state.status = status;
       state.message = message;
+    },
+    checkUsername(
+      state,
+      action: PayloadAction<{
+        status: "fail" | "success" | null;
+        message: string;
+      }>
+    ) {
+      const { status, message } = action.payload;
 
-      if (status === "success") {
-        state.email = email;
-        state.password = password;
-        state.passwordConfirm = passwordConfirm;
-      }
+      state.status = status;
+      state.message = message;
     },
     setStatus(
       state,
       action: PayloadAction<{ status: "success" | "fail" | null }>
     ) {
       state.status = action.payload.status;
+    },
+    sendParentCode(
+      state,
+      action: PayloadAction<{
+        status: "success" | "fail" | null;
+        message: string;
+      }>
+    ) {
+      const { status, message } = action.payload;
+
+      state.status = status;
+      state.message = message;
     },
     signup(
       state,

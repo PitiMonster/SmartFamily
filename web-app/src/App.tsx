@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 
 import classes from "./App.module.scss";
 
-import { Switch, Route } from "react-router-dom";
+import { Switch, Route, Redirect } from "react-router-dom";
 import { ThemeProvider } from "@mui/material/styles";
 import { mainTheme } from "./themes";
 
@@ -54,6 +54,9 @@ const App = () => {
     <div className={classes.container}>
       <ThemeProvider theme={mainTheme}>
         <Switch>
+          <Route path="/" exact={true}>
+            <Redirect to={{ pathname: "/auth" }} />
+          </Route>
           <Route path="/auth">
             <AuthRouter />
           </Route>

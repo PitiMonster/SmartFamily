@@ -44,14 +44,14 @@ const WelcomePage: React.FC = () => {
             isOutline={true}
             text="Sign In"
             onClick={() => {
-              history.push(`${location.pathname}signin`);
+              history.push(`${location.pathname}/signin`);
             }}
           />
           <MainButton
             isOutline={false}
             text="Sign Up"
             onClick={() => {
-              history.push(`${location.pathname}signup`);
+              history.push(`${location.pathname}/signup`);
             }}
           />
         </div>

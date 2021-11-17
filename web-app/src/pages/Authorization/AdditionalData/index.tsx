@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import FormControl from "@mui/material/FormControl";
 import TextField from "@mui/material/TextField";
@@ -11,29 +11,72 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 
 import { History } from "history";
 import { useHistory } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "../../../hooks";
 
 import AuthLayout from "../../../layout/AuthLayout";
 import classes from "./index.module.scss";
 import TextInput from "../../../components/inputs/TextInput";
 import MainButton from "../../../components/buttons/MainButton";
 import PersonIcon from "@mui/icons-material/Person";
+import { toastError } from "../../../utils/toasts";
+import { checkUsername, setStatus } from "../../../store/auth/actions";
 
 const AdditionalDataPage: React.FC = () => {
+  const dispatch = useAppDispatch();
+  const status = useAppSelector((state) => state.auth.status);
+
   const history = useHistory<History>();
 
-  const [name, setName] = useState<string>("");
-  const [surname, setSurname] = useState<string>("");
-  const [username, setUsername] = useState<string>("");
-  const [date, setDate] = useState<Date | null>(new Date(Date.now()));
-  const [gender, setGender] = useState<string>("");
+  const [name, setName] = useState<string>(localStorage.getItem("name") ?? "");
+  const [surname, setSurname] = useState<string>(
+    localStorage.getItem("surname") ?? ""
+  );
+  const [username, setUsername] = useState<string>(
+    localStorage.getItem("username") ?? ""
+  );
+  const [date, setDate] = useState<Date | null>(
+    new Date(localStorage.getItem("date") as string) ?? new Date(Date.now())
+  );
+  const [gender, setGender] = useState<"male" | "female">(
+    (localStorage.getItem("gender") as "male" | "female") ?? "female"
+  );
+
+  const [isUsernameError, setIsUsernameError] = useState<boolean>(false);
 
   const handleDateChange = (newValue: Date | null) => {
     setDate(newValue);
   };
 
   const handleGenderChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setGender((event.target as HTMLInputElement).value);
+    setGender((event.target as HTMLInputElement).value as "male" | "female");
   };
+
+  const handleSave = () => {
+    setIsUsernameError(false);
+
+    if (!name || !surname || !username || !date || !gender) {
+      toastError("All fields are required");
+      return;
+    }
+
+    localStorage.setItem("name", name);
+    localStorage.setItem("surname", username);
+    localStorage.setItem("date", date.toISOString());
+    localStorage.setItem("gender", gender);
+    localStorage.setItem("username", username);
+
+    dispatch(checkUsername(username));
+  };
+
+  useEffect(() => {
+    if (status === "fail") {
+      setIsUsernameError(true);
+    }
+    if (status === "success") {
+      dispatch(setStatus(null));
+      history.push(`/auth/signup/choose-photo`);
+    }
+  }, [status, history, dispatch]);
 
   return (
     <AuthLayout>
@@ -48,7 +91,7 @@ const AdditionalDataPage: React.FC = () => {
             <TextInput
               text={name}
               setText={setName}
-              label="Imię"
+              label="Name"
               icon={<PersonIcon />}
             />
           </FormControl>
@@ -60,7 +103,7 @@ const AdditionalDataPage: React.FC = () => {
             <TextInput
               text={surname}
               setText={setSurname}
-              label="Nazwisko"
+              label="Surname"
               icon={<PersonIcon />}
             />
           </FormControl>
@@ -68,17 +111,18 @@ const AdditionalDataPage: React.FC = () => {
             className={classes.input}
             variant="standard"
             color="primary"
+            error={isUsernameError}
           >
             <TextInput
               text={username}
               setText={setUsername}
-              label="Pseudonim"
+              label="Username"
               icon={<PersonIcon />}
             />
           </FormControl>
           <LocalizationProvider dateAdapter={DateAdapter}>
             <MobileDatePicker
-              label="Wybierz datę urodzenia"
+              label="Select your date of birth"
               inputFormat="MM/dd/yyyy"
               value={date}
               onChange={handleDateChange}
@@ -101,24 +145,14 @@ const AdditionalDataPage: React.FC = () => {
             onChange={handleGenderChange}
           >
             <FormControlLabel
-              value="Kobieta"
+              value="female"
               control={<Radio />}
-              label="Kobieta"
+              label="Female"
             />
-            <FormControlLabel
-              value="Mężczyzna"
-              control={<Radio />}
-              label="Mężczyzna"
-            />
+            <FormControlLabel value="male" control={<Radio />} label="Male" />
           </RadioGroup>
         </FormControl>
-        <MainButton
-          isOutline={false}
-          text="Zatwierdź"
-          onClick={() => {
-            history.push(`/signup/choose-photo`);
-          }}
-        />
+        <MainButton isOutline={false} text="Save" onClick={handleSave} />
       </form>
     </AuthLayout>
   );
