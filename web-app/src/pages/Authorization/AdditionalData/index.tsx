@@ -35,7 +35,7 @@ const AdditionalDataPage: React.FC = () => {
     localStorage.getItem("username") ?? ""
   );
   const [date, setDate] = useState<Date | null>(
-    new Date(localStorage.getItem("date") as string) ?? new Date(Date.now())
+    new Date((localStorage.getItem("birthDate") as string) ?? Date.now())
   );
   const [gender, setGender] = useState<"male" | "female">(
     (localStorage.getItem("gender") as "male" | "female") ?? "female"
@@ -61,7 +61,7 @@ const AdditionalDataPage: React.FC = () => {
 
     localStorage.setItem("name", name);
     localStorage.setItem("surname", username);
-    localStorage.setItem("date", date.toISOString());
+    localStorage.setItem("birthDate", date.toISOString());
     localStorage.setItem("gender", gender);
     localStorage.setItem("username", username);
 

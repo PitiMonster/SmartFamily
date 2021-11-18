@@ -1,19 +1,10 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { stat } from "fs";
 
 interface AuthState {
   token: string | null;
   isUserLoggedIn: boolean;
   isSingupSuccess: boolean;
-  // email?: string;
-  // password?: string;
-  // passwordConfirm?: string;
-  // name?: string;
-  // surname?: string;
-  // username?: string;
-  // birthDate?: Date;
-  // sex?: "male" | "female";
-  // photo?: string;
-  // role?: "parent" | "child";
   status?: "fail" | "success" | null;
   message?: string;
 }
@@ -77,18 +68,30 @@ const authSlice = createSlice({
       }>
     ) {
       const { status, message } = action.payload;
-      console.log(status);
+      state.status = status;
+      state.message = message;
+    },
+    verifyPraentCode(
+      state,
+      action: PayloadAction<{
+        status: "success" | "fail" | null;
+        message: string;
+      }>
+    ) {
+      const { status, message } = action.payload;
       state.status = status;
       state.message = message;
     },
     signup(
       state,
       action: PayloadAction<{
-        isSingupSuccess: boolean;
+        status: "success" | "fail" | null;
+        message: string;
       }>
     ) {
-      const { isSingupSuccess } = action.payload;
-      state.isSingupSuccess = isSingupSuccess;
+      const { status, message } = action.payload;
+      state.status = status;
+      state.message = message;
     },
     logout(state, action) {
       state.token = null;

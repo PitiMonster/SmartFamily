@@ -78,8 +78,27 @@ export const sendParentCode =
         childFullName,
       });
       const { status, message } = response.data;
-      console.log(status);
       dispatch(authActions.sendParentCode({ status, message }));
+    } catch (err: any) {
+      dispatch(utilsActions.setAppError({ msg: err.response.data.message }));
+    }
+  };
+
+export const verifyParentCode =
+  (
+    childCode: string,
+    parentEmail: string,
+    childId: string = "6169510415ce3402f07ed1ff"
+  ) =>
+  async (dispatch: AppDispatch) => {
+    try {
+      const response = await api.post("users/signup/verifyChildCode", {
+        childCode,
+        childId,
+        parentEmail,
+      });
+      const { status, message } = response.data;
+      dispatch(authActions.verifyPraentCode({ status, message }));
     } catch (err: any) {
       dispatch(utilsActions.setAppError({ msg: err.response.data.message }));
     }
@@ -88,27 +107,40 @@ export const sendParentCode =
 export const signup = (
   name: string,
   surname: string,
+  username: string,
   email: string,
+  role: "parent" | "child",
+  birthDate: string,
+  sex: "male" | "female",
+  profilePhoto: string,
   password: string,
-  passwordConfirm: string,
-  username: string
+  passwordConfirm: string
 ) => {
   return async (dispatch: AppDispatch) => {
     try {
       const response = await api.post("/users/signup", {
         name,
         surname,
+        username,
         email,
+        role,
+        birthDate,
+        sex,
+        profilePhoto,
         password,
         passwordConfirm,
-        username,
       });
-      if (response.data.status === "success")
-        dispatch(
-          authActions.signup({
-            isSingupSuccess: true,
-          })
-        );
+      console.log(response);
+      const { status, message } = response.data;
+      if (role === "child") {
+        localStorage.setItem("childId", response.data.data.id);
+      }
+      dispatch(
+        authActions.signup({
+          status,
+          message,
+        })
+      );
     } catch (err: any) {
       console.error("SIGNUP ERROR", err);
       dispatch(utilsActions.setAppError({ msg: err.response.data.message }));
