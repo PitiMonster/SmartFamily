@@ -13,7 +13,7 @@ import CreateIcon from "@mui/icons-material/Create";
 
 import { useAppDispatch, useAppSelector } from "../../../hooks";
 import { toastError, toastSuccess } from "../../../utils/toasts";
-import { sendParentCode } from "../../../store/auth/actions";
+import { sendParentCode, setStatus } from "../../../store/auth/actions";
 
 const ParentCode: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -27,6 +27,7 @@ const ParentCode: React.FC = () => {
   const [isParentIdCorrect, setIsParentIdCorrect] = useState<boolean>(false);
 
   useEffect(() => {
+    console.log(status);
     if (status === "fail") {
       if (!isParentIdCorrect) {
         toastError("Provided parent's username is not correct");
@@ -37,12 +38,13 @@ const ParentCode: React.FC = () => {
       if (!isParentIdCorrect) {
         toastSuccess("Code send to parent email address successfully");
         setIsParentIdCorrect(true);
+        dispatch(setStatus(null));
       } else {
         toastSuccess("You have signed up successfully");
         // signup
       }
     }
-  }, [status]);
+  }, [status, dispatch]);
 
   const handleSendCode = () => {
     setIsEmailError(false);

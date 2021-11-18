@@ -77,7 +77,7 @@ const authSlice = createSlice({
       }>
     ) {
       const { status, message } = action.payload;
-
+      console.log(status);
       state.status = status;
       state.message = message;
     },

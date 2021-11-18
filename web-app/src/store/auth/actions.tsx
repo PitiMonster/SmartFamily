@@ -17,9 +17,9 @@ export const signin = (email: string, password: string) => {
           isUserLoggedIn: true,
         })
       );
-    } catch (err) {
+    } catch (err: any) {
       console.error("SIGNIN ERROR: ", err);
-      dispatch(utilsActions.setAppError({ msg: "Sign in error" }));
+      dispatch(utilsActions.setAppError({ msg: err.response.data.message }));
     }
   };
 };
@@ -37,9 +37,9 @@ export const checkEmail = (email: string) => async (dispatch: AppDispatch) => {
         message: message,
       })
     );
-  } catch (err) {
+  } catch (err: any) {
     console.error("Check email", err);
-    dispatch(utilsActions.setAppError({ msg: "This email is already in use" }));
+    dispatch(utilsActions.setAppError({ msg: err.response.data.message }));
   }
 };
 
@@ -59,11 +59,9 @@ export const checkUsername =
           message: message,
         })
       );
-    } catch (err) {
+    } catch (err: any) {
       console.error("Check username", err);
-      dispatch(
-        utilsActions.setAppError({ msg: "This username is already in use" })
-      );
+      dispatch(utilsActions.setAppError({ msg: err.response.data.message }));
     }
   };
 
@@ -80,12 +78,10 @@ export const sendParentCode =
         childFullName,
       });
       const { status, message } = response.data;
-      if (status !== "success") {
-        dispatch(utilsActions.setAppError({ msg: message }));
-      }
-    } catch (err) {
-      console.error("Send parent code", err);
-      dispatch(utilsActions.setAppError({ msg: "Wrong parent's username" }));
+      console.log(status);
+      dispatch(authActions.sendParentCode({ status, message }));
+    } catch (err: any) {
+      dispatch(utilsActions.setAppError({ msg: err.response.data.message }));
     }
   };
 
@@ -113,9 +109,9 @@ export const signup = (
             isSingupSuccess: true,
           })
         );
-    } catch (err) {
+    } catch (err: any) {
       console.error("SIGNUP ERROR", err);
-      dispatch(utilsActions.setAppError({ msg: "Sign up error" }));
+      dispatch(utilsActions.setAppError({ msg: err.response.data.message }));
     }
   };
 };
