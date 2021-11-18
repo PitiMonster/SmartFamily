@@ -8,6 +8,7 @@ import AddPhotoPage from "./AddPhoto";
 import ParentCode from "./ParentCode";
 import ChooseRolePage from "./ChooseRole";
 import ForgotPasswordPage from "./ForgotPassword";
+import ResetPasswordPage from "./ResetPassword";
 
 const Router: React.FC = () => {
   return (
@@ -20,6 +21,9 @@ const Router: React.FC = () => {
       </Route>
       <Route path="/auth/forgot-password">
         <ForgotPasswordPage />
+      </Route>
+      <Route path="/auth/reset-password/:id">
+        <ResetPasswordPage />
       </Route>
       <Route path="/auth/signup" exact={true}>
         <RegisterPage />

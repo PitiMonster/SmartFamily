@@ -71,7 +71,7 @@ const authSlice = createSlice({
       state.status = status;
       state.message = message;
     },
-    verifyPraentCode(
+    verifyParentCode(
       state,
       action: PayloadAction<{
         status: "success" | "fail" | null;
@@ -93,6 +93,29 @@ const authSlice = createSlice({
       state.status = status;
       state.message = message;
     },
+    forgotPassword(
+      state,
+      action: PayloadAction<{
+        status: "success" | "fail" | null;
+        message: string;
+      }>
+    ) {
+      const { status, message } = action.payload;
+      state.status = status;
+      state.message = message;
+    },
+    resetPassword(
+      state,
+      action: PayloadAction<{
+        status: "success" | "fail" | null;
+        message: string;
+      }>
+    ) {
+      const { status, message } = action.payload;
+      state.status = status;
+      state.message = message;
+    },
+
     logout(state, action) {
       state.token = null;
       state.isUserLoggedIn = false;

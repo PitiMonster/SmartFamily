@@ -184,9 +184,7 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
 
   // 3) Send it to user's email
   try {
-    const resetURL = `${req.protocol}://${req.get(
-      "host"
-    )}/api/v1/users/resetPassword/${resetToken}`;
+    const resetURL = `${req.protocol}://127.0.0.1:3000/auth/reset-password/${resetToken}`;
 
     await new Email(user, resetURL).sendPasswordReset();
 
@@ -210,6 +208,9 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
 
 exports.resetPassword = catchAsync(async (req, res, next) => {
   // 1) Get user based on the token
+  console.log(req.params.id);
+  console.log(req.body.password);
+  console.log(req.body.passwordConfirm);
   const hashedToken = crypto
     .createHash("sha256")
     .update(req.params.token)
@@ -230,9 +231,10 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
   user.passwordResetExpires = undefined;
   await user.save();
 
-  // 3) Update changedPasswordAt property for the user
-  // 4) Log the user in, send JWT
-  createAndSendToken(user, 200, req, res);
+  return res.status(200).json({
+    status: "success",
+    message: "Password reset successfully!",
+  });
 });
 
 exports.updatePassword = catchAsync(async (req, res, next) => {
@@ -284,7 +286,7 @@ exports.verifyChildCodeToParent = catchAsync(async (req, res, next) => {
 
   const parent = await User.findOne({ email: parentEmail, role: "parent" });
   const child = await User.findOne({ _id: childId, active: false });
-
+  console.log(childId);
   if (!parent) {
     return next(
       new AppError("No parent found with provided email address", 404)

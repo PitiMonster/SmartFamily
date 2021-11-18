@@ -98,7 +98,7 @@ export const verifyParentCode =
         parentEmail,
       });
       const { status, message } = response.data;
-      dispatch(authActions.verifyPraentCode({ status, message }));
+      dispatch(authActions.verifyParentCode({ status, message }));
     } catch (err: any) {
       dispatch(utilsActions.setAppError({ msg: err.response.data.message }));
     }
@@ -147,3 +147,30 @@ export const signup = (
     }
   };
 };
+
+export const forgotPassword =
+  (email: string) => async (dispatch: AppDispatch) => {
+    try {
+      const response = await api.post("users/forgotPassword", {
+        email,
+      });
+      const { status, message } = response.data;
+      dispatch(authActions.forgotPassword({ status, message }));
+    } catch (err: any) {
+      dispatch(utilsActions.setAppError({ msg: err.response.data.message }));
+    }
+  };
+export const resetPassword =
+  (password: string, passwordConfirm: string, id: string) =>
+  async (dispatch: AppDispatch) => {
+    try {
+      const response = await api.patch(`users/resetPassword/${id}`, {
+        password,
+        passwordConfirm,
+      });
+      const { status, message } = response.data;
+      dispatch(authActions.resetPassword({ status, message }));
+    } catch (err: any) {
+      dispatch(utilsActions.setAppError({ msg: err.response.data.message }));
+    }
+  };

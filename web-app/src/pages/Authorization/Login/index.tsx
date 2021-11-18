@@ -65,7 +65,7 @@ const LoginPage: React.FC = () => {
                 label="Hasło"
               />
             </FormControl>
-            <Link to="/forgot-password" className={classes.forgotPassword}>
+            <Link to="/auth/forgot-password" className={classes.forgotPassword}>
               Zapomniałem hasła
             </Link>
           </div>
