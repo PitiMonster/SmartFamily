@@ -54,7 +54,9 @@ const GroupsListPage: React.FC = () => {
       },
     ];
 
-    const newBlockGroups = groups.map((group) => <GroupBlock {...group} />);
+    const newBlockGroups = groups.map((group, index) => (
+      <GroupBlock key={index} {...group} />
+    ));
 
     setGroupBlocks(newBlockGroups);
   }, []);

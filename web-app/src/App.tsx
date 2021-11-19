@@ -1,6 +1,4 @@
-import { useEffect } from "react";
-
-import { toast } from "react-toastify";
+import { useEffect, useState } from "react";
 
 import classes from "./App.module.scss";
 
@@ -22,11 +20,16 @@ import TasksRouter from "./pages/Children/Router";
 import ChatRouter from "./pages/Chat/Router";
 
 import Backdrop from "./components/ux/Backdrop";
+import { toastError } from "./utils/toasts";
 
 const App = () => {
   const dispatch = useAppDispatch();
   const isBackdrop = useAppSelector((store) => store.utils.isBackdrop);
   const appError = useAppSelector((store) => store.utils.error);
+
+  const [isUserLoggedIn, setIsUserLoggedIn] = useState<boolean>(
+    !!localStorage.getItem("token")
+  );
 
   useEffect(() => {
     setUpCloudinary();
@@ -34,18 +37,8 @@ const App = () => {
 
   useEffect(() => {
     if (appError) {
-      toast.error(appError, {
-        position: "top-center",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-        onClose: () => {
-          dispatch(setAppError(""));
-        },
+      toastError(appError, () => {
+        dispatch(setAppError(""));
       });
     }
   }, [appError, dispatch]);
@@ -55,32 +48,40 @@ const App = () => {
       <ThemeProvider theme={mainTheme}>
         <Switch>
           <Route path="/" exact={true}>
-            <Redirect to={{ pathname: "/auth" }} />
+            {isUserLoggedIn ? (
+              <Redirect to={{ pathname: "/groups" }} />
+            ) : (
+              <Redirect to={{ pathname: "/auth" }} />
+            )}
           </Route>
           <Route path="/auth">
-            <AuthRouter />
+            {!isUserLoggedIn ? <AuthRouter /> : <Redirect to="/groups" />}
           </Route>
-          <Route path="/groups">
-            <GroupsRouter />
-          </Route>
-          <Route path="/calendar">
-            <CalendarRouter />
-          </Route>
-          <Route path="/budgets">
-            <BudgetsRouter />
-          </Route>
-          <Route path="/shopping">
-            <ShoppingListRouter />
-          </Route>
-          <Route path="/children">
-            <ChildrenRouter />
-          </Route>
-          <Route path="/children/:id/tasks">
-            <TasksRouter />
-          </Route>
-          <Route path="/chats">
-            <ChatRouter />
-          </Route>
+          {isUserLoggedIn && (
+            <>
+              <Route path="/groups">
+                <GroupsRouter />
+              </Route>
+              <Route path="/calendar">
+                <CalendarRouter />
+              </Route>
+              <Route path="/budgets">
+                <BudgetsRouter />
+              </Route>
+              <Route path="/shopping">
+                <ShoppingListRouter />
+              </Route>
+              <Route path="/children">
+                <ChildrenRouter />
+              </Route>
+              <Route path="/children/:id/tasks">
+                <TasksRouter />
+              </Route>
+              <Route path="/chats">
+                <ChatRouter />
+              </Route>
+            </>
+          )}
         </Switch>
       </ThemeProvider>
       {isBackdrop && <Backdrop />}

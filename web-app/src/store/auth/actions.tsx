@@ -9,8 +9,10 @@ export const signin = (email: string, password: string) => {
       console.log(email, password);
       const response = await api.post("/users/signin", { email, password });
       console.log(response);
+      localStorage.clear();
       localStorage.setItem("token", response.data.token);
       localStorage.setItem("userId", response.data.data.user._id);
+      localStorage.setItem("role", response.data.data.user.role);
       dispatch(
         authActions.login({
           token: response.data.token,
