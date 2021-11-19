@@ -5,3 +5,7 @@ export const updateBackdrop =
   (isBackdrop: boolean) => async (dispatch: AppDispatch) => {
     dispatch(utilsActions.updateBackdrop({ isBackdrop }));
   };
+
+export const setAppError = (msg: string) => async (dispatch: AppDispatch) => {
+  dispatch(utilsActions.setAppError({ msg }));
+};

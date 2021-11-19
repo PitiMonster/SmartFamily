@@ -1,4 +1,4 @@
-import { Switch, Route, BrowserRouter } from "react-router-dom";
+import { Switch, Route } from "react-router-dom";
 
 import WelcomePage from "./Welcome";
 import LoginPage from "./Login";
@@ -8,37 +8,39 @@ import AddPhotoPage from "./AddPhoto";
 import ParentCode from "./ParentCode";
 import ChooseRolePage from "./ChooseRole";
 import ForgotPasswordPage from "./ForgotPassword";
+import ResetPasswordPage from "./ResetPassword";
 
 const Router: React.FC = () => {
   return (
-    <BrowserRouter basename="/auth">
-      <Switch>
-        <Route path="/" exact={true}>
-          <WelcomePage />
-        </Route>
-        <Route path={`/signin`} exact={true}>
-          <LoginPage />
-        </Route>
-        <Route path="/forgot-password">
-          <ForgotPasswordPage />
-        </Route>
-        <Route path="/signup" exact={true}>
-          <RegisterPage />
-        </Route>
-        <Route path="/signup/fill-data">
-          <AdditionalDataPage />
-        </Route>
-        <Route path="/signup/choose-photo">
-          <AddPhotoPage />
-        </Route>
-        <Route path="/signup/choose-role">
-          <ChooseRolePage />
-        </Route>
-        <Route path="/signup/parent-code">
-          <ParentCode />
-        </Route>
-      </Switch>
-    </BrowserRouter>
+    <Switch>
+      <Route path="/auth" exact={true}>
+        <WelcomePage />
+      </Route>
+      <Route path={`/auth/signin`} exact={true}>
+        <LoginPage />
+      </Route>
+      <Route path="/auth/forgot-password">
+        <ForgotPasswordPage />
+      </Route>
+      <Route path="/auth/reset-password/:id">
+        <ResetPasswordPage />
+      </Route>
+      <Route path="/auth/signup" exact={true}>
+        <RegisterPage />
+      </Route>
+      <Route path="/auth/signup/fill-data">
+        <AdditionalDataPage />
+      </Route>
+      <Route path="/auth/signup/choose-photo">
+        <AddPhotoPage />
+      </Route>
+      <Route path="/auth/signup/choose-role">
+        <ChooseRolePage />
+      </Route>
+      <Route path="/auth/signup/parent-code">
+        <ParentCode />
+      </Route>
+    </Switch>
   );
 };
 

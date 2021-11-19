@@ -7,8 +7,11 @@ const router = express.Router();
 router.post("/signup", authController.signUp);
 router.post("/signin", authController.signIn);
 
-router.post("/childCode", authController.sendAcceptChildCodeToParent);
-router.post("/verifyChildCode", authController.verifyChildCodeToParent);
+router.post("/signup/checkEmail", authController.checkEmail);
+router.post("/signup/checkUsername", authController.checkUsername);
+
+router.post("/signup/childCode", authController.sendAcceptChildCodeToParent);
+router.post("/signup/verifyChildCode", authController.verifyChildCodeToParent);
 
 router.post("/forgotPassword", authController.forgotPassword);
 router.patch("/resetPassword/:token", authController.resetPassword);

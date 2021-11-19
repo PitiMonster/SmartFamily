@@ -3,6 +3,9 @@ import ReactDOM from "react-dom";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 import { BrowserRouter as Router } from "react-router-dom";
 import { Provider } from "react-redux";
 
@@ -12,6 +15,7 @@ ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
       <Router>
+        <ToastContainer />
         <App />
       </Router>
     </Provider>

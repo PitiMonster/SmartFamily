@@ -19,11 +19,12 @@ const AddPhotoPage: React.FC = () => {
 
   const [cloudinaryWidget, setCloudinaryWidget] = useState<any>(null);
   const [profilePhotoId, setProfilePhotoId] = useState<string>(
-    "SmartFamily/default_person"
+    localStorage.getItem("photoId") ?? "SmartFamily/default_person"
   );
   const [userProfilePhoto, setUserProfilePhoto] = useState<any>();
   const [photoUrl, setPhotoUrl] = useState<string>(
-    "https://res.cloudinary.com/dq7ionfvn/image/upload/v1634891263/SmartFamily/default_person.jpg"
+    localStorage.getItem("photoUrl") ??
+      "https://res.cloudinary.com/dq7ionfvn/image/upload/v1634891263/SmartFamily/default_person.jpg"
   );
 
   useEffect(() => {
@@ -32,7 +33,6 @@ const AddPhotoPage: React.FC = () => {
       setPhotoUrl(url);
     };
     setCloudinaryWidget(cloudinaryUploadWidget(action));
-    setProfilePhotoId("SmartFamily/default_person");
   }, []);
 
   useEffect(() => {
@@ -45,7 +45,9 @@ const AddPhotoPage: React.FC = () => {
       ) // Crop the image, focusing on the face.
       .roundCorners(max());
     setUserProfilePhoto(profilePhoto);
-  }, [profilePhotoId, cld]);
+    localStorage.setItem("photoUrl", photoUrl);
+    localStorage.setItem("photoId", profilePhotoId);
+  }, [profilePhotoId, cld, photoUrl]);
 
   return (
     <AuthLayout>
@@ -86,7 +88,7 @@ const AddPhotoPage: React.FC = () => {
             isOutline={false}
             text="Zatwierdź"
             onClick={() => {
-              history.push("/signup/choose-role");
+              history.push("/auth/signup/choose-role");
             }}
           />
         </div>
