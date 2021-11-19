@@ -2,11 +2,13 @@ import { configureStore } from "@reduxjs/toolkit";
 
 import utilsSlice from "./utils/slice";
 import authSlice from "./auth/slice";
+import groupsSlice from "./groups/slice";
 
 const store = configureStore({
   reducer: {
     utils: utilsSlice.reducer,
     auth: authSlice.reducer,
+    groups: groupsSlice.reducer,
   },
 });
 

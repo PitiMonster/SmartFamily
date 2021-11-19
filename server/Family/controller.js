@@ -7,7 +7,7 @@ const crudHandlers = require("../controllers/handlers");
 exports.getFamilies = catchAsync(async (req, res, next) => {
   const user = await User.findById(req.user.id).populate({
     path: "families",
-    select: "name photos",
+    select: "name photo",
   });
   return res.status(200).json({
     status: "success",

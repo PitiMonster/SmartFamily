@@ -2,6 +2,7 @@ import api from "../../api/api";
 import { AppDispatch } from "..";
 import { authActions } from "./slice";
 import { utilsActions } from "../utils/slice";
+import { groupsActions } from "../groups/slice";
 
 export const signin = (email: string, password: string) => {
   return async (dispatch: AppDispatch) => {
@@ -10,9 +11,13 @@ export const signin = (email: string, password: string) => {
       const response = await api.post("/users/signin", { email, password });
       console.log(response);
       localStorage.clear();
+
+      const { _id, role, families } = response.data.data.user;
+
       localStorage.setItem("token", response.data.token);
-      localStorage.setItem("userId", response.data.data.user._id);
-      localStorage.setItem("role", response.data.data.user.role);
+      localStorage.setItem("userId", _id);
+      localStorage.setItem("role", role);
+      dispatch(groupsActions.setFamilies({ families }));
       dispatch(
         authActions.login({
           token: response.data.token,
