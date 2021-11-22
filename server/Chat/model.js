@@ -7,6 +7,13 @@ const chatSchema = new mongoose.Schema({
       ref: "User",
     },
   ],
+  readByMembers: [
+    {
+      type: mongoose.Schema.ObjectId,
+      ref: "User",
+      default: [],
+    },
+  ],
   name: {
     type: String,
   },
@@ -17,6 +24,11 @@ const chatSchema = new mongoose.Schema({
       default: [],
     },
   ],
+  lastMessageDate: {
+    type: Date,
+    default: new Date(Date.now()),
+  },
+  photo: String,
 });
 
 const Chat = mongoose.model("Chat", chatSchema);

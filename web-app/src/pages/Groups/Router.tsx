@@ -6,19 +6,17 @@ import SpecificGroupPage from "./SpecificGroup";
 
 const Router: React.FC = () => {
   return (
-    <BrowserRouter basename="/groups">
-      <Switch>
-        <Route path="/" exact={true}>
-          <GroupsListPage />
-        </Route>
-        <Route path={`/create-new`} exact={true}>
-          <CreateGroupPage />
-        </Route>
-        <Route path="/:groupId" exact={true}>
-          <SpecificGroupPage />
-        </Route>
-      </Switch>
-    </BrowserRouter>
+    <Switch>
+      <Route path="/groups" exact={true}>
+        <GroupsListPage />
+      </Route>
+      <Route path={`/groups/create-new`} exact={true}>
+        <CreateGroupPage />
+      </Route>
+      <Route path="/groups/:groupId" exact={true}>
+        <SpecificGroupPage />
+      </Route>
+    </Switch>
   );
 };
 

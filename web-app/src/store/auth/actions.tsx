@@ -10,10 +10,10 @@ export const signin = (email: string, password: string) => {
       console.log(email, password);
       const response = await api.post("/users/signin", { email, password });
       console.log(response);
-      localStorage.clear();
 
       const { _id, role, families } = response.data.data.user;
-
+      const userChats = response.data.data.userChats;
+      localStorage.clear();
       localStorage.setItem("token", response.data.token);
       localStorage.setItem("userId", _id);
       localStorage.setItem("role", role);
@@ -132,8 +132,8 @@ export const signup = (
         password,
         passwordConfirm,
       });
-      console.log(response);
       const { status } = response.data;
+      localStorage.clear();
       if (role === "child") {
         localStorage.setItem("childId", response.data.data.id);
       }

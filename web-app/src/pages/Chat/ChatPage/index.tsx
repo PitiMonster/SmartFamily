@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import moment from "moment";
 
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
@@ -6,6 +7,8 @@ import ListItemAvatar from "@mui/material/ListItemAvatar";
 import Avatar from "@mui/material/Avatar";
 import IconButton from "@mui/material/IconButton";
 import SendIcon from "@mui/icons-material/Send";
+
+import { useAppSelector, useAppDispatch } from "../../../hooks";
 
 import { History } from "history";
 import { useHistory } from "react-router-dom";
@@ -15,12 +18,11 @@ import classes from "./index.module.scss";
 import ContentLayout from "../../../layout/ContentLayout";
 import Message from "../components/Message";
 
-interface RenderChatItemOptions {
-  name: string;
-  photo: string;
-  unread: boolean;
+import { Chat as ChatType } from "../../../types";
+import { getChats } from "../../../store/chat/actions";
+
+interface RenderChatItemOptions extends ChatType {
   onClick: (id: string) => void;
-  id?: string;
 }
 
 interface MessageItemOptions {
@@ -30,72 +32,77 @@ interface MessageItemOptions {
 }
 
 const Chat: React.FC = () => {
+  const dispatch = useAppDispatch();
+  const chats = useAppSelector((state) => state.chats.chats);
+
   const history = useHistory<History>();
 
-  const [chatsData, setChatsData] = useState<RenderChatItemOptions[]>([]);
+  const [chatsData, setChatsData] = useState<ChatType[]>([]);
   const [messagesData, setMessagesData] = useState<MessageItemOptions[]>([]);
   const [input, setInput] = useState<string>("");
 
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
+    dispatch(getChats());
     messagesEndRef?.current?.scrollIntoView();
-  });
+  }, [dispatch]);
 
   useEffect(() => {
-    const data = [
-      {
-        name: "test name",
-        photo:
-          "https://res.cloudinary.com/dq7ionfvn/image/upload/v1634891263/SmartFamily/default_person.jpg",
-        unread: true,
-        onClick: onChatItemClick,
-      },
-      {
-        name: "test name",
-        photo:
-          "https://res.cloudinary.com/dq7ionfvn/image/upload/v1634891263/SmartFamily/default_person.jpg",
-        unread: true,
-        onClick: onChatItemClick,
-      },
-      {
-        name: "test name",
-        photo:
-          "https://res.cloudinary.com/dq7ionfvn/image/upload/v1634891263/SmartFamily/default_person.jpg",
-        unread: true,
-        onClick: onChatItemClick,
-      },
-      {
-        name: "test name",
-        photo:
-          "https://res.cloudinary.com/dq7ionfvn/image/upload/v1634891263/SmartFamily/default_person.jpg",
-        unread: false,
-        onClick: onChatItemClick,
-      },
-      {
-        name: "test name",
-        photo:
-          "https://res.cloudinary.com/dq7ionfvn/image/upload/v1634891263/SmartFamily/default_person.jpg",
-        unread: false,
-        onClick: onChatItemClick,
-      },
-      {
-        name: "test name",
-        photo:
-          "https://res.cloudinary.com/dq7ionfvn/image/upload/v1634891263/SmartFamily/default_person.jpg",
-        unread: false,
-        onClick: onChatItemClick,
-      },
-      {
-        name: "test name",
-        photo:
-          "https://res.cloudinary.com/dq7ionfvn/image/upload/v1634891263/SmartFamily/default_person.jpg",
-        unread: true,
-        onClick: onChatItemClick,
-      },
-    ];
-    setChatsData(data);
-  }, []);
+    // const data = [
+    //   {
+    //     name: "test name",
+    //     photo:
+    //       "https://res.cloudinary.com/dq7ionfvn/image/upload/v1634891263/SmartFamily/default_person.jpg",
+    //     unread: true,
+    //     onClick: onChatItemClick,
+    //   },
+    //   {
+    //     name: "test name",
+    //     photo:
+    //       "https://res.cloudinary.com/dq7ionfvn/image/upload/v1634891263/SmartFamily/default_person.jpg",
+    //     unread: true,
+    //     onClick: onChatItemClick,
+    //   },
+    //   {
+    //     name: "test name",
+    //     photo:
+    //       "https://res.cloudinary.com/dq7ionfvn/image/upload/v1634891263/SmartFamily/default_person.jpg",
+    //     unread: true,
+    //     onClick: onChatItemClick,
+    //   },
+    //   {
+    //     name: "test name",
+    //     photo:
+    //       "https://res.cloudinary.com/dq7ionfvn/image/upload/v1634891263/SmartFamily/default_person.jpg",
+    //     unread: false,
+    //     onClick: onChatItemClick,
+    //   },
+    //   {
+    //     name: "test name",
+    //     photo:
+    //       "https://res.cloudinary.com/dq7ionfvn/image/upload/v1634891263/SmartFamily/default_person.jpg",
+    //     unread: false,
+    //     onClick: onChatItemClick,
+    //   },
+    //   {
+    //     name: "test name",
+    //     photo:
+    //       "https://res.cloudinary.com/dq7ionfvn/image/upload/v1634891263/SmartFamily/default_person.jpg",
+    //     unread: false,
+    //     onClick: onChatItemClick,
+    //   },
+    //   {
+    //     name: "test name",
+    //     photo:
+    //       "https://res.cloudinary.com/dq7ionfvn/image/upload/v1634891263/SmartFamily/default_person.jpg",
+    //     unread: true,
+    //     onClick: onChatItemClick,
+    //   },
+    // ];
+    console.log(chats);
+    setChatsData(chats);
+  }, [chats]);
 
   useEffect(() => {
     const data = [
@@ -222,15 +229,18 @@ const Chat: React.FC = () => {
   const renderItem = ({
     name,
     photo,
-    unread,
+    readByMembers,
+    lastMessageDate,
     onClick,
-    id = "tempId",
+    _id = "tempId",
   }: RenderChatItemOptions) => (
     <ListItem
-      onClick={() => onClick(id)}
+      onClick={() => onClick(_id)}
       sx={{ paddingLeft: 0 }}
       className={classes.chatLI}
-      secondaryAction={unread && <div className={classes.circle} />}
+      secondaryAction={
+        <p>{moment(new Date(lastMessageDate)).format("HH:mm")}</p>
+      }
     >
       <ListItemAvatar>
         <Avatar alt="reward" src={photo} />
@@ -238,7 +248,11 @@ const Chat: React.FC = () => {
       <ListItemText
         sx={{
           "& .MuiTypography-root": {
-            fontWeight: unread ? 500 : 400,
+            fontWeight: readByMembers.includes(
+              localStorage.getItem("userId") as string
+            )
+              ? 400
+              : 500,
           },
         }}
         className={classes.list__text}
@@ -253,7 +267,9 @@ const Chat: React.FC = () => {
         <div className={classes.list}>
           <p className={classes.list__title}>Chats</p>
           <ul className={classes.list__chats}>
-            {chatsData.map((item) => renderItem({ ...item }))}
+            {chatsData.map((item) =>
+              renderItem({ ...item, onClick: onChatItemClick })
+            )}
           </ul>
         </div>
         <div className={classes.chat}>

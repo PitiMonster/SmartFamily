@@ -24,6 +24,8 @@ exports.runSockets = (io, socket) => {
       text: message,
     });
 
+    chat.lastMessageDate = newMessage.createdAt;
+    chat.readByMembers = [authorId];
     chat.messages.push(newMessage);
     chat.save();
     for (userId of chat.members) {

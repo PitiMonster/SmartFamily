@@ -3,12 +3,14 @@ import { configureStore } from "@reduxjs/toolkit";
 import utilsSlice from "./utils/slice";
 import authSlice from "./auth/slice";
 import groupsSlice from "./groups/slice";
+import chatSlice from "./chat/slice";
 
 const store = configureStore({
   reducer: {
     utils: utilsSlice.reducer,
     auth: authSlice.reducer,
     groups: groupsSlice.reducer,
+    chats: chatSlice.reducer,
   },
 });
 

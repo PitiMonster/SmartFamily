@@ -1,13 +1,18 @@
 import api from "../../api/api";
 import { AppDispatch } from "..";
 import { groupsActions } from "./slice";
+import { chatsActions } from "../chat/slice";
 import { utilsActions } from "../utils/slice";
+import countUnreadMessages from "../../utils/countUnreadMessages";
 
 export const getGroups = () => {
   return async (dispatch: AppDispatch) => {
     try {
       const response = await api.get("/families/");
-      dispatch(groupsActions.setFamilies({ families: response.data.data }));
+      dispatch(
+        groupsActions.setFamilies({ families: response.data.data.families })
+      );
+      countUnreadMessages(response.data.data.chats);
     } catch (err: any) {
       console.error("GET GROUPS ERROR: ", err);
       dispatch(utilsActions.setAppError({ msg: err.response.data.message }));

@@ -36,6 +36,10 @@ const App = () => {
   }, []);
 
   useEffect(() => {
+    setIsUserLoggedIn(!!localStorage.getItem("token"));
+  }, [localStorage.getItem("token")]);
+
+  useEffect(() => {
     if (appError) {
       toastError(appError, () => {
         dispatch(setAppError(""));
@@ -60,9 +64,11 @@ const App = () => {
           {isUserLoggedIn && (
             <>
               <Route path="/groups">
+                {console.log("groups")}
                 <GroupsRouter />
               </Route>
               <Route path="/calendar">
+                {console.log("calendar")}
                 <CalendarRouter />
               </Route>
               <Route path="/budgets">
@@ -82,6 +88,9 @@ const App = () => {
               </Route>
             </>
           )}
+          <Route>
+            <Redirect to="/" />
+          </Route>
         </Switch>
       </ThemeProvider>
       {isBackdrop && <Backdrop />}

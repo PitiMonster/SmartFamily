@@ -64,9 +64,13 @@ exports.getOne = (Model, ...popObjects) =>
   });
 
 // get all objects of given Model
-exports.getAll = (Model, ...popObjects) =>
+exports.getAll = (Model, findObject = {}, findNeedReq = false, ...popObjects) =>
   catchAsync(async (req, res, next) => {
-    const features = new QueryFeatures(Model.find(), req.query)
+    let findData = findObject;
+    if (findNeedReq) {
+      findData = findObject(req);
+    }
+    const features = new QueryFeatures(Model.find(findData), req.query)
       .filter()
       .limitFields()
       .sort()

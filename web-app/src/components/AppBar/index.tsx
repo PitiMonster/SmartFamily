@@ -19,6 +19,11 @@ import MoreIcon from "@mui/icons-material/MoreVert";
 import logoImgPath from "../../assets/icons/idea.svg";
 import classes from "./index.module.scss";
 
+// import history from "history/browser";
+
+import { useHistory } from "react-router-dom";
+import { History } from "history";
+
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
   borderRadius: theme.shape.borderRadius,
@@ -55,6 +60,8 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 const MyAppBar = () => {
+  const history = useHistory<History>();
+
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
     React.useState<null | HTMLElement>(null);
@@ -159,8 +166,16 @@ const MyAppBar = () => {
       anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
     >
       <MenuItem>
-        <IconButton size="large" aria-label="show 4 new mails" color="inherit">
-          <Badge badgeContent={4} color="error">
+        <IconButton
+          size="large"
+          aria-label="show 4 new mails"
+          color="inherit"
+          onClick={() => history.push("/chats")}
+        >
+          <Badge
+            badgeContent={localStorage.getItem("unreadMessagesCount") ?? 0}
+            color="error"
+          >
             <ChatIcon />
           </Badge>
         </IconButton>
@@ -237,8 +252,16 @@ const MyAppBar = () => {
               size="large"
               aria-label="show 4 new mails"
               color="inherit"
+              onClick={() => history.push("/chats")}
+              // onClick={() => {
+              //   history.push("/chats");
+              //   window.location.reload();
+              // }}
             >
-              <Badge badgeContent={4} color="error">
+              <Badge
+                badgeContent={localStorage.getItem("unreadMessagesCount") ?? 0}
+                color="error"
+              >
                 <ChatIcon />
               </Badge>
             </IconButton>
