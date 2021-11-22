@@ -17,6 +17,9 @@ const groupsSlice = createSlice({
     setFamilies(state, action: PayloadAction<{ families: Family[] }>) {
       state.groups = action.payload.families;
     },
+    addFamily(state, action: PayloadAction<{ family: Family }>) {
+      state.groups = [...state.groups, action.payload.family];
+    },
   },
 });
 

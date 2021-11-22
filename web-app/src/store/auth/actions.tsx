@@ -34,14 +34,10 @@ export const signin = (email: string, password: string) => {
 export const checkEmail = (email: string) => async (dispatch: AppDispatch) => {
   try {
     const response = await api.post("users/signup/checkEmail", { email });
-    const { status, message } = response.data;
-    if (status !== "success") {
-      dispatch(utilsActions.setAppError({ msg: message }));
-    }
+    const { status } = response.data;
     dispatch(
-      authActions.checkEmail({
+      utilsActions.setRequestStatus({
         status: status as "fail" | "success" | null,
-        message: message,
       })
     );
   } catch (err: any) {
@@ -56,25 +52,16 @@ export const checkUsername =
       const response = await api.post("users/signup/checkUsername", {
         username,
       });
-      const { status, message } = response.data;
-      if (status !== "success") {
-        dispatch(utilsActions.setAppError({ msg: message }));
-      }
+      const { status } = response.data;
       dispatch(
-        authActions.checkUsername({
+        utilsActions.setRequestStatus({
           status: status as "fail" | "success" | null,
-          message: message,
         })
       );
     } catch (err: any) {
       console.error("Check username", err);
       dispatch(utilsActions.setAppError({ msg: err.response.data.message }));
     }
-  };
-
-export const setStatus =
-  (status: "success" | "fail" | null) => (dispatch: AppDispatch) => {
-    dispatch(authActions.setStatus({ status }));
   };
 
 export const sendParentCode =
@@ -84,8 +71,12 @@ export const sendParentCode =
         email,
         childFullName,
       });
-      const { status, message } = response.data;
-      dispatch(authActions.sendParentCode({ status, message }));
+      const { status } = response.data;
+      dispatch(
+        utilsActions.setRequestStatus({
+          status: status as "fail" | "success" | null,
+        })
+      );
     } catch (err: any) {
       dispatch(utilsActions.setAppError({ msg: err.response.data.message }));
     }
@@ -104,8 +95,12 @@ export const verifyParentCode =
         childId,
         parentEmail,
       });
-      const { status, message } = response.data;
-      dispatch(authActions.verifyParentCode({ status, message }));
+      const { status } = response.data;
+      dispatch(
+        utilsActions.setRequestStatus({
+          status: status as "fail" | "success" | null,
+        })
+      );
     } catch (err: any) {
       dispatch(utilsActions.setAppError({ msg: err.response.data.message }));
     }
@@ -138,14 +133,13 @@ export const signup = (
         passwordConfirm,
       });
       console.log(response);
-      const { status, message } = response.data;
+      const { status } = response.data;
       if (role === "child") {
         localStorage.setItem("childId", response.data.data.id);
       }
       dispatch(
-        authActions.signup({
-          status,
-          message,
+        utilsActions.setRequestStatus({
+          status: status as "fail" | "success" | null,
         })
       );
     } catch (err: any) {
@@ -161,8 +155,12 @@ export const forgotPassword =
       const response = await api.post("users/forgotPassword", {
         email,
       });
-      const { status, message } = response.data;
-      dispatch(authActions.forgotPassword({ status, message }));
+      const { status } = response.data;
+      dispatch(
+        utilsActions.setRequestStatus({
+          status: status as "fail" | "success" | null,
+        })
+      );
     } catch (err: any) {
       dispatch(utilsActions.setAppError({ msg: err.response.data.message }));
     }
@@ -175,8 +173,12 @@ export const resetPassword =
         password,
         passwordConfirm,
       });
-      const { status, message } = response.data;
-      dispatch(authActions.resetPassword({ status, message }));
+      const { status } = response.data;
+      dispatch(
+        utilsActions.setRequestStatus({
+          status: status as "fail" | "success" | null,
+        })
+      );
     } catch (err: any) {
       dispatch(utilsActions.setAppError({ msg: err.response.data.message }));
     }

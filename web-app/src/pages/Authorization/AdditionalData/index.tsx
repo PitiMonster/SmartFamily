@@ -19,11 +19,12 @@ import TextInput from "../../../components/inputs/TextInput";
 import MainButton from "../../../components/buttons/MainButton";
 import PersonIcon from "@mui/icons-material/Person";
 import { toastError } from "../../../utils/toasts";
-import { checkUsername, setStatus } from "../../../store/auth/actions";
+import { checkUsername } from "../../../store/auth/actions";
+import { setStatus } from "../../../store/utils/actions";
 
 const AdditionalDataPage: React.FC = () => {
   const dispatch = useAppDispatch();
-  const status = useAppSelector((state) => state.auth.status);
+  const status = useAppSelector((state) => state.utils.status);
 
   const history = useHistory<History>();
 

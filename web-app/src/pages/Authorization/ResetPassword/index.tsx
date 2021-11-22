@@ -14,11 +14,12 @@ import PasswordInput from "../../../components/inputs/PasswordInput";
 
 import MainButton from "../../../components/buttons/MainButton";
 import { toastError, toastSuccess } from "../../../utils/toasts";
-import { resetPassword, setStatus } from "../../../store/auth/actions";
+import { resetPassword } from "../../../store/auth/actions";
+import { setStatus } from "../../../store/utils/actions";
 
 const ForgotPasswordPage: React.FC = () => {
   const dispatch = useAppDispatch();
-  const status = useAppSelector((state) => state.auth.status);
+  const status = useAppSelector((state) => state.utils.status);
   const { id } = useParams<{ id: string }>();
 
   const history = useHistory<History>();

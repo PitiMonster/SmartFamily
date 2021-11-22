@@ -14,3 +14,15 @@ export const getGroups = () => {
     }
   };
 };
+
+export const createGroup =
+  (name: string, photo: string) => async (dispatch: AppDispatch) => {
+    try {
+      const response = await api.post("/families/", { name, photo });
+      dispatch(groupsActions.addFamily({ family: response.data.data }));
+      dispatch(utilsActions.setRequestStatus({ status: response.data.status }));
+    } catch (err: any) {
+      console.error("CREATE GROUP ERROR: ", err);
+      dispatch(utilsActions.setAppError({ msg: err.response.data.message }));
+    }
+  };

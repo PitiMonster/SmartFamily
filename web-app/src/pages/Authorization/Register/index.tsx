@@ -14,12 +14,13 @@ import MainButton from "../../../components/buttons/MainButton";
 import EmailIcon from "@mui/icons-material/Email";
 
 import { useAppDispatch, useAppSelector } from "../../../hooks";
-import { checkEmail, setStatus } from "../../../store/auth/actions";
+import { checkEmail } from "../../../store/auth/actions";
+import { setStatus } from "../../../store/utils/actions";
 import { toastError } from "../../../utils/toasts";
 
 const Register: React.FC = () => {
   const dispatch = useAppDispatch();
-  const status = useAppSelector((state) => state.auth.status);
+  const status = useAppSelector((state) => state.utils.status);
   const history = useHistory<History>();
 
   const [password, setPassword] = useState<string>(
