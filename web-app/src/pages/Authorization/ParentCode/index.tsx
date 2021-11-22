@@ -16,15 +16,12 @@ import { History } from "history";
 
 import { useAppDispatch, useAppSelector } from "../../../hooks";
 import { toastError, toastSuccess } from "../../../utils/toasts";
-import {
-  sendParentCode,
-  setStatus,
-  verifyParentCode,
-} from "../../../store/auth/actions";
+import { sendParentCode, verifyParentCode } from "../../../store/auth/actions";
+import { setStatus } from "../../../store/utils/actions";
 
 const ParentCode: React.FC = () => {
   const dispatch = useAppDispatch();
-  const status = useAppSelector((state) => state.auth.status);
+  const status = useAppSelector((state) => state.utils.status);
   const history = useHistory<History>();
 
   const [parentEmail, setParentEmail] = useState<string>("");

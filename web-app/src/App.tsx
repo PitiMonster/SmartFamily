@@ -7,7 +7,7 @@ import { ThemeProvider } from "@mui/material/styles";
 import { mainTheme } from "./themes";
 
 import { useAppSelector, useAppDispatch } from "./hooks";
-import { setAppError } from "./store/utils/action";
+import { setAppError } from "./store/utils/actions";
 
 import { setUpCloudinary } from "./utils/cloudinary";
 import AuthRouter from "./pages/Authorization/Router";

@@ -10,16 +10,19 @@ const initialState: AuthState = {
   groups: [],
 };
 
-const authSlice = createSlice({
-  name: "auth",
+const groupsSlice = createSlice({
+  name: "groups",
   initialState,
   reducers: {
     setFamilies(state, action: PayloadAction<{ families: Family[] }>) {
       state.groups = action.payload.families;
     },
+    addFamily(state, action: PayloadAction<{ family: Family }>) {
+      state.groups = [...state.groups, action.payload.family];
+    },
   },
 });
 
-export const authActions = authSlice.actions;
+export const groupsActions = groupsSlice.actions;
 
-export default authSlice;
+export default groupsSlice;

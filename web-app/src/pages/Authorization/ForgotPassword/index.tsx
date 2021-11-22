@@ -11,11 +11,12 @@ import TextInput from "../../../components/inputs/TextInput";
 import MainButton from "../../../components/buttons/MainButton";
 import EmailIcon from "@mui/icons-material/Email";
 import { toastError, toastSuccess } from "../../../utils/toasts";
-import { forgotPassword, setStatus } from "../../../store/auth/actions";
+import { forgotPassword } from "../../../store/auth/actions";
+import { setStatus } from "../../../store/utils/actions";
 
 const ForgotPasswordPage: React.FC = () => {
   const dispatch = useAppDispatch();
-  const status = useAppSelector((state) => state.auth.status);
+  const status = useAppSelector((state) => state.utils.status);
 
   const [email, setEmail] = useState<string>("");
 

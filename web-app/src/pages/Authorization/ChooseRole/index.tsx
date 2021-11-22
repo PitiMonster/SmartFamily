@@ -17,11 +17,12 @@ import sonPath from "../../../assets/images/son.png";
 import AuthLayout from "../../../layout/AuthLayout";
 import MainButton from "../../../components/buttons/MainButton";
 import { toastSuccess } from "../../../utils/toasts";
-import { setStatus, signup } from "../../../store/auth/actions";
+import { signup } from "../../../store/auth/actions";
+import { setStatus } from "../../../store/utils/actions";
 
 const ChooseRolePage: React.FC = () => {
   const dispatch = useAppDispatch();
-  const status = useAppSelector((state) => state.auth.status);
+  const status = useAppSelector((state) => state.utils.status);
 
   const history = useHistory<History>();
 

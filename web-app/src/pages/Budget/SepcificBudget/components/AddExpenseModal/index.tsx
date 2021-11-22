@@ -6,7 +6,7 @@ import FormControl from "@mui/material/FormControl";
 import classes from "./index.module.scss";
 
 import { useAppDispatch } from "../../../../../hooks";
-import { updateBackdrop } from "../../../../../store/utils/action";
+import { updateBackdrop } from "../../../../../store/utils/actions";
 
 import TextInput from "../../../../../components/inputs/TextInput";
 import MainButton from "../../../../../components/buttons/MainButton";

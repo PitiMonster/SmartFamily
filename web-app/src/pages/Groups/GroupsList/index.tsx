@@ -2,64 +2,48 @@ import { useEffect, useState } from "react";
 
 import classes from "./index.module.scss";
 
+import { useAppSelector, useAppDispatch } from "../../../hooks";
+
+import { useHistory } from "react-router-dom";
+import { History } from "history";
+
+import { getGroups } from "../../../store/groups/actions";
+
 import GroupBlock from "../components/GroupBlock";
 import ContentLayout from "../../../layout/ContentLayout";
 
+import { HtmlElements } from "../../../types";
+
 const GroupsListPage: React.FC = () => {
-  const [groupBlocks, setGroupBlocks] = useState<
-    | React.DetailedHTMLProps<
-        React.HTMLAttributes<HTMLDivElement>,
-        HTMLDivElement
-      >[]
-    | undefined
-  >([]);
+  const dispatch = useAppDispatch();
+  const groups = useAppSelector((state) => state.groups.groups);
+  const history = useHistory<History>();
+
+  const [groupBlocks, setGroupBlocks] = useState<HtmlElements>([]);
 
   useEffect(() => {
-    const groups = [
-      {
-        name: "Grupa 1",
-        photo:
-          "https://res.cloudinary.com/dq7ionfvn/image/upload/v1635284961/SmartFamily/GroupPhotos/scary-faces.jpg",
-        onClick: () => {},
-      },
-      {
-        name: "Grupa 2",
-        photo:
-          "https://res.cloudinary.com/dq7ionfvn/image/upload/v1635284961/SmartFamily/GroupPhotos/lovely-cat.jpg",
-        onClick: () => {},
-      },
-      {
-        name: "Grupa 3",
-        photo:
-          "https://res.cloudinary.com/dq7ionfvn/image/upload/v1635284961/SmartFamily/GroupPhotos/circus-astronaut.jpg",
-        onClick: () => {},
-      },
-      {
-        name: "Grupa 4",
-        photo:
-          "https://res.cloudinary.com/dq7ionfvn/image/upload/v1635284961/SmartFamily/GroupPhotos/dab-unicorn.jpg",
-        onClick: () => {},
-      },
-      {
-        name: "Grupa 5",
-        photo:
-          "https://res.cloudinary.com/dq7ionfvn/image/upload/v1635284961/SmartFamily/GroupPhotos/disco-cat.jpg",
-        onClick: () => {},
-      },
-      {
-        name: "Utwórz grupę",
-        photo:
-          "https://res.cloudinary.com/dq7ionfvn/image/upload/v1635284961/SmartFamily/GroupPhotos/new-group.jpg",
-        onClick: () => {},
-      },
-    ];
+    dispatch(getGroups());
+  }, [dispatch]);
 
-    const newBlockGroups = groups.map((group, index) => (
-      <GroupBlock key={index} {...group} />
+  useEffect(() => {
+    const newGroups = groups.slice();
+    newGroups.push({
+      _id: "create-new",
+      name: "Utwórz grupę",
+      photo:
+        "https://res.cloudinary.com/dq7ionfvn/image/upload/v1635284961/SmartFamily/GroupPhotos/new-group.jpg",
+    });
+
+    const newBlockGroups = newGroups.map((group, index) => (
+      <GroupBlock
+        key={group._id}
+        {...group}
+        onClick={() => history.push(`${group._id}`)}
+      />
     ));
 
     setGroupBlocks(newBlockGroups);
-  }, []);
+  }, [groups, history]);
 
   return (
     <ContentLayout>

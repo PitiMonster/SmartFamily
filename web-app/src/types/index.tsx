@@ -74,14 +74,14 @@ export type Invitation = {
 export type Family = {
   _id: string;
   name: string;
-  members: User[] | string[];
+  members?: User[] | string[];
   photo: string;
-  chat: Chat | string;
-  calendarEvents: CalendarEvent[] | string[];
-  budgets: Budget[] | string[];
-  shoppingList: ShoppingItem[] | string[];
-  tasks: Task[] | string[];
-  rewards: Reward[] | string[];
+  chat?: Chat | string;
+  calendarEvents?: CalendarEvent[] | string[];
+  budgets?: Budget[] | string[];
+  shoppingList?: ShoppingItem[] | string[];
+  tasks?: Task[] | string[];
+  rewards?: Reward[] | string[];
 };
 
 export type Chat = {
