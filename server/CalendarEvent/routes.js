@@ -13,6 +13,9 @@ router
   .get(calendarEventController.getCalendarEvents)
   .post(calendarEventController.createCalendarEvent);
 
-router.route("/:id").get(calendarEventController.getCalendarEvent);
+router
+  .route("/:id")
+  .get(calendarEventController.getCalendarEvent)
+  .patch(calendarEventController.updateCalendarEvent);
 
 module.exports = router;

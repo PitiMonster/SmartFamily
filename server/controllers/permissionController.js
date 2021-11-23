@@ -5,7 +5,6 @@ const AppError = require("../utils/appError");
 
 exports.isFamilyMember = catchAsync(async (req, res, next) => {
   const id = req.params.familyId ?? req.params.id;
-  console.log(id);
   const family = await Family.findById(id);
 
   if (!family) {

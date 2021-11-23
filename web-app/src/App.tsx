@@ -83,21 +83,7 @@ const App = () => {
               <Route path="/groups">
                 <GroupsRouter />
               </Route>
-              <Route path="/calendar">
-                <CalendarRouter />
-              </Route>
-              <Route path="/budgets">
-                <BudgetsRouter />
-              </Route>
-              <Route path="/shopping">
-                <ShoppingListRouter />
-              </Route>
-              <Route path="/children">
-                <ChildrenRouter />
-              </Route>
-              <Route path="/children/:id/tasks">
-                <TasksRouter />
-              </Route>
+
               <Route path="/chats">
                 <ChatRouter />
               </Route>

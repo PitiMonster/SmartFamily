@@ -9,17 +9,38 @@ import FormControl from "@mui/material/FormControl";
 
 import classes from "./index.module.scss";
 
-import { useAppDispatch } from "../../../../../hooks";
-import { updateBackdrop } from "../../../../../store/utils/actions";
+import { useHistory } from "react-router-dom";
+import { History } from "history";
+import { useParams } from "react-router-dom";
+
+import { useAppDispatch, useAppSelector } from "../../../../../hooks";
+import { setStatus, updateBackdrop } from "../../../../../store/utils/actions";
 
 import TextInput from "../../../../../components/inputs/TextInput";
 import MainButton from "../../../../../components/buttons/MainButton";
+import {
+  addCalendarEvent,
+  getOneCalendarEvent,
+  updateCalendarEvent,
+} from "../../../../../store/calendar/actions";
+import { toastError, toastSuccess } from "../../../../../utils/toasts";
 
-const AddModifyEventModal: React.FC<{ id?: string }> = ({ id }) => {
+const AddModifyEventModal: React.FC<{ id?: string; initDate?: Date }> = ({
+  id,
+  initDate,
+}) => {
   const dispatch = useAppDispatch();
+  const { groupId } = useParams<{ groupId: string }>();
+  const selectedEvent = useAppSelector((store) => store.calendar.selectedEvent);
+  const requestStatus = useAppSelector((store) => store.utils.status);
+
   const [eventName, setEventName] = useState<string>("");
-  const [dateTime, setDateTime] = useState<Date | null>();
+  const [dateTime, setDateTime] = useState<Date | null>(initDate ?? null);
   const [description, setDescription] = useState<string>("");
+
+  const [currentAction, setCurrentAction] = useState<
+    "update" | "create" | null
+  >();
 
   useEffect(() => {
     dispatch(updateBackdrop(true));
@@ -27,12 +48,64 @@ const AddModifyEventModal: React.FC<{ id?: string }> = ({ id }) => {
 
   useEffect(() => {
     if (id) {
-      // get event data from db and fill fields
+      dispatch(getOneCalendarEvent(groupId, id));
     }
-  }, [id]);
+  }, [id, dispatch, groupId]);
+
+  useEffect(() => {
+    if (id) {
+      setEventName(selectedEvent?.name ?? "");
+      setDateTime(selectedEvent?.date ?? new Date(Date.now()));
+      setDescription(selectedEvent?.description ?? "");
+    }
+  }, [selectedEvent, id]);
+
+  useEffect(() => {
+    if (requestStatus === "success") {
+      let toastText = "Action completed successfully";
+      switch (currentAction) {
+        case "update":
+          toastText = "Event updated successfully";
+          break;
+        case "create":
+          toastText = "Event created successfully";
+          break;
+        default:
+          break;
+      }
+      toastSuccess(toastText);
+      dispatch(updateBackdrop(false));
+      dispatch(setStatus(null));
+    }
+  }, [requestStatus, currentAction, dispatch]);
 
   const handleDateTime = (newValue: Date | null) => {
     setDateTime(newValue);
+  };
+
+  const handleSave = () => {
+    if (!eventName || !dateTime) {
+      toastError("Name and date fields are required");
+      return;
+    }
+
+    if (id) {
+      dispatch(
+        updateCalendarEvent(
+          groupId,
+          id,
+          eventName,
+          dateTime as Date,
+          description
+        )
+      );
+      setCurrentAction("update");
+    } else {
+      dispatch(
+        addCalendarEvent(groupId, eventName, dateTime as Date, description)
+      );
+      setCurrentAction("create");
+    }
   };
 
   return (
@@ -43,7 +116,7 @@ const AddModifyEventModal: React.FC<{ id?: string }> = ({ id }) => {
       <LocalizationProvider dateAdapter={DateAdapter}>
         <DateTimePicker
           label="Event date time"
-          inputFormat="MM/dd/yyyy"
+          inputFormat="dd/MM/yyyy"
           value={dateTime}
           onChange={handleDateTime}
           renderInput={(params) => <TextField variant="standard" {...params} />}
@@ -57,7 +130,7 @@ const AddModifyEventModal: React.FC<{ id?: string }> = ({ id }) => {
         value={description}
         onChange={(event) => setDescription(event.target.value)}
       />
-      <MainButton isOutline={true} text="Save" onClick={() => {}} />
+      <MainButton isOutline={true} text="Save" onClick={handleSave} />
     </div>
   );
 };

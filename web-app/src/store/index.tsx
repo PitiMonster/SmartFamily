@@ -4,6 +4,7 @@ import utilsSlice from "./utils/slice";
 import authSlice from "./auth/slice";
 import groupsSlice from "./groups/slice";
 import chatSlice from "./chat/slice";
+import calendarSlice from "./calendar/slice";
 
 const store = configureStore({
   reducer: {
@@ -11,6 +12,7 @@ const store = configureStore({
     auth: authSlice.reducer,
     groups: groupsSlice.reducer,
     chats: chatSlice.reducer,
+    calendar: calendarSlice.reducer,
   },
 });
 
