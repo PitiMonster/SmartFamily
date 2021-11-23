@@ -36,7 +36,6 @@ const AddPhotoPage: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    console.log(profilePhotoId);
     const profilePhoto = cld?.image(profilePhotoId);
 
     profilePhoto

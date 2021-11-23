@@ -19,6 +19,11 @@ import MoreIcon from "@mui/icons-material/MoreVert";
 import logoImgPath from "../../assets/icons/idea.svg";
 import classes from "./index.module.scss";
 
+// import history from "history/browser";
+
+import { useHistory } from "react-router-dom";
+import { History } from "history";
+
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
   borderRadius: theme.shape.borderRadius,
@@ -55,12 +60,23 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 const MyAppBar = () => {
+  const history = useHistory<History>();
+
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
     React.useState<null | HTMLElement>(null);
+  const [unreadMessagesCount, setUnreadMessagesCount] =
+    React.useState<string>("0");
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+
+  React.useEffect(() => {
+    const newCount = localStorage.getItem("unreadMessagesCount") as string;
+    if (newCount && newCount !== unreadMessagesCount) {
+      setUnreadMessagesCount(newCount);
+    }
+  }, [localStorage.getItem("unreadMessagesCount")]);
 
   const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -159,8 +175,13 @@ const MyAppBar = () => {
       anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
     >
       <MenuItem>
-        <IconButton size="large" aria-label="show 4 new mails" color="inherit">
-          <Badge badgeContent={4} color="error">
+        <IconButton
+          size="large"
+          aria-label="show 4 new mails"
+          color="inherit"
+          onClick={() => history.push("/chats")}
+        >
+          <Badge badgeContent={unreadMessagesCount} color="error">
             <ChatIcon />
           </Badge>
         </IconButton>
@@ -213,15 +234,22 @@ const MyAppBar = () => {
           >
             <MenuIcon />
           </IconButton>
-          <img className={classes.logo__image} src={logoImgPath} alt="logo" />
-          <Typography
-            variant="h6"
-            noWrap
-            component="div"
-            // sx={{ display: { xs: "none", sm: "block" } }}
+          <div
+            onClick={() => {
+              history.push("/");
+            }}
+            style={{ cursor: "pointer", display: "flex", alignItems: "center" }}
           >
-            Smart Family
-          </Typography>
+            <img className={classes.logo__image} src={logoImgPath} alt="logo" />
+            <Typography
+              variant="h6"
+              noWrap
+              component="div"
+              // sx={{ display: { xs: "none", sm: "block" } }}
+            >
+              Smart Family
+            </Typography>
+          </div>
           <Search sx={{ display: { xs: "none", sm: "block" } }}>
             <SearchIconWrapper>
               <SearchIcon />
@@ -237,8 +265,13 @@ const MyAppBar = () => {
               size="large"
               aria-label="show 4 new mails"
               color="inherit"
+              onClick={() => history.push("/chats")}
+              // onClick={() => {
+              //   history.push("/chats");
+              //   window.location.reload();
+              // }}
             >
-              <Badge badgeContent={4} color="error">
+              <Badge badgeContent={unreadMessagesCount} color="error">
                 <ChatIcon />
               </Badge>
             </IconButton>

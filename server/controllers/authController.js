@@ -90,7 +90,7 @@ exports.signUp = catchAsync(async (req, res, next) => {
     const url = `${req.protocol}://${req.get("host")}/me`;
     // console.log(url);
     await new Email(newUser, url).sendWelcome();
-    createAndSendToken(newUser, 201, req, res);
+    res.status(201).json({ status: "success", data: {} });
   } else {
     res.status(201).json({ status: "success", data: newUser });
   }
@@ -107,8 +107,9 @@ exports.signIn = catchAsync(async (req, res, next) => {
     .select("+password +active")
     .populate({
       path: "families",
-      select: "name photo",
+      select: "name photo chat",
     });
+
   if (!user || !user.correctPassword(password, user.password)) {
     return next(new AppError("Incorrect email or password provided", 401));
   }
@@ -256,8 +257,7 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
   await user.save();
   // User.findByIdAndUpdate will NOT work as intended!
 
-  // 4) Log user in, send JWT
-  return createAndSendToken(user, 200, req, res);
+  return res.status(200).json({ status: "success", data: {} });
 });
 
 exports.sendAcceptChildCodeToParent = catchAsync(async (req, res, next) => {

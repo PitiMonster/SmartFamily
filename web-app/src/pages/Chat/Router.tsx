@@ -5,18 +5,14 @@ import SpecificChatPage from "./SpecificChatPage";
 
 const Router: React.FC = () => {
   return (
-    <BrowserRouter basename="/chats">
-      <Switch>
-        <Route path="/" exact={true}>
-          <ChatPage />
-        </Route>
-      </Switch>
-      <Switch>
-        <Route path="/:id" exact={true}>
-          <SpecificChatPage />
-        </Route>
-      </Switch>
-    </BrowserRouter>
+    <Switch>
+      <Route path="/chats/" exact={true}>
+        <ChatPage />
+      </Route>
+      <Route path="/chats/:id" exact={true}>
+        <SpecificChatPage />
+      </Route>
+    </Switch>
   );
 };
 

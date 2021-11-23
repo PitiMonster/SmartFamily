@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import moment from "moment";
 
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
@@ -6,6 +7,8 @@ import ListItemAvatar from "@mui/material/ListItemAvatar";
 import Avatar from "@mui/material/Avatar";
 import IconButton from "@mui/material/IconButton";
 import SendIcon from "@mui/icons-material/Send";
+
+import { useAppSelector, useAppDispatch } from "../../../hooks";
 
 import { History } from "history";
 import { useHistory } from "react-router-dom";
@@ -15,194 +18,55 @@ import classes from "./index.module.scss";
 import ContentLayout from "../../../layout/ContentLayout";
 import Message from "../components/Message";
 
-interface RenderChatItemOptions {
-  name: string;
-  photo: string;
-  unread: boolean;
-  onClick: (id: string) => void;
-  id?: string;
-}
+import { Chat as ChatType } from "../../../types";
+import {
+  getChats,
+  getChatData,
+  readChat,
+  sendMessage,
+  clearState,
+} from "../../../store/chat/actions";
 
-interface MessageItemOptions {
-  author: string;
-  text: string;
-  createdAt: Date;
+import { Message as MessageType, User as UserType } from "../../../types";
+import { readUnreadMessage } from "../../../utils/countUnreadMessages";
+
+interface RenderChatItemOptions extends ChatType {
+  onClick: (id: string, readByMembers: (string | UserType)[]) => void;
 }
 
 const Chat: React.FC = () => {
+  const dispatch = useAppDispatch();
+  const chats = useAppSelector((state) => state.chats.chats);
+  const chatMessages = useAppSelector((state) => state.chats.messages);
+  const chatName = useAppSelector((state) => state.chats.name);
+  const openedChatId = useAppSelector((state) => state.chats.openedChatId);
+
   const history = useHistory<History>();
 
-  const [chatsData, setChatsData] = useState<RenderChatItemOptions[]>([]);
-  const [messagesData, setMessagesData] = useState<MessageItemOptions[]>([]);
+  const [chatsData, setChatsData] = useState<ChatType[]>([]);
+  const [messagesData, setMessagesData] = useState<MessageType[]>([]);
   const [input, setInput] = useState<string>("");
 
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
+    dispatch(getChats());
     messagesEndRef?.current?.scrollIntoView();
-  });
+  }, [dispatch]);
 
   useEffect(() => {
-    const data = [
-      {
-        name: "test name",
-        photo:
-          "https://res.cloudinary.com/dq7ionfvn/image/upload/v1634891263/SmartFamily/default_person.jpg",
-        unread: true,
-        onClick: onChatItemClick,
-      },
-      {
-        name: "test name",
-        photo:
-          "https://res.cloudinary.com/dq7ionfvn/image/upload/v1634891263/SmartFamily/default_person.jpg",
-        unread: true,
-        onClick: onChatItemClick,
-      },
-      {
-        name: "test name",
-        photo:
-          "https://res.cloudinary.com/dq7ionfvn/image/upload/v1634891263/SmartFamily/default_person.jpg",
-        unread: true,
-        onClick: onChatItemClick,
-      },
-      {
-        name: "test name",
-        photo:
-          "https://res.cloudinary.com/dq7ionfvn/image/upload/v1634891263/SmartFamily/default_person.jpg",
-        unread: false,
-        onClick: onChatItemClick,
-      },
-      {
-        name: "test name",
-        photo:
-          "https://res.cloudinary.com/dq7ionfvn/image/upload/v1634891263/SmartFamily/default_person.jpg",
-        unread: false,
-        onClick: onChatItemClick,
-      },
-      {
-        name: "test name",
-        photo:
-          "https://res.cloudinary.com/dq7ionfvn/image/upload/v1634891263/SmartFamily/default_person.jpg",
-        unread: false,
-        onClick: onChatItemClick,
-      },
-      {
-        name: "test name",
-        photo:
-          "https://res.cloudinary.com/dq7ionfvn/image/upload/v1634891263/SmartFamily/default_person.jpg",
-        unread: true,
-        onClick: onChatItemClick,
-      },
-    ];
-    setChatsData(data);
-  }, []);
+    setChatsData(chats);
+    !chatName && chats.length > 0 && dispatch(getChatData(chats[0]._id));
+  }, [chats, dispatch, chatName]);
 
   useEffect(() => {
-    const data = [
-      {
-        author: "me",
-        text: "hej",
-        createdAt: new Date(Date.now()),
-      },
-      {
-        author: "you",
-        text: "hej",
-        createdAt: new Date(Date.now()),
-      },
-      {
-        author: "you",
-        text: "co tam słychać w wielkim świecie?",
-        createdAt: new Date(Date.now()),
-      },
-      {
-        author: "me",
-        text: "aaaa dobrze, wszystko gra :D",
-        createdAt: new Date(Date.now()),
-      },
-      {
-        author: "me",
-        text: "słyszałeś nowy żarcik?",
-        createdAt: new Date(Date.now()),
-      },
-      {
-        author: "you",
-        text: "nie nie, nowego nie słyszałem",
-        createdAt: new Date(Date.now()),
-      },
-      {
-        author: "me",
-        text: "to słuchaj",
-        createdAt: new Date(Date.now()),
-      },
-      {
-        author: "me",
-        text: `Rozmawiają dwie koleżanki:\n- Wczoraj w restauracji musieliśmy długo czekać na stolik.\n- Ja z tym nie mam problemu.\nWyjmuję telefon i głośno mówię do słuchawki:\nKochana, przyjdź szybko, Twój mąż tu siedzi z jakąś babą!\nZawsze zwalnia się kilka stolików...`,
-        createdAt: new Date(Date.now()),
-      },
-      {
-        author: "you",
-        text: "haha",
-        createdAt: new Date(Date.now()),
-      },
-      {
-        author: "you",
-        text: "dobre dobre",
-        createdAt: new Date(Date.now()),
-      },
-      {
-        author: "you",
-        text: "mozna kiedyś przetestować",
-        createdAt: new Date(Date.now()),
-      },
-      {
-        author: "me",
-        text: "hah no czemu nie",
-        createdAt: new Date(Date.now()),
-      },
-      {
-        author: "me",
-        text: "śmiesznie może być",
-        createdAt: new Date(Date.now()),
-      },
-      {
-        author: "me",
-        text: "test",
-        createdAt: new Date(Date.now()),
-      },
-      {
-        author: "me",
-        text: "test",
-        createdAt: new Date(Date.now()),
-      },
-      {
-        author: "me",
-        text: "test",
-        createdAt: new Date(Date.now()),
-      },
-      {
-        author: "me",
-        text: "test",
-        createdAt: new Date(Date.now()),
-      },
-      {
-        author: "me",
-        text: "test",
-        createdAt: new Date(Date.now()),
-      },
-      {
-        author: "me",
-        text: "test",
-        createdAt: new Date(Date.now()),
-      },
-      {
-        author: "me",
-        text: "test",
-        createdAt: new Date(Date.now()),
-      },
-    ];
+    setMessagesData(chatMessages);
+    dispatch(readChat(openedChatId));
+  }, [chatMessages, openedChatId, dispatch]);
 
-    setMessagesData(data.reverse());
-  }, []);
+  useEffect(() => {
+    return dispatch(clearState());
+  }, [dispatch]);
 
   const handleMessageInputChange = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -210,11 +74,25 @@ const Chat: React.FC = () => {
     setInput((event.target as HTMLInputElement).value);
   };
 
-  const onChatItemClick = (id: string) => {
-    if (id) {
-      // fetch data from db / redux
+  const sendTextMessage = () => {
+    if (!input) return;
+    sendMessage(openedChatId, input);
+    setInput("");
+  };
+
+  const onChatItemClick = (
+    id: string,
+    readByMembers: (string | UserType)[]
+  ) => {
+    if (id && id !== openedChatId) {
+      readUnreadMessage(id);
+      if (!readByMembers.includes(localStorage.getItem("userId") as string)) {
+        dispatch(readChat(id));
+      }
       if (window.innerWidth < 900) {
-        history.push(`/:${id}`);
+        history.push(`/chats/${id}`);
+      } else {
+        dispatch(getChatData(id));
       }
     }
   };
@@ -222,15 +100,21 @@ const Chat: React.FC = () => {
   const renderItem = ({
     name,
     photo,
-    unread,
+    readByMembers,
+    lastMessageDate,
     onClick,
-    id = "tempId",
+    _id = "tempId",
   }: RenderChatItemOptions) => (
     <ListItem
-      onClick={() => onClick(id)}
-      sx={{ paddingLeft: 0 }}
+      onClick={() => onClick(_id, readByMembers)}
+      sx={{
+        paddingLeft: 0,
+        backgroundColor: openedChatId === _id ? "#7eeb90" : "transparent",
+      }}
       className={classes.chatLI}
-      secondaryAction={unread && <div className={classes.circle} />}
+      secondaryAction={
+        <p>{moment(new Date(lastMessageDate)).format("HH:mm")}</p>
+      }
     >
       <ListItemAvatar>
         <Avatar alt="reward" src={photo} />
@@ -238,7 +122,11 @@ const Chat: React.FC = () => {
       <ListItemText
         sx={{
           "& .MuiTypography-root": {
-            fontWeight: unread ? 500 : 400,
+            fontWeight: readByMembers.includes(
+              localStorage.getItem("userId") as string
+            )
+              ? 400
+              : 500,
           },
         }}
         className={classes.list__text}
@@ -253,15 +141,17 @@ const Chat: React.FC = () => {
         <div className={classes.list}>
           <p className={classes.list__title}>Chats</p>
           <ul className={classes.list__chats}>
-            {chatsData.map((item) => renderItem({ ...item }))}
+            {chatsData.map((item) =>
+              renderItem({ ...item, onClick: onChatItemClick })
+            )}
           </ul>
         </div>
         <div className={classes.chat}>
-          <p className={classes.chat__name}>Nazwa rodziny</p>
+          <p className={classes.chat__name}>{chatName}</p>
           <ul className={classes.chat__messages}>
             {[
               <div ref={messagesEndRef} />,
-              messagesData.map((item) => <Message {...item} />),
+              messagesData.map((item) => <Message key={item._id} {...item} />),
             ]}
           </ul>
           <div className={classes.inputContainer}>
@@ -272,7 +162,7 @@ const Chat: React.FC = () => {
               onChange={handleMessageInputChange}
               placeholder="Aa"
             />
-            <IconButton color="primary" onClick={() => {}}>
+            <IconButton color="primary" onClick={sendTextMessage}>
               <SendIcon fontSize="large" />
             </IconButton>
           </div>

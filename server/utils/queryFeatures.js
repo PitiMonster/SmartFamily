@@ -6,7 +6,7 @@ class QueryFeatures {
 
   filter() {
     const queryObj = { ...this.queryString };
-    const excludedFields = ["page", "sort", "limit", "fields"];
+    const excludedFields = ["page", "sort", "limit", "fields", "populate"];
     excludedFields.forEach((el) => delete queryObj[el]);
 
     // Advanced filtering
@@ -59,6 +59,16 @@ class QueryFeatures {
 
     this.query = this.query.skip(skip).limit(limit);
 
+    return this;
+  }
+
+  populate() {
+    if (this.queryString.populate) {
+      const toPopulate = this.queryString.populate.split(",");
+      for (const popObj of toPopulate) {
+        this.query = this.query.populate(popObj);
+      }
+    }
     return this;
   }
 }

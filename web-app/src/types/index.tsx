@@ -8,13 +8,13 @@ export type User = {
   profilePhoto: string;
   role: string;
   birthDate: Date;
-  families: Family[] | string[];
-  notifications: Notification[] | string[];
-  purchasedRewards: Reward[] | string[];
+  families: (Family | string)[];
+  notifications: (Notification | string)[];
+  purchasedRewards: (Reward | string)[];
   parent?: User | string;
   pointsCount: Number;
-  tasks: Task[] | string[];
-  invitations: Invitation[] | string[];
+  tasks: (Task | string)[];
+  invitations: (Invitation | string)[];
 };
 
 export type Task = {
@@ -74,21 +74,24 @@ export type Invitation = {
 export type Family = {
   _id: string;
   name: string;
-  members?: User[] | string[];
+  members?: (User | string)[];
   photo: string;
   chat?: Chat | string;
-  calendarEvents?: CalendarEvent[] | string[];
-  budgets?: Budget[] | string[];
-  shoppingList?: ShoppingItem[] | string[];
-  tasks?: Task[] | string[];
-  rewards?: Reward[] | string[];
+  calendarEvents?: (CalendarEvent | string)[];
+  budgets?: (Budget | string)[];
+  shoppingList?: (ShoppingItem | string)[];
+  tasks?: (Task | string)[];
+  rewards?: (Reward | string)[];
 };
 
 export type Chat = {
   _id: string;
-  members: User[] | string[];
+  members?: (User | string)[];
+  readByMembers: (User | string)[];
   name: string;
-  messages: Message[] | string[];
+  messages?: (Message | string)[];
+  lastMessageDate: Date;
+  photo: string;
 };
 
 export type CalendarEvent = {
@@ -109,7 +112,7 @@ export type Budget = {
   _id: string;
   name: string;
   budgetValue: Number;
-  expenses: Expense[] | string[];
+  expenses: (Expense | string)[];
   renewalDate?: Date;
 };
 

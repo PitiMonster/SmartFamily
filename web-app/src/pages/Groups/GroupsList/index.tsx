@@ -38,7 +38,7 @@ const GroupsListPage: React.FC = () => {
       <GroupBlock
         key={group._id}
         {...group}
-        onClick={() => history.push(`${group._id}`)}
+        onClick={() => history.push(`/groups/${group._id}`)}
       />
     ));
 

@@ -36,7 +36,6 @@ const ParentCode: React.FC = () => {
   );
 
   useEffect(() => {
-    console.log(status);
     if (status === "success") {
       if (!isParentIdCorrect && currentAction === "sendCode") {
         toastSuccess("Code send to parent email address successfully");

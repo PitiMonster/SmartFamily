@@ -2,11 +2,11 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 import { Family } from "../../types";
 
-interface AuthState {
+interface GroupsState {
   groups: Family[];
 }
 
-const initialState: AuthState = {
+const initialState: GroupsState = {
   groups: [],
 };
 
