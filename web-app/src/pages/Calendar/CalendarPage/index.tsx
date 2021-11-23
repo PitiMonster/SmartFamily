@@ -8,15 +8,28 @@ import IconButton from "@mui/material/IconButton";
 import classes from "./index.module.scss";
 import "./calendar-styles.scss";
 
+import { useHistory } from "react-router-dom";
+import { History } from "history";
+import { useParams } from "react-router-dom";
+
 import ContentLayout from "../../../layout/ContentLayout";
 import ListItem from "../../../components/ListItem";
 import EventModal from "./components/AddModifyEventModal";
 
-import { useAppSelector } from "../../../hooks";
+import { useAppSelector, useAppDispatch } from "../../../hooks";
 
 import { HtmlElements } from "../../../types";
+import { getFmailyCalendar } from "../../../store/calendar/actions";
 
 const CalendarPage: React.FC = () => {
+  const dispatch = useAppDispatch();
+  const calendarEvents = useAppSelector(
+    (state) => state.calendar.calendarEvents
+  );
+
+  const history = useHistory<History>();
+  const { groupId } = useParams<{ groupId: string }>();
+
   const [isAddModifyEventModal, setIsAddModifyEventModal] =
     useState<boolean>(false);
   const [selectedEventId, setSelectedEventId] = useState<string>("");
@@ -41,64 +54,85 @@ const CalendarPage: React.FC = () => {
   }, [selectedEventId]);
 
   useEffect(() => {
-    const eventsData = [
-      {
-        id: "idtest",
-        primaryText: "event 1",
-        trailingText: "trailing 1",
-      },
-      {
-        id: "idtest",
-        primaryText: "event 1",
-        trailingText: "trailing 1",
-      },
-      {
-        id: "idtest",
-        primaryText: "event 1",
-        trailingText: "trailing 1",
-      },
-      {
-        id: "idtest",
-        primaryText: "event 1",
-        trailingText: "trailing 1",
-      },
-      {
-        id: "idtest",
-        primaryText: "event 1",
-        trailingText: "trailing 1",
-      },
-      {
-        id: "idtest",
-        primaryText: "event 1",
-        trailingText: "trailing 1",
-      },
-      {
-        id: "idtest",
-        primaryText: "event 1",
-        trailingText: "trailing 1",
-      },
-      {
-        id: "idtest",
-        primaryText: "event 1",
-        trailingText: "trailing 1",
-      },
-      {
-        id: "idtest",
-        primaryText: "event 1",
-        trailingText: "trailing 1",
-      },
-      {
-        id: "idtest",
-        primaryText: "event 1",
-        trailingText: "trailing 1",
-      },
-    ];
+    dispatch(getFmailyCalendar(groupId));
+  }, [groupId, dispatch]);
 
-    const newEvents = eventsData.map((event) => (
-      <ListItem {...event} onClick={() => setSelectedEventId(event.id)} />
+  useEffect(() => {
+    const currDate = moment(value).format("YYYY-MM-DD");
+    const selectedDayEvents = calendarEvents.filter((event) => {
+      const eventDate = moment(event.date).format("YYYY-MM-DD");
+      return eventDate === currDate;
+    });
+    const newEvents = selectedDayEvents.map((event) => (
+      <ListItem
+        key={event._id}
+        primaryText={event.name}
+        trailingText={""}
+        onClick={() => setSelectedEventId(event._id)}
+      />
     ));
     setEvents(newEvents);
-  }, []);
+  }, [calendarEvents, value]);
+
+  // useEffect(() => {
+  //   const eventsData = [
+  //     {
+  //       id: "idtest",
+  //       primaryText: "event 1",
+  //       trailingText: "trailing 1",
+  //     },
+  //     {
+  //       id: "idtest",
+  //       primaryText: "event 1",
+  //       trailingText: "trailing 1",
+  //     },
+  //     {
+  //       id: "idtest",
+  //       primaryText: "event 1",
+  //       trailingText: "trailing 1",
+  //     },
+  //     {
+  //       id: "idtest",
+  //       primaryText: "event 1",
+  //       trailingText: "trailing 1",
+  //     },
+  //     {
+  //       id: "idtest",
+  //       primaryText: "event 1",
+  //       trailingText: "trailing 1",
+  //     },
+  //     {
+  //       id: "idtest",
+  //       primaryText: "event 1",
+  //       trailingText: "trailing 1",
+  //     },
+  //     {
+  //       id: "idtest",
+  //       primaryText: "event 1",
+  //       trailingText: "trailing 1",
+  //     },
+  //     {
+  //       id: "idtest",
+  //       primaryText: "event 1",
+  //       trailingText: "trailing 1",
+  //     },
+  //     {
+  //       id: "idtest",
+  //       primaryText: "event 1",
+  //       trailingText: "trailing 1",
+  //     },
+  //     {
+  //       id: "idtest",
+  //       primaryText: "event 1",
+  //       trailingText: "trailing 1",
+  //     },
+  //   ];
+
+  //   const newEvents = eventsData.map((event) => (
+  //     <ListItem {...event} onClick={() => setSelectedEventId(event.id)} />
+  //   ));
+  //   setEvents(newEvents);
+  // }, []);
 
   const onChangeCalendar = (date: Date) => {
     const mDate = moment(date);
@@ -137,7 +171,9 @@ const CalendarPage: React.FC = () => {
           locale="en-GB"
         />
       </div>
-      {isAddModifyEventModal && <EventModal id={selectedEventId} />}
+      {isAddModifyEventModal && (
+        <EventModal id={selectedEventId} initDate={value} />
+      )}
     </ContentLayout>
   );
 };
