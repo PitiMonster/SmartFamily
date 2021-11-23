@@ -22,6 +22,13 @@ import ChatRouter from "./pages/Chat/Router";
 import Backdrop from "./components/ux/Backdrop";
 import { toastError } from "./utils/toasts";
 
+import {
+  runSocket,
+  setDispatch,
+  runAppListeners,
+  runAppEmitters,
+} from "./utils/websockets";
+
 const App = () => {
   const dispatch = useAppDispatch();
   const isBackdrop = useAppSelector((store) => store.utils.isBackdrop);
@@ -34,6 +41,16 @@ const App = () => {
   useEffect(() => {
     setUpCloudinary();
   }, []);
+
+  useEffect(() => {
+    const userId = localStorage.getItem("userId");
+    if (userId) {
+      runSocket();
+      setDispatch(dispatch);
+      runAppListeners();
+      runAppEmitters(userId);
+    }
+  }, [dispatch]);
 
   useEffect(() => {
     setIsUserLoggedIn(!!localStorage.getItem("token"));
@@ -64,11 +81,9 @@ const App = () => {
           {isUserLoggedIn && (
             <>
               <Route path="/groups">
-                {console.log("groups")}
                 <GroupsRouter />
               </Route>
               <Route path="/calendar">
-                {console.log("calendar")}
                 <CalendarRouter />
               </Route>
               <Route path="/budgets">

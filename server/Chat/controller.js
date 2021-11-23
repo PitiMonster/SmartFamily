@@ -2,20 +2,14 @@ const Chat = require("./model");
 const crudHandlers = require("../controllers/handlers");
 const catchAsync = require("../utils/catchAsync");
 
-exports.getChat = crudHandlers.getOne(
-  Chat,
-  {
-    path: "members",
-    select: "name surname profilePhotos",
+exports.getChat = crudHandlers.getOne(Chat, {
+  path: "messages",
+  sort: "createdAt",
+  populate: {
+    path: "author",
+    select: "profilePhotos",
   },
-  {
-    path: "messages",
-    populate: {
-      path: "author",
-      select: "profilePhotos",
-    },
-  }
-);
+});
 
 exports.getAllChats = crudHandlers.getAll(
   Chat,

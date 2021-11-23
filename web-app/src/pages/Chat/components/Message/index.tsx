@@ -2,9 +2,9 @@ import { useState, useEffect } from "react";
 
 import classes from "./index.module.scss";
 
-const Message: React.FC<{ author: string; text: string; createdAt: Date }> = (
-  props
-) => {
+import { Message as MessageType } from "../../../../types";
+
+const Message: React.FC<MessageType> = (props) => {
   const [messageClasses, setMessageClasses] = useState<string[]>([
     classes.container,
   ]);
@@ -12,7 +12,9 @@ const Message: React.FC<{ author: string; text: string; createdAt: Date }> = (
   useEffect(() => {
     const newClasses: string[] = [classes.container];
     newClasses.push(
-      props.author === "me" ? classes.authorMe : classes.authorYou
+      (props.author as any)._id === (localStorage.getItem("userId") as string)
+        ? classes.authorMe
+        : classes.authorYou
     );
     setMessageClasses(newClasses);
   }, [props.author]);

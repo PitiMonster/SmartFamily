@@ -74,7 +74,8 @@ exports.getAll = (Model, findObject = {}, findNeedReq = false, ...popObjects) =>
       .filter()
       .limitFields()
       .sort()
-      .paginate();
+      .paginate()
+      .populate();
 
     let docs;
     if (popObjects.length > 0) {

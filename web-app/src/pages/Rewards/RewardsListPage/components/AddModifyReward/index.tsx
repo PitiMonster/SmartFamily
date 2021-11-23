@@ -45,7 +45,6 @@ const AddModifyRewardModal: React.FC<{
   }, [photoId]);
 
   useEffect(() => {
-    console.log(profilePhotoId);
     const profilePhoto = cld?.image(profilePhotoId);
 
     profilePhoto

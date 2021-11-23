@@ -7,9 +7,7 @@ import { groupsActions } from "../groups/slice";
 export const signin = (email: string, password: string) => {
   return async (dispatch: AppDispatch) => {
     try {
-      console.log(email, password);
       const response = await api.post("/users/signin", { email, password });
-      console.log(response);
 
       const { _id, role, families } = response.data.data.user;
       const userChats = response.data.data.userChats;

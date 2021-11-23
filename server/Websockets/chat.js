@@ -5,7 +5,7 @@ const AppError = require("../utils/appError");
 exports.runSockets = (io, socket) => {
   socket.on("send message", async (data) => {
     const { chatId, message, authorId } = data;
-
+    console.log(chatId, message, authorId);
     const chat = await Chat.findById(chatId);
     if (!chat) {
       return socket.emit("error occured", {
@@ -23,7 +23,6 @@ exports.runSockets = (io, socket) => {
       author: authorId,
       text: message,
     });
-
     chat.lastMessageDate = newMessage.createdAt;
     chat.readByMembers = [authorId];
     chat.messages.push(newMessage);

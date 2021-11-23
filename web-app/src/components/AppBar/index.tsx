@@ -65,9 +65,18 @@ const MyAppBar = () => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
     React.useState<null | HTMLElement>(null);
+  const [unreadMessagesCount, setUnreadMessagesCount] =
+    React.useState<string>("0");
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+
+  React.useEffect(() => {
+    const newCount = localStorage.getItem("unreadMessagesCount") as string;
+    if (newCount && newCount !== unreadMessagesCount) {
+      setUnreadMessagesCount(newCount);
+    }
+  }, [localStorage.getItem("unreadMessagesCount")]);
 
   const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -172,10 +181,7 @@ const MyAppBar = () => {
           color="inherit"
           onClick={() => history.push("/chats")}
         >
-          <Badge
-            badgeContent={localStorage.getItem("unreadMessagesCount") ?? 0}
-            color="error"
-          >
+          <Badge badgeContent={unreadMessagesCount} color="error">
             <ChatIcon />
           </Badge>
         </IconButton>
@@ -228,15 +234,22 @@ const MyAppBar = () => {
           >
             <MenuIcon />
           </IconButton>
-          <img className={classes.logo__image} src={logoImgPath} alt="logo" />
-          <Typography
-            variant="h6"
-            noWrap
-            component="div"
-            // sx={{ display: { xs: "none", sm: "block" } }}
+          <div
+            onClick={() => {
+              history.push("/");
+            }}
+            style={{ cursor: "pointer", display: "flex", alignItems: "center" }}
           >
-            Smart Family
-          </Typography>
+            <img className={classes.logo__image} src={logoImgPath} alt="logo" />
+            <Typography
+              variant="h6"
+              noWrap
+              component="div"
+              // sx={{ display: { xs: "none", sm: "block" } }}
+            >
+              Smart Family
+            </Typography>
+          </div>
           <Search sx={{ display: { xs: "none", sm: "block" } }}>
             <SearchIconWrapper>
               <SearchIcon />
@@ -258,10 +271,7 @@ const MyAppBar = () => {
               //   window.location.reload();
               // }}
             >
-              <Badge
-                badgeContent={localStorage.getItem("unreadMessagesCount") ?? 0}
-                color="error"
-              >
+              <Badge badgeContent={unreadMessagesCount} color="error">
                 <ChatIcon />
               </Badge>
             </IconButton>

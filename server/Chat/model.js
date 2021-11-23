@@ -26,7 +26,7 @@ const chatSchema = new mongoose.Schema({
   ],
   lastMessageDate: {
     type: Date,
-    default: new Date(Date.now()),
+    default: Date.now,
   },
   photo: String,
 });
