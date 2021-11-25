@@ -8,11 +8,17 @@ import classes from "./styles.module.scss";
 
 const TextInput: React.FC<{
   text: string;
-  setText: React.Dispatch<React.SetStateAction<string>>;
+  setText?: React.Dispatch<React.SetStateAction<string>>;
   label: string;
   disabled?: boolean;
   icon?: JSX.Element;
-}> = ({ text, setText, label, icon, disabled = false }) => {
+}> = ({
+  text,
+  setText = (value: React.SetStateAction<string>) => {},
+  label,
+  icon,
+  disabled = false,
+}) => {
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setText(event.target.value);
   };

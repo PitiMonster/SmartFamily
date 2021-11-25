@@ -13,7 +13,11 @@ export const getChats = () => {
       dispatch(chatsActions.setChats({ chats: response.data.data }));
     } catch (err: any) {
       console.error("GET CHATS ERROR: ", err);
-      dispatch(utilsActions.setAppError({ msg: err.response.data.message }));
+      dispatch(
+        utilsActions.setAppError({
+          msg: err?.response?.data?.message ?? "Server error",
+        })
+      );
     }
   };
 };
@@ -31,7 +35,11 @@ export const getChatData = (id: string) => async (dispatch: AppDispatch) => {
     );
   } catch (err: any) {
     console.error("GET ONE CHAT ERROR: ", err);
-    dispatch(utilsActions.setAppError({ msg: err.response.data.message }));
+    dispatch(
+      utilsActions.setAppError({
+        msg: err?.response?.data?.message ?? "Server error",
+      })
+    );
   }
 };
 
@@ -43,7 +51,11 @@ export const readChat = (id: string) => async (dispatch: AppDispatch) => {
     }
   } catch (err: any) {
     console.error("READ CHAT ERROR: ", err);
-    dispatch(utilsActions.setAppError({ msg: err.response.data.message }));
+    dispatch(
+      utilsActions.setAppError({
+        msg: err?.response?.data?.message ?? "Server error",
+      })
+    );
   }
 };
 

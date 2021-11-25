@@ -1,27 +1,24 @@
-import { useState, useEffect } from "react";
-
 import classes from "./index.module.scss";
 
-const BudgetsListItem: React.FC<{
-  leftValue: number;
-  budgetName: string;
-  onClick?: () => {};
-}> = ({ leftValue, budgetName, onClick }) => {
-  //   const [value, setValue] = useState<number>(0);
+import { useHistory } from "react-router-dom";
+import { History } from "history";
 
-  //   useEffect(() => {
-  //     if (value !== leftValue) {
-  //       const newValue = value + (1 / 100) * leftValue;
-  //       setTimeout(() => {
-  //         return setValue(newValue);
-  //       }, 5);
-  //     }
-  //   }, [value, leftValue]);
+import { Budget as BudgetType } from "../../../../../types";
+
+const BudgetsListItem: React.FC<BudgetType> = (BudgetData) => {
+  const history = useHistory<History>();
 
   return (
-    <div className={classes.container} onClick={onClick}>
-      <p className={classes.budgetLeftValue}>{leftValue}zł</p>
-      <p className={classes.budgetName}>{budgetName}</p>
+    <div
+      className={classes.container}
+      onClick={() => {
+        history.push(BudgetData._id);
+      }}
+    >
+      <p className={classes.budgetLeftValue}>
+        {+BudgetData.budgetValue - +BudgetData.currentExpensesValue}zł
+      </p>
+      <p className={classes.budgetName}>{BudgetData.name}</p>
     </div>
   );
 };

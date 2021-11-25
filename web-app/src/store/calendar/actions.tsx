@@ -14,7 +14,11 @@ export const getFmailyCalendar = (familyId: string) => {
       );
     } catch (err: any) {
       console.error("GET CALENDAR EVENTS ERROR: ", err);
-      dispatch(utilsActions.setAppError({ msg: err.response.data.message }));
+      dispatch(
+        utilsActions.setAppError({
+          msg: err?.response?.data?.message ?? "Server error",
+        })
+      );
     }
   };
 };
@@ -34,7 +38,7 @@ export const getOneCalendarEvent = (familyId: string, eventId: string) => {
       console.error("GET ONE CALENDAR EVENT ERROR: ", err);
       dispatch(
         utilsActions.setAppError({
-          msg: err.response.data.message ?? "Server error",
+          msg: err?.response?.data?.message ?? "Server error",
         })
       );
     }
@@ -61,7 +65,7 @@ export const addCalendarEvent =
       console.error("CREATE CALENDAR EVENT ERROR: ", err);
       dispatch(
         utilsActions.setAppError({
-          msg: err.response.data.message ?? "Server error",
+          msg: err?.response?.data?.message ?? "Server error",
         })
       );
     }
@@ -95,7 +99,7 @@ export const updateCalendarEvent =
       console.error("UPDATE CALENDAR EVENT ERROR: ", err);
       dispatch(
         utilsActions.setAppError({
-          msg: err.response.data.message ?? "Server error",
+          msg: err?.response?.data?.message ?? "Server error",
         })
       );
     }

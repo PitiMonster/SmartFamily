@@ -5,16 +5,14 @@ import SpecificBudgetPage from "./SepcificBudget";
 
 const Router: React.FC = () => {
   return (
-    <BrowserRouter basename="/budgets">
-      <Switch>
-        <Route path="/" exact={true}>
-          <BudgetsListPage />
-        </Route>
-        <Route path="/:id" exact={true}>
-          <SpecificBudgetPage />
-        </Route>
-      </Switch>
-    </BrowserRouter>
+    <Switch>
+      <Route path="/groups/:groupId/budgets/" exact={true}>
+        <BudgetsListPage />
+      </Route>
+      <Route path="/groups/:groupId/budgets/:id" exact={true}>
+        <SpecificBudgetPage />
+      </Route>
+    </Switch>
   );
 };
 

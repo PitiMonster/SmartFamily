@@ -1,7 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 import { CalendarEvent } from "../../types";
-import { addCalendarEvent } from "./actions";
 
 interface CalendarState {
   calendarEvents: CalendarEvent[];

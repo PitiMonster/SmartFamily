@@ -24,7 +24,11 @@ export const signin = (email: string, password: string) => {
       );
     } catch (err: any) {
       console.error("SIGNIN ERROR: ", err);
-      dispatch(utilsActions.setAppError({ msg: err.response.data.message }));
+      dispatch(
+        utilsActions.setAppError({
+          msg: err?.response?.data?.message ?? "Server error",
+        })
+      );
     }
   };
 };
@@ -40,7 +44,11 @@ export const checkEmail = (email: string) => async (dispatch: AppDispatch) => {
     );
   } catch (err: any) {
     console.error("Check email", err);
-    dispatch(utilsActions.setAppError({ msg: err.response.data.message }));
+    dispatch(
+      utilsActions.setAppError({
+        msg: err?.response?.data?.message ?? "Server error",
+      })
+    );
   }
 };
 
@@ -58,7 +66,11 @@ export const checkUsername =
       );
     } catch (err: any) {
       console.error("Check username", err);
-      dispatch(utilsActions.setAppError({ msg: err.response.data.message }));
+      dispatch(
+        utilsActions.setAppError({
+          msg: err?.response?.data?.message ?? "Server error",
+        })
+      );
     }
   };
 
@@ -76,7 +88,11 @@ export const sendParentCode =
         })
       );
     } catch (err: any) {
-      dispatch(utilsActions.setAppError({ msg: err.response.data.message }));
+      dispatch(
+        utilsActions.setAppError({
+          msg: err?.response?.data?.message ?? "Server error",
+        })
+      );
     }
   };
 
@@ -100,7 +116,11 @@ export const verifyParentCode =
         })
       );
     } catch (err: any) {
-      dispatch(utilsActions.setAppError({ msg: err.response.data.message }));
+      dispatch(
+        utilsActions.setAppError({
+          msg: err?.response?.data?.message ?? "Server error",
+        })
+      );
     }
   };
 
@@ -142,7 +162,11 @@ export const signup = (
       );
     } catch (err: any) {
       console.error("SIGNUP ERROR", err);
-      dispatch(utilsActions.setAppError({ msg: err.response.data.message }));
+      dispatch(
+        utilsActions.setAppError({
+          msg: err?.response?.data?.message ?? "Server error",
+        })
+      );
     }
   };
 };
@@ -160,7 +184,11 @@ export const forgotPassword =
         })
       );
     } catch (err: any) {
-      dispatch(utilsActions.setAppError({ msg: err.response.data.message }));
+      dispatch(
+        utilsActions.setAppError({
+          msg: err?.response?.data?.message ?? "Server error",
+        })
+      );
     }
   };
 export const resetPassword =
@@ -178,6 +206,10 @@ export const resetPassword =
         })
       );
     } catch (err: any) {
-      dispatch(utilsActions.setAppError({ msg: err.response.data.message }));
+      dispatch(
+        utilsActions.setAppError({
+          msg: err?.response?.data?.message ?? "Server error",
+        })
+      );
     }
   };

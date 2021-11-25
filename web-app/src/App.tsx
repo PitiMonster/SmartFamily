@@ -12,11 +12,6 @@ import { setAppError } from "./store/utils/actions";
 import { setUpCloudinary } from "./utils/cloudinary";
 import AuthRouter from "./pages/Authorization/Router";
 import GroupsRouter from "./pages/Groups/Router";
-import CalendarRouter from "./pages/Calendar/Router";
-import BudgetsRouter from "./pages/Budget/Router";
-import ShoppingListRouter from "./pages/ShoppingList/Router";
-import ChildrenRouter from "./pages/Children/Router";
-import TasksRouter from "./pages/Children/Router";
 import ChatRouter from "./pages/Chat/Router";
 
 import Backdrop from "./components/ux/Backdrop";

@@ -12,7 +12,7 @@ import ContentLayout from "../../../layout/ContentLayout";
 
 const SpecificGroupPage: React.FC = () => {
   const history = useHistory<History>();
-  const { groupId } = useParams<{ groupId: string }>();
+  // const { groupId } = useParams<{ groupId: string }>();
 
   const [funcBlocks, setFuncBlocks] = useState<
     | React.DetailedHTMLProps<
@@ -23,14 +23,13 @@ const SpecificGroupPage: React.FC = () => {
   >([]);
 
   useEffect(() => {
-    console.log(groupId);
     const data = [
       {
         photo:
           "https://res.cloudinary.com/dq7ionfvn/image/upload/v1635345933/SmartFamily/calendar.png",
         name: "Calendar",
         onClick: () => {
-          history.push(`${groupId}/calendar`);
+          history.push(`calendar`);
         },
         isBorder: true,
       },
@@ -38,7 +37,9 @@ const SpecificGroupPage: React.FC = () => {
         photo:
           "https://res.cloudinary.com/dq7ionfvn/image/upload/v1635345933/SmartFamily/piggy-bank.png",
         name: "Budgets",
-        onClick: () => {},
+        onClick: () => {
+          history.push(`budgets/`);
+        },
         isBorder: true,
       },
       {
@@ -63,7 +64,7 @@ const SpecificGroupPage: React.FC = () => {
       <GroupBlock key={object.name} {...object} />
     ));
     setFuncBlocks(newFuncObjects);
-  }, [groupId, history]);
+  }, [history]);
 
   return (
     <ContentLayout>

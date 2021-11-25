@@ -5,15 +5,26 @@ import classes from "./index.module.scss";
 import AddIcon from "@mui/icons-material/Add";
 import IconButton from "@mui/material/IconButton";
 
+import { useAppSelector, useAppDispatch } from "../../../hooks";
+
+import { useHistory } from "react-router-dom";
+import { History } from "history";
+import { useParams } from "react-router-dom";
+
 import { HtmlElements } from "../../../types";
 
 import BudgetsListItem from "./components/BudgetsListItem";
 import ContentLayout from "../../../layout/ContentLayout";
 import AddBudgetModal from "../components/AddModifyBudget";
-
-import { useAppSelector } from "../../../hooks";
+import { getFamilyBudgets } from "../../../store/budget/actions";
 
 const BudgetsList: React.FC = () => {
+  const dispatch = useAppDispatch();
+  const budgetsData = useAppSelector((state) => state.budget.budgetsList);
+
+  const history = useHistory<History>();
+  const { groupId } = useParams<{ groupId: string }>();
+
   const [budgets, setBudgets] = useState<HtmlElements>([]);
   const [isAddModifyBudgetModal, setIsAddModifyBudgetModal] =
     useState<boolean>(false);
@@ -27,36 +38,16 @@ const BudgetsList: React.FC = () => {
   }, [isBackdrop]);
 
   useEffect(() => {
-    const data = [
-      {
-        budgetName: "Budget name",
-        leftValue: 100,
-      },
-      {
-        budgetName: "Budget name",
-        leftValue: 50,
-      },
-      {
-        budgetName: "Budget name",
-        leftValue: 1000,
-      },
-      {
-        budgetName: "Budget name",
-        leftValue: 90000,
-      },
-      {
-        budgetName: "Budget name",
-        leftValue: 500,
-      },
-      {
-        budgetName: "Budget name",
-        leftValue: 5500,
-      },
-    ];
-    const newBudgets = data.map((budget) => <BudgetsListItem {...budget} />);
+    dispatch(getFamilyBudgets(groupId));
+  }, [dispatch, groupId]);
+
+  useEffect(() => {
+    const newBudgets = budgetsData.map((budget) => (
+      <BudgetsListItem {...budget} />
+    ));
 
     setBudgets(newBudgets);
-  }, []);
+  }, [budgetsData]);
 
   return (
     <ContentLayout>
@@ -74,7 +65,7 @@ const BudgetsList: React.FC = () => {
         </div>
         <div className={classes.budgets}>{budgets}</div>
       </div>
-      {isAddModifyBudgetModal && <AddBudgetModal />}
+      {isAddModifyBudgetModal && <AddBudgetModal groupId={groupId} />}
     </ContentLayout>
   );
 };
