@@ -41,8 +41,21 @@ const budgetSchema = mongoose.Schema({
       default: [],
     },
   ],
+  currentExpensesValue: {
+    type: Number,
+    default: 0,
+  },
   renewalDate: {
     type: Date,
+  },
+  renewalUnit: {
+    type: String,
+    enum: ["days", "months", "years"],
+    default: "days",
+  },
+  renewalUnitCount: {
+    type: Number,
+    default: 0,
   },
 });
 

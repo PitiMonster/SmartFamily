@@ -78,7 +78,7 @@
     grid-area: expenses;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     border-left: 1px solid $light-gray;
     padding: 0 2rem;
     overflow-y: auto;

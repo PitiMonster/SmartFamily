@@ -106,13 +106,15 @@ export type Expense = {
   _id: string;
   name: string;
   value: Number;
+  description?: string;
 };
 
 export type Budget = {
   _id: string;
   name: string;
   budgetValue: Number;
-  expenses: (Expense | string)[];
+  currentExpensesValue: Number;
+  expenses?: (Expense | string)[];
   renewalDate?: Date;
 };
 

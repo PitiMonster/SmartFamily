@@ -15,7 +15,11 @@ export const getGroups = () => {
       countUnreadMessages(response.data.data.chats);
     } catch (err: any) {
       console.error("GET GROUPS ERROR: ", err);
-      dispatch(utilsActions.setAppError({ msg: err.response.data.message }));
+      dispatch(
+        utilsActions.setAppError({
+          msg: err?.response?.data?.message ?? "Server error",
+        })
+      );
     }
   };
 };
@@ -28,6 +32,10 @@ export const createGroup =
       dispatch(utilsActions.setRequestStatus({ status: response.data.status }));
     } catch (err: any) {
       console.error("CREATE GROUP ERROR: ", err);
-      dispatch(utilsActions.setAppError({ msg: err.response.data.message }));
+      dispatch(
+        utilsActions.setAppError({
+          msg: err?.response?.data?.message ?? "Server error",
+        })
+      );
     }
   };

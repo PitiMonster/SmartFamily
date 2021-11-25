@@ -11,19 +11,26 @@ import AddIcon from "@mui/icons-material/Add";
 import CreateIcon from "@mui/icons-material/Create";
 import IconButton from "@mui/material/IconButton";
 
-import { HtmlElements } from "../../../types";
+import { Expense, HtmlElements } from "../../../types";
 
-import { useAppSelector } from "../../../hooks";
+import { useAppSelector, useAppDispatch } from "../../../hooks";
+import { useParams } from "react-router-dom";
 
 import ContentLayout from "../../../layout/ContentLayout";
 import ListItem from "../../../components/ListItem";
 import ModifyBudgetModal from "../components/AddModifyBudget";
 import AddExpenseModal from "./components/AddExpenseModal";
+import { getOneBudget } from "../../../store/budget/actions";
 
 const SpecificBudgetPage: React.FC = () => {
+  const dispatch = useAppDispatch();
+  const selectedBudget = useAppSelector((state) => state.budget.selectedBudget);
+  const { id, groupId } = useParams<{ groupId: string; id: string }>();
+
   const [progress, setProgress] = useState<number>(0);
-  const [maxValue, setMaxValue] = useState<number>(1000);
-  const [currentValue, setCurrentValue] = useState<number>(1075);
+  const [budgetName, setBudgetName] = useState<string>("");
+  const [maxValue, setMaxValue] = useState<number>(0);
+  const [currentValue, setCurrentValue] = useState<number>(0);
   const [expenses, setExpenses] = useState<HtmlElements>([]);
 
   const [isAddModifyBudgetModal, setIsAddModifyBudgetModal] =
@@ -41,82 +48,49 @@ const SpecificBudgetPage: React.FC = () => {
   }, [isBackdrop]);
 
   useEffect(() => {
-    const data = [
-      {
-        primaryText: "Expense name",
-        trailingText: "12",
-      },
-      {
-        primaryText: "Expense name",
-        trailingText: "12",
-      },
-      {
-        primaryText: "Expense name",
-        trailingText: "12",
-      },
-      {
-        primaryText: "Expense name",
-        trailingText: "12",
-      },
-      {
-        primaryText: "Expense name",
-        trailingText: "12",
-      },
-      {
-        primaryText: "Expense name",
-        trailingText: "12",
-      },
-      {
-        primaryText: "Expense name",
-        trailingText: "12",
-      },
-      {
-        primaryText: "Expense name",
-        trailingText: "12",
-      },
-      {
-        primaryText: "Expense name",
-        trailingText: "12",
-      },
-      {
-        primaryText: "Expense name",
-        trailingText: "12",
-      },
-      {
-        primaryText: "Expense name",
-        trailingText: "12",
-      },
-      {
-        primaryText: "Expense name",
-        trailingText: "12",
-      },
-      {
-        primaryText: "Expense name",
-        trailingText: "12",
-      },
-      {
-        primaryText: "Expense name",
-        trailingText: "12",
-      },
-    ];
-
-    const newExpenses = data.map((expense) => <ListItem {...expense} />);
-    setExpenses(newExpenses);
-  }, []);
+    if (id) {
+      dispatch(getOneBudget(groupId, id));
+    }
+  }, [groupId, id, dispatch]);
 
   useEffect(() => {
-    const temp = (currentValue / maxValue) * 100;
-    if (progress < temp) {
-      let newProgress = parseFloat(
-        (
-          progress +
-          (1 / Math.pow(10, Math.round(Math.log10(temp)))) * temp
-        ).toFixed(2)
+    if (selectedBudget) {
+      setMaxValue(+selectedBudget.budgetValue);
+      console.log(selectedBudget.currentExpensesValue);
+      setCurrentValue(+selectedBudget.currentExpensesValue);
+      setBudgetName(selectedBudget.name);
+    }
+  }, [selectedBudget]);
+
+  useEffect(() => {
+    if (selectedBudget) {
+      const newExpenses = (selectedBudget.expenses as Expense[])?.map(
+        (expense) => (
+          <ListItem
+            primaryText={expense.name}
+            trailingText={expense.value.toString()}
+          />
+        )
       );
-      newProgress = newProgress > temp ? temp : newProgress;
-      setTimeout(() => {
-        return setProgress(newProgress);
-      }, 1);
+      setExpenses(newExpenses);
+    }
+  }, [selectedBudget]);
+
+  useEffect(() => {
+    if (maxValue) {
+      const temp = (currentValue / maxValue) * 100;
+      if (progress < temp) {
+        let newProgress = parseFloat(
+          (
+            progress +
+            (1 / Math.pow(10, Math.round(Math.log10(temp)))) * temp
+          ).toFixed(2)
+        );
+        newProgress = newProgress > temp ? temp : newProgress;
+        setTimeout(() => {
+          return setProgress(newProgress);
+        }, 1);
+      }
     }
   }, [currentValue, maxValue, progress]);
 
@@ -174,7 +148,7 @@ const SpecificBudgetPage: React.FC = () => {
           component="div"
           color="text.secondary"
           className={classes.progress__textProcent}
-        >{`${props.value}%`}</Typography>
+        >{`${props.value.toFixed(2)}%`}</Typography>
       </Box>
     </Box>
   );
@@ -209,8 +183,10 @@ const SpecificBudgetPage: React.FC = () => {
           <div className={classes.expenses__list}>{expenses}</div>
         </div>
       </div>
-      {isAddModifyBudgetModal && <ModifyBudgetModal />}
-      {isAddExpenseModal && <AddExpenseModal />}
+      {isAddModifyBudgetModal && (
+        <ModifyBudgetModal groupId={groupId} selectedBudget={selectedBudget} />
+      )}
+      {isAddExpenseModal && <AddExpenseModal groupId={groupId} budgetId={id} />}
     </ContentLayout>
   );
 };

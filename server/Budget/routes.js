@@ -17,6 +17,7 @@ router
 router
   .route("/:id")
   .get(budgetController.getOneBudget)
-  .post(budgetController.addExpenseToBudget);
+  .post(budgetController.addExpenseToBudget)
+  .patch(budgetController.updateBudget);
 
 module.exports = router;
