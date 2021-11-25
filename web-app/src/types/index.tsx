@@ -35,6 +35,7 @@ export type ShoppingItem = {
   authorName: string;
   count: Number;
   description?: string;
+  checked?: boolean;
 };
 
 export type Reward = {
