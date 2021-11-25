@@ -25,6 +25,10 @@ const shoppingItemSchema = new mongoose.Schema({
       message: "Count value must be positive and integer",
     },
   },
+  checked: {
+    type: Boolean,
+    default: false,
+  },
   description: String,
 });
 

@@ -16,174 +16,103 @@ import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 
 import classes from "./index.module.scss";
 
-import { useAppSelector } from "../../../hooks";
+import { useAppSelector, useAppDispatch } from "../../../hooks";
+import { useParams } from "react-router-dom";
 
 import shopImgPath from "../../../assets/images/shoppingListShop.jpg";
 
 import ContentLayout from "../../../layout/ContentLayout";
 import AddShoppingItemModal from "./components/AddShoppingItemModal";
 
-interface RenderItemOptions {
-  name: string;
-  username: string;
-  price: number;
-  checked: boolean;
-  description: string;
+import { ShoppingItem as ShoppingItemType } from "../../../types";
+import {
+  deleteShoppingItem,
+  getFamilyShoppingItems,
+  updateShoppingItem,
+} from "../../../store/shopping/actions";
+import { toastSuccess } from "../../../utils/toasts";
+import { setStatus } from "../../../store/utils/actions";
+
+interface RenderItemOptions extends ShoppingItemType {
   handleRemoveItem: (name: string) => void;
   onClick: () => void;
 }
 
-interface SelectedShoppingItemData {
+interface SelectedItemType extends ShoppingItemType {
   title: string;
-  name: string;
-  price: number;
-  description: string;
 }
 
 const ListPage: React.FC = () => {
+  const dispatch = useAppDispatch();
+  const shoppingList = useAppSelector((state) => state.shopping.shoppingList);
+  const status = useAppSelector((state) => state.utils.status);
+  const [currentAction, setCurrentAction] = useState<"delete" | "">("");
+
+  const checkedShoppingList = useAppSelector(
+    (state) => state.shopping.checkedShoppingList
+  );
+  const { groupId } = useParams<{ groupId: string }>();
+
   const [selectedShoppingItemData, setSelectedShoppingItemData] =
-    useState<SelectedShoppingItemData>({
+    useState<SelectedItemType>({
+      _id: "",
+      authorName: "",
       title: "Add item",
       name: "",
-      price: 0,
+      count: 0,
       description: "",
+      checked: false,
     });
   const [isAddShoppingItemModal, setIsAddShoppingItemModal] =
     useState<boolean>(false);
-  const [shoppingList, setShoppingList] = useState<
-    {
-      name: string;
-      username: string;
-      price: number;
-      checked: boolean;
-      description: string;
-    }[]
-  >([]);
-  const [checkedShoppingList, setCheckedShoppingList] = useState<
-    {
-      name: string;
-      username: string;
-      price: number;
-      checked: boolean;
-      description: string;
-    }[]
-  >([]);
 
   const isBackdrop = useAppSelector((state) => state.utils.isBackdrop);
+
+  useEffect(() => {
+    dispatch(getFamilyShoppingItems(groupId));
+  }, [dispatch, groupId]);
 
   useEffect(() => {
     if (!isBackdrop) {
       setIsAddShoppingItemModal(false);
       setSelectedShoppingItemData({
+        _id: "",
+        authorName: "",
         title: "Add item",
         name: "",
-        price: 0,
+        count: 0,
         description: "",
+        checked: false,
       });
     }
   }, [isBackdrop]);
 
   useEffect(() => {
-    const items = [
-      {
-        name: "Name1",
-        username: "Pitimonster",
-        price: 12.3,
-        checked: false,
-        description: "Temp description",
-      },
-      {
-        name: "Name2",
-        username: "Pitimonster",
-        price: 12.3,
-        checked: false,
-        description: "Temp description",
-      },
-      {
-        name: "Name3",
-        username: "Pitimonster",
-        price: 12.3,
-        checked: false,
-        description: "Temp description",
-      },
-      {
-        name: "Name4",
-        username: "Pitimonster",
-        price: 12.3,
-        checked: false,
-        description: "Temp description",
-      },
-      {
-        name: "Name5",
-        username: "Pitimonster",
-        price: 12.3,
-        checked: false,
-        description: "Temp description",
-      },
-      {
-        name: "Name6",
-        username: "Pitimonster",
-        price: 12.3,
-        checked: false,
-        description: "Temp description",
-      },
-      {
-        name: "Name7",
-        username: "Pitimonster",
-        price: 12.3,
-        checked: false,
-        description: "Temp description",
-      },
-      {
-        name: "Name8",
-        username: "Pitimonster",
-        price: 12.3,
-        checked: false,
-        description: "Temp description",
-      },
-      {
-        name: "Name8",
-        username: "Pitimonster",
-        price: 12.3,
-        checked: false,
-        description: "Temp description",
-      },
-      {
-        name: "Name8",
-        username: "Pitimonster",
-        price: 12.3,
-        checked: false,
-        description: "Temp description",
-      },
-      {
-        name: "Name8",
-        username: "Pitimonster",
-        price: 12.3,
-        checked: false,
-        description: "Temp description",
-      },
-      {
-        name: "Name8",
-        username: "Pitimonster",
-        price: 12.3,
-        checked: false,
-        description: "Temp description",
-      },
-      {
-        name: "Name10",
-        username: "Pitimonster",
-        price: 12.3,
-        checked: false,
-        description: "Temp description",
-      },
-    ];
-    setShoppingList(items);
-  }, []);
+    if (status === "success") {
+      if (currentAction === "delete") {
+        toastSuccess("Item deleted successfully");
+        dispatch(setStatus(null));
+        setCurrentAction("");
+      }
+    }
+  }, [status, currentAction, dispatch]);
+
+  const handleOnItemClick = (type: "check" | "uncheck", itemId: string) => {
+    dispatch(updateShoppingItem(groupId, itemId, type));
+  };
+
+  const handleRemoveItem = (itemId: string) => {
+    if (itemId) {
+      setCurrentAction("delete");
+      dispatch(deleteShoppingItem(groupId, itemId));
+    }
+  };
 
   const renderItem = ({
+    _id,
     name,
-    username,
-    price,
+    authorName,
+    count,
     checked,
     description,
     handleRemoveItem,
@@ -194,13 +123,13 @@ const ListPage: React.FC = () => {
       secondaryAction={
         <Stack direction="row" alignItems="center">
           <ListItemText
-            primary={`${price.toFixed(2)}zł`}
+            primary={`${count} szt.`}
             sx={{ paddingRight: "1rem" }}
           />
           <IconButton
             aria-label="delete"
             title="Delete"
-            onClick={() => handleRemoveItem(name)}
+            onClick={() => handleRemoveItem(_id)}
             color="error"
           >
             <DeleteIcon />
@@ -211,8 +140,10 @@ const ListPage: React.FC = () => {
             onClick={() => {
               setSelectedShoppingItemData({
                 title: "Modify item",
+                _id,
+                authorName,
                 name,
-                price,
+                count,
                 description,
               });
               setIsAddShoppingItemModal(true);
@@ -235,7 +166,7 @@ const ListPage: React.FC = () => {
             color={checked ? "info" : "primary"}
           />
         </ListItemIcon>
-        <ListItemText id={name} primary={name} secondary={username} />
+        <ListItemText id={name} primary={name} secondary={authorName} />
       </ListItemButton>
     </ListItem>
   );
@@ -265,26 +196,11 @@ const ListPage: React.FC = () => {
             <List>
               <TransitionGroup>
                 {shoppingList.map((item) => (
-                  <Collapse in={item.checked}>
+                  <Collapse key={item._id} in={!item.checked}>
                     {renderItem({
-                      name: item.name,
-                      username: item.username,
-                      price: item.price,
-                      checked: item.checked,
-                      description: item.description,
-                      handleRemoveItem: (name) => {},
-                      onClick: () => {
-                        setShoppingList((prev) => {
-                          const firstItem = prev[0];
-                          firstItem.checked = !firstItem.checked;
-                          const newList = prev.slice(1);
-                          setCheckedShoppingList((prev) => [
-                            firstItem,
-                            ...prev,
-                          ]);
-                          return [...newList];
-                        });
-                      },
+                      ...item,
+                      handleRemoveItem: () => handleRemoveItem(item._id),
+                      onClick: () => handleOnItemClick("check", item._id),
                     })}
                   </Collapse>
                 ))}
@@ -293,23 +209,11 @@ const ListPage: React.FC = () => {
             <List>
               <TransitionGroup>
                 {checkedShoppingList.map((item) => (
-                  <Collapse in={item.checked}>
+                  <Collapse key={item._id} in={item.checked}>
                     {renderItem({
-                      name: item.name,
-                      username: item.username,
-                      price: item.price,
-                      checked: item.checked,
-                      description: item.description,
-                      handleRemoveItem: (name) => {},
-                      onClick: () => {
-                        setCheckedShoppingList((prev) => {
-                          const firstItem = prev[0];
-                          firstItem.checked = !firstItem.checked;
-                          const newList = prev.slice(1);
-                          setShoppingList((prev) => [firstItem, ...prev]);
-                          return [...newList];
-                        });
-                      },
+                      ...item,
+                      handleRemoveItem: () => handleRemoveItem(item._id),
+                      onClick: () => handleOnItemClick("uncheck", item._id),
                     })}
                   </Collapse>
                 ))}
@@ -319,7 +223,7 @@ const ListPage: React.FC = () => {
         </div>
       </div>
       {isAddShoppingItemModal && (
-        <AddShoppingItemModal {...selectedShoppingItemData} />
+        <AddShoppingItemModal {...selectedShoppingItemData} groupId={groupId} />
       )}
     </ContentLayout>
   );

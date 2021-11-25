@@ -46,7 +46,9 @@ const SpecificGroupPage: React.FC = () => {
         photo:
           "https://res.cloudinary.com/dq7ionfvn/image/upload/v1635345933/SmartFamily/shop.png",
         name: "Shopping List",
-        onClick: () => {},
+        onClick: () => {
+          history.push(`shopping/`);
+        },
         isBorder: true,
       },
       {

@@ -14,6 +14,11 @@ router
   .get(shoppingItemController.getShoppingItems)
   .post(shoppingItemController.createShoppingItem);
 
-router.route("/:id").get(shoppingItemController.getOneShoppingItem);
+router
+  .route("/:id")
+  .get(shoppingItemController.getOneShoppingItem)
+  .patch(shoppingItemController.updateShoppingItem)
+  .put(shoppingItemController.patchShoppingItem)
+  .delete(shoppingItemController.deleteShoppingItem);
 
 module.exports = router;

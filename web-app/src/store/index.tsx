@@ -6,6 +6,7 @@ import groupsSlice from "./groups/slice";
 import chatSlice from "./chat/slice";
 import calendarSlice from "./calendar/slice";
 import budgetSlice from "./budget/slice";
+import shoppingListSlice from "./shopping/slice";
 
 const store = configureStore({
   reducer: {
@@ -15,6 +16,7 @@ const store = configureStore({
     chats: chatSlice.reducer,
     calendar: calendarSlice.reducer,
     budget: budgetSlice.reducer,
+    shopping: shoppingListSlice.reducer,
   },
 });
 
