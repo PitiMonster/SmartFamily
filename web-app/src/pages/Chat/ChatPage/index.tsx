@@ -56,7 +56,8 @@ const Chat: React.FC = () => {
 
   useEffect(() => {
     setChatsData(chats);
-    !chatName && chats.length > 0 && dispatch(getChatData(chats[0]._id));
+    if (window.innerWidth >= 900)
+      !chatName && chats.length > 0 && dispatch(getChatData(chats[0]._id));
   }, [chats, dispatch, chatName]);
 
   useEffect(() => {

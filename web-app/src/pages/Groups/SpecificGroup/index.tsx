@@ -8,10 +8,13 @@ import { useHistory } from "react-router-dom";
 import { History } from "history";
 import { useParams } from "react-router-dom";
 
+import { useAppSelector, useAppDispatch } from "../../../hooks";
+
 import ContentLayout from "../../../layout/ContentLayout";
 
 const SpecificGroupPage: React.FC = () => {
   const history = useHistory<History>();
+  const currentUser = useAppSelector((state) => state.user.loggedInUser);
   // const { groupId } = useParams<{ groupId: string }>();
 
   const [funcBlocks, setFuncBlocks] = useState<
@@ -51,14 +54,29 @@ const SpecificGroupPage: React.FC = () => {
         },
         isBorder: true,
       },
-      {
-        photo:
-          "https://res.cloudinary.com/dq7ionfvn/image/upload/v1635345933/SmartFamily/children.png",
-        name: "Children",
-        onClick: () => {},
-        isBorder: true,
-      },
     ];
+
+    data.push(
+      currentUser?.role === "parent"
+        ? {
+            photo:
+              "https://res.cloudinary.com/dq7ionfvn/image/upload/v1635345933/SmartFamily/children.png",
+            name: "Children",
+            onClick: () => {
+              history.push(`children/`);
+            },
+            isBorder: true,
+          }
+        : {
+            photo:
+              "https://res.cloudinary.com/dq7ionfvn/image/upload/v1635345933/SmartFamily/goal.png",
+            name: "Tasks and rewards",
+            onClick: () => {
+              history.push(`children/`);
+            },
+            isBorder: true,
+          }
+    );
 
     // TODO if child role then last object photo equal to 'goal'
 

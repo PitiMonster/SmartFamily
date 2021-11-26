@@ -10,7 +10,6 @@ export const signin = (email: string, password: string) => {
       const response = await api.post("/users/signin", { email, password });
 
       const { _id, role, families } = response.data.data.user;
-      const userChats = response.data.data.userChats;
       localStorage.clear();
       localStorage.setItem("token", response.data.token);
       localStorage.setItem("userId", _id);
@@ -213,3 +212,7 @@ export const resetPassword =
       );
     }
   };
+
+export const logout = (dispatch: AppDispatch) => {
+  dispatch(authActions.logout({}));
+};

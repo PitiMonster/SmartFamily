@@ -23,6 +23,7 @@ import {
   runAppListeners,
   runAppEmitters,
 } from "./utils/websockets";
+import { getCurrentUser } from "./store/user/actions";
 
 const App = () => {
   const dispatch = useAppDispatch();
@@ -38,6 +39,10 @@ const App = () => {
   }, []);
 
   useEffect(() => {
+    console.log("siema uruchomiony");
+  }, []);
+
+  useEffect(() => {
     const userId = localStorage.getItem("userId");
     if (userId) {
       runSocket();
@@ -48,7 +53,11 @@ const App = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    setIsUserLoggedIn(!!localStorage.getItem("token"));
+    const isToken = !!localStorage.getItem("token");
+    setIsUserLoggedIn(isToken);
+    if (isToken) {
+      dispatch(getCurrentUser());
+    }
   }, [localStorage.getItem("token")]);
 
   useEffect(() => {

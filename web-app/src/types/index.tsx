@@ -1,20 +1,20 @@
 export type User = {
   _id: string;
   name: string;
-  surname: string;
-  email: string;
-  username: string;
-  sex: string;
+  surname?: string;
+  email?: string;
+  username?: string;
+  sex?: string;
   profilePhoto: string;
   role: string;
-  birthDate: Date;
-  families: (Family | string)[];
-  notifications: (Notification | string)[];
-  purchasedRewards: (Reward | string)[];
+  birthDate?: Date;
+  families?: (Family | string)[];
+  notifications?: (Notification | string)[];
+  purchasedRewards?: (Reward | string)[];
   parent?: User | string;
-  pointsCount: Number;
-  tasks: (Task | string)[];
-  invitations: (Invitation | string)[];
+  pointsCount?: Number;
+  tasks?: (Task | string)[];
+  invitations?: (Invitation | string)[];
 };
 
 export type Task = {

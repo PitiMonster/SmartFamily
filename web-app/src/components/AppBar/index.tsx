@@ -11,18 +11,21 @@ import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
 import MenuIcon from "@mui/icons-material/Menu";
 import SearchIcon from "@mui/icons-material/Search";
-import AccountCircle from "@mui/icons-material/AccountCircle";
 import ChatIcon from "@mui/icons-material/Chat";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import MoreIcon from "@mui/icons-material/MoreVert";
+import LogoutIcon from "@mui/icons-material/Logout";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 import logoImgPath from "../../assets/icons/idea.svg";
 import classes from "./index.module.scss";
 
 // import history from "history/browser";
 
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import { History } from "history";
+import { useAppDispatch, useAppSelector } from "../../hooks";
+import { logout } from "../../store/auth/actions";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -60,7 +63,9 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 const MyAppBar = () => {
+  const dispatch = useAppDispatch();
   const history = useHistory<History>();
+  const location = useLocation() as any;
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
@@ -193,9 +198,7 @@ const MyAppBar = () => {
           aria-label="show 17 new notifications"
           color="inherit"
         >
-          <Badge badgeContent={17} color="error">
-            <NotificationsIcon />
-          </Badge>
+          <NotificationsIcon />
         </IconButton>
         <p>Notifications</p>
       </MenuItem>
@@ -206,10 +209,11 @@ const MyAppBar = () => {
           aria-controls="primary-search-account-menu"
           aria-haspopup="true"
           color="inherit"
+          onClick={() => dispatch(logout)}
         >
-          <AccountCircle />
+          <LogoutIcon />
         </IconButton>
-        <p>Profile</p>
+        <p>Log out</p>
       </MenuItem>
     </Menu>
   );
@@ -225,15 +229,22 @@ const MyAppBar = () => {
     >
       <AppBar position="sticky">
         <Toolbar>
-          <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="open drawer"
-            sx={{ mr: 2, display: { xs: "block", sm: "none" } }}
-          >
-            <MenuIcon />
-          </IconButton>
+          {location.pathname !== "/groups" && (
+            <IconButton
+              size="large"
+              edge="start"
+              color="inherit"
+              aria-label="open drawer"
+              sx={{
+                mr: 2,
+                alignSelf: "center",
+                display: { xs: "block", sm: "none" },
+              }}
+              onClick={() => history.goBack()}
+            >
+              <ArrowBackIcon />
+            </IconButton>
+          )}
           <div
             onClick={() => {
               history.push("/");
@@ -280,20 +291,15 @@ const MyAppBar = () => {
               aria-label="show 17 new notifications"
               color="inherit"
             >
-              <Badge badgeContent={17} color="error">
-                <NotificationsIcon />
-              </Badge>
+              <NotificationsIcon />
             </IconButton>
             <IconButton
               size="large"
               edge="end"
-              aria-label="account of current user"
-              aria-controls={menuId}
-              aria-haspopup="true"
-              onClick={handleProfileMenuOpen}
+              onClick={() => dispatch(logout)}
               color="inherit"
             >
-              <AccountCircle />
+              <LogoutIcon />
             </IconButton>
           </Box>
           <Box sx={{ display: { xs: "flex", md: "none" } }}>
@@ -311,7 +317,7 @@ const MyAppBar = () => {
         </Toolbar>
       </AppBar>
       {renderMobileMenu}
-      {renderMenu}
+      {/* {renderMenu} */}
     </Box>
   );
 };
