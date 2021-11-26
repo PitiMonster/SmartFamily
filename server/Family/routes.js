@@ -28,4 +28,14 @@ router
   .route("/:id")
   .get(permissionController.isFamilyMember, familyController.getOneFamily);
 
+router.use(permissionController.isRolePermitted("child"));
+
+router
+  .route("/:id/children")
+  .get(permissionController.isFamilyMember, familyController.getFamilyChildren);
+
+router
+  .route("/:id/children/:childId")
+  .get(permissionController.isFamilyMember, familyController.getOneFamilyChild);
+
 module.exports = router;

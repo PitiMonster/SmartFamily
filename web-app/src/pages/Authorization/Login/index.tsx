@@ -33,7 +33,7 @@ const LoginPage: React.FC = () => {
   useEffect(() => {
     if (token) {
       setTimeout(() => {
-        history.replace({ pathname: "/groups" });
+        window.location.reload();
       }, 100);
     }
   }, [token, history]);

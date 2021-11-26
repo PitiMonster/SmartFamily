@@ -4,7 +4,7 @@ import classes from "./index.module.scss";
 
 import { useAppSelector, useAppDispatch } from "../../../hooks";
 
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import { History } from "history";
 
 import { getGroups } from "../../../store/groups/actions";
@@ -19,11 +19,17 @@ const GroupsListPage: React.FC = () => {
   const groups = useAppSelector((state) => state.groups.groups);
   const history = useHistory<History>();
 
+  const location = useLocation() as any;
+
   const [groupBlocks, setGroupBlocks] = useState<HtmlElements>([]);
 
   useEffect(() => {
     dispatch(getGroups());
   }, [dispatch]);
+
+  useEffect(() => {
+    console.log(location.pathname);
+  }, [location]);
 
   useEffect(() => {
     const newGroups = groups.slice();

@@ -5,6 +5,7 @@ const AppError = require("../utils/appError");
 
 exports.isFamilyMember = catchAsync(async (req, res, next) => {
   const id = req.params.familyId ?? req.params.id;
+  console.log(req.params);
   console.log(id);
   const family = await Family.findById(id);
 
@@ -40,3 +41,10 @@ exports.isChatMember = catchAsync(async (req, res, next) => {
 
   return next();
 });
+
+exports.isRolePermitted = (role) => (req, res, next) => {
+  if (!req.user.role === role) {
+    return next(new AppError("Your are not permitted to this action", 403));
+  }
+  return next();
+};

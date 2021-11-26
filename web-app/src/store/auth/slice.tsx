@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { stat } from "fs";
+import history from "history/browser";
 
 interface AuthState {
   token: string | null;
@@ -120,6 +120,9 @@ const authSlice = createSlice({
       state.token = null;
       state.isUserLoggedIn = false;
       state.isSingupSuccess = false;
+      state.status = null;
+      localStorage.clear();
+      window.location.reload();
     },
   },
 });

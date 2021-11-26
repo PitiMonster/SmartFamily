@@ -1,16 +1,25 @@
 import classes from "./index.module.scss";
 
-const ChildrenListItem: React.FC<{ name: string; photo: string }> = ({
-  name,
-  photo,
-}) => {
+import { User as UserType } from "../../../../../types";
+
+import { useHistory } from "react-router-dom";
+import { History } from "history";
+
+const ChildrenListItem: React.FC<UserType> = (props) => {
+  const history = useHistory<History>();
+
   return (
-    <div className={classes.container}>
+    <div
+      className={classes.container}
+      onClick={() => {
+        history.push(`${props._id}/`);
+      }}
+    >
       <div
         className={classes.photo}
-        style={{ backgroundImage: `url(${photo})`, margin: "1px" }}
+        style={{ backgroundImage: `url(${props.profilePhoto})`, margin: "1px" }}
       />
-      <p className={classes.name}>{name}</p>
+      <p className={classes.name}>{props.name}</p>
     </div>
   );
 };
