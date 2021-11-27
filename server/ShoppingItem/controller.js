@@ -84,7 +84,6 @@ exports.patchShoppingItem = catchAsync(async (req, res, next) => {
     { new: true }
   );
   shoppingItem.save();
-  console.log(shoppingItem);
 
   return res.status(200).json({ status: "success", data: shoppingItem });
 });

@@ -37,7 +37,6 @@ exports.updateOne = (Model) =>
 // create object of given Model with req.body data
 exports.createOne = (Model) =>
   catchAsync(async (req, res, next) => {
-    console.log(req.body);
     const doc = await Model.create(req.body);
 
     res.status(201).json({ status: "success", data: { data: doc } });
@@ -59,7 +58,6 @@ exports.getOne = (Model, ...popObjects) =>
     if (!doc) {
       return next(new AppError("No document found with that id", 404));
     }
-    console.log(Model.toString());
     return res.status(200).json({ status: "success", data: doc });
   });
 

@@ -8,12 +8,15 @@ import LocationOnIcon from "@mui/icons-material/LocationOn";
 
 import { useParams } from "react-router-dom";
 
+import { History } from "history";
+import { useHistory } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "../../../hooks";
+
 import classes from "./index.module.scss";
 
 import ContentLayout from "../../../layout/ContentLayout";
 
 import { User as UserType } from "../../../types";
-import { useAppDispatch, useAppSelector } from "../../../hooks";
 import { getOneChild } from "../../../store/children/actions";
 
 const SpecificChildPage: React.FC = () => {
@@ -21,6 +24,7 @@ const SpecificChildPage: React.FC = () => {
   const currentUser = useAppSelector((state) => state.user.loggedInUser);
   const selectedChild = useAppSelector((state) => state.children.selectedChild);
   const { id, groupId } = useParams<{ id: string; groupId: string }>();
+  const history = useHistory<History>();
 
   const [image, setImage] = useState<string>("");
   const [name, setName] = useState<string>("");
@@ -36,6 +40,7 @@ const SpecificChildPage: React.FC = () => {
       if (id === user?._id) {
         setImage(user.profilePhoto);
         setName(user.name);
+        console.log("mypoints", (user?.pointsCount as any)[groupId] as string);
         setPoints(((user?.pointsCount as any)[groupId] as number) ?? 0);
       } else {
         dispatch(getOneChild(groupId, id));
@@ -44,12 +49,12 @@ const SpecificChildPage: React.FC = () => {
   }, [id, user, dispatch, groupId]);
 
   useEffect(() => {
-    if (selectedChild) {
+    if (selectedChild && selectedChild?._id !== user?._id) {
       setImage(selectedChild.profilePhoto);
       setName(selectedChild.name);
       setPoints((selectedChild.points as number) ?? 0);
     }
-  }, [selectedChild]);
+  }, [selectedChild, user]);
 
   if (!user) return <></>;
 
@@ -67,7 +72,11 @@ const SpecificChildPage: React.FC = () => {
         <div className={classes.menu}>
           <FormControlLabel
             control={
-              <IconButton>
+              <IconButton
+                onClick={() => {
+                  history.push("tasks/");
+                }}
+              >
                 <TaskIcon />
               </IconButton>
             }
@@ -75,7 +84,7 @@ const SpecificChildPage: React.FC = () => {
           />
           <FormControlLabel
             control={
-              <IconButton>
+              <IconButton onClick={() => history.push("rewards/")}>
                 <CardGiftcardIcon />
               </IconButton>
             }

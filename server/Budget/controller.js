@@ -17,8 +17,6 @@ exports.getBudgets = catchAsync(async (req, res, next) => {
 exports.createBudget = catchAsync(async (req, res, next) => {
   const { name, budgetValue, renewalDate, renewalUnit, renewalUnitCount } =
     req.body;
-  console.log("siema1");
-  console.log(req.family._id);
   const newBudget = await Budget.create({
     name,
     uniqueName: req.family._id.toString() + name.toString(),
@@ -27,8 +25,6 @@ exports.createBudget = catchAsync(async (req, res, next) => {
     renewalUnit,
     renewalUnitCount,
   });
-  console.log("siema2");
-
   req.family.budgets.push(newBudget);
   req.family.save({ validateBeforeSave: false });
 

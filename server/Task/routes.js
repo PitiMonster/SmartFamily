@@ -11,9 +11,12 @@ router.use(permissionController.isFamilyMember);
 router.route("/").get(taskController.getTasks).post(taskController.createTask);
 
 router.route("/:id").get(taskController.getTask);
-router.route("/:id/complete").delete(taskController.completeTask);
+router
+  .route("/:id")
+  .patch(authController.restrictTo("child"), taskController.completeTask)
+  .delete(authController.restrictTo("parent"), taskController.removeTask);
 router
   .route("/:id/response/:response(done|todo)")
-  .patch(taskController.responseTask);
+  .patch(authController.restrictTo("parent"), taskController.responseTask);
 
 module.exports = router;
