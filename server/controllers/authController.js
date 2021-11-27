@@ -84,6 +84,7 @@ exports.signUp = catchAsync(async (req, res, next) => {
     password,
     passwordConfirm,
     active,
+    pointsCount: {},
   });
 
   if (role === "parent") {

@@ -12,7 +12,8 @@ export type User = {
   notifications?: (Notification | string)[];
   purchasedRewards?: (Reward | string)[];
   parent?: User | string;
-  pointsCount?: Number;
+  pointsCount?: { [key: string]: Number };
+  points?: Number;
   tasks?: (Task | string)[];
   invitations?: (Invitation | string)[];
 };

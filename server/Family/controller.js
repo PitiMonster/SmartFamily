@@ -65,7 +65,7 @@ exports.getFamilyChildren = catchAsync(async (req, res, next) => {
   console.log(id);
   const family = await Family.findById(id).populate({
     path: "members",
-    select: "name profilePhoto points role",
+    select: "name profilePhoto pointsCount role",
   });
 
   // points chnge to object {
@@ -80,6 +80,9 @@ exports.getFamilyChildren = catchAsync(async (req, res, next) => {
   const children = [];
   for (member of family.members) {
     if (member.role === "child") {
+      console.log(member.pointsCount.get(id));
+      member.points = member.pointsCount.get(id);
+      member.pointsCount = undefined;
       children.push(member);
     }
   }
@@ -108,10 +111,14 @@ exports.getOneFamilyChild = catchAsync(async (req, res, next) => {
   }
 
   const child = await User.findById(childId).select(
-    "profilePhoto name points role"
+    "profilePhoto name pointsCount role"
   );
   if (!child || child.role === "parent") {
     return next(new AppError("No child found in provided family", 404));
   }
+  console.log(child.pointsCount.get(id));
+  child.points = child.pointsCount.get(id);
+  child.pointsCount = undefined;
+
   return res.status(200).json({ status: "success", data: child });
 });

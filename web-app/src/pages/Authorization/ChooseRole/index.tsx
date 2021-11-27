@@ -70,7 +70,6 @@ const ChooseRolePage: React.FC = () => {
 
   useEffect(() => {
     if (status === "success") {
-      dispatch(setStatus(null));
       if (role === "parent") {
         toastSuccess("You have successfully created account!\nSign in now!");
         history.replace("/auth/signin");
@@ -78,8 +77,9 @@ const ChooseRolePage: React.FC = () => {
       } else if (role === "child") {
         history.replace("/auth/signup/parent-code");
       }
+      dispatch(setStatus(null));
     }
-  }, [status]);
+  }, [status, dispatch, history, role]);
 
   return (
     <AuthLayout>

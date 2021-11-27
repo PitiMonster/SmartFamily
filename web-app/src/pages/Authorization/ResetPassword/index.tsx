@@ -35,7 +35,8 @@ const ForgotPasswordPage: React.FC = () => {
       setStatus(null);
       history.replace("/auth/signin");
     }
-  }, [status]);
+    dispatch(setStatus(null));
+  }, [status, dispatch, history]);
 
   const handleResetPassword = () => {
     setPasswordConfirmError(false);

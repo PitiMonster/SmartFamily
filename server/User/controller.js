@@ -19,14 +19,6 @@ exports.filterFieldsToUpdate = (req, res, next) => {
   next();
 };
 
-exports.getUser = crudHandlers.getOne(
-  User
-  // { path: "notifications", select: "text" },
-  // {
-  //   path: "invitations",
-  //   select: "sender",
-  //   populate: { path: "sender", select: "name surname profilePhoto" },
-  // }
-);
+exports.getUser = crudHandlers.getOne(User);
 exports.getAllUsers = crudHandlers.getAll(User);
 exports.updateUser = crudHandlers.updateOne(User);

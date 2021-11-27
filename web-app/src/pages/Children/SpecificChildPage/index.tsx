@@ -36,7 +36,7 @@ const SpecificChildPage: React.FC = () => {
       if (id === user?._id) {
         setImage(user.profilePhoto);
         setName(user.name);
-        setPoints((user?.pointsCount as number) ?? 0);
+        setPoints(((user?.pointsCount as any)[groupId] as number) ?? 0);
       } else {
         dispatch(getOneChild(groupId, id));
       }
@@ -47,7 +47,7 @@ const SpecificChildPage: React.FC = () => {
     if (selectedChild) {
       setImage(selectedChild.profilePhoto);
       setName(selectedChild.name);
-      setPoints((selectedChild.pointsCount as number) ?? 0);
+      setPoints((selectedChild.points as number) ?? 0);
     }
   }, [selectedChild]);
 

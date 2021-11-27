@@ -94,6 +94,7 @@ const ListPage: React.FC = () => {
         dispatch(setStatus(null));
         setCurrentAction("");
       }
+      dispatch(setStatus(null));
     }
   }, [status, currentAction, dispatch]);
 

@@ -79,8 +79,8 @@ const userSchema = new mongoose.Schema(
       ref: "User",
     },
     pointsCount: {
-      type: Number,
-      default: 0,
+      type: Map,
+      of: Number,
     },
     password: {
       type: String,

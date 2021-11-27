@@ -17,6 +17,7 @@ import { HtmlElements } from "../../../types";
 const GroupsListPage: React.FC = () => {
   const dispatch = useAppDispatch();
   const groups = useAppSelector((state) => state.groups.groups);
+  const currentUser = useAppSelector((state) => state.user.loggedInUser);
   const history = useHistory<History>();
 
   const location = useLocation() as any;
@@ -33,12 +34,13 @@ const GroupsListPage: React.FC = () => {
 
   useEffect(() => {
     const newGroups = groups.slice();
-    newGroups.push({
-      _id: "create-new",
-      name: "Utwórz grupę",
-      photo:
-        "https://res.cloudinary.com/dq7ionfvn/image/upload/v1635284961/SmartFamily/GroupPhotos/new-group.jpg",
-    });
+    currentUser?.role === "parent" &&
+      newGroups.push({
+        _id: "create-new",
+        name: "Utwórz grupę",
+        photo:
+          "https://res.cloudinary.com/dq7ionfvn/image/upload/v1635284961/SmartFamily/GroupPhotos/new-group.jpg",
+      });
 
     const newBlockGroups = newGroups.map((group, index) => (
       <GroupBlock
@@ -49,7 +51,7 @@ const GroupsListPage: React.FC = () => {
     ));
 
     setGroupBlocks(newBlockGroups);
-  }, [groups, history]);
+  }, [groups, history, currentUser]);
 
   return (
     <ContentLayout>

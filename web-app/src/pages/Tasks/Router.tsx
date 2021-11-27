@@ -5,7 +5,7 @@ import TasksListPage from "./TasksListPage";
 const Router: React.FC = () => {
   return (
     <Switch>
-      <Route path="/:id/tasks" exact={true}>
+      <Route path="" exact={true}>
         <TasksListPage />
       </Route>
     </Switch>
