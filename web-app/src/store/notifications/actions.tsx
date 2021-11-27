@@ -1,7 +1,29 @@
+import api from "../../api/api";
 import { Socket } from "socket.io-client";
 import { AppDispatch } from "..";
-
+import { notificationsActions } from "./slice";
+import { utilsActions } from "../utils/slice";
 import { chatsActions } from "../chat/slice";
+import { invitationsActions } from "../invitations/slice";
+
+export const getNotifications = async (dispatch: AppDispatch) => {
+  try {
+    const response = await api.get("/notifications/");
+    console.log(response, "notifications");
+    dispatch(
+      notificationsActions.setNotifications({
+        notifications: response.data.data,
+      })
+    );
+  } catch (err: any) {
+    console.error("GET NOTIFICATIONS ERROR: ", err);
+    dispatch(
+      utilsActions.setAppError({
+        msg: err?.response?.data?.message ?? "Server error",
+      })
+    );
+  }
+};
 
 export const runNotificationSocketListeners = (
   socket: Socket,
@@ -21,11 +43,24 @@ export const runNotificationSocketListeners = (
           })
         );
         break;
-      // case 'acquaintance request':
-      //   console.log('new request: ', notification);
-      //   const { request } = notification;
-      //   dispatch(notificationActions.addNewRequest({ request }));
-      //   break;
+      case "notification":
+        console.log("new request: ", notification);
+        dispatch(notificationsActions.addNotification({ notification }));
+        switch (notification.type) {
+          case "invitation":
+            dispatch(
+              invitationsActions.addInvitation({
+                invitation: notification.invitation,
+              })
+            );
+            break;
+
+          default:
+            break;
+        }
+        // const { request } = notification;
+        // dispatch(notificationActions.addNewRequest({ request }));
+        break;
       default:
         break;
     }

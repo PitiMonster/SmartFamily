@@ -74,66 +74,6 @@ const CalendarPage: React.FC = () => {
     setEvents(newEvents);
   }, [calendarEvents, value]);
 
-  // useEffect(() => {
-  //   const eventsData = [
-  //     {
-  //       id: "idtest",
-  //       primaryText: "event 1",
-  //       trailingText: "trailing 1",
-  //     },
-  //     {
-  //       id: "idtest",
-  //       primaryText: "event 1",
-  //       trailingText: "trailing 1",
-  //     },
-  //     {
-  //       id: "idtest",
-  //       primaryText: "event 1",
-  //       trailingText: "trailing 1",
-  //     },
-  //     {
-  //       id: "idtest",
-  //       primaryText: "event 1",
-  //       trailingText: "trailing 1",
-  //     },
-  //     {
-  //       id: "idtest",
-  //       primaryText: "event 1",
-  //       trailingText: "trailing 1",
-  //     },
-  //     {
-  //       id: "idtest",
-  //       primaryText: "event 1",
-  //       trailingText: "trailing 1",
-  //     },
-  //     {
-  //       id: "idtest",
-  //       primaryText: "event 1",
-  //       trailingText: "trailing 1",
-  //     },
-  //     {
-  //       id: "idtest",
-  //       primaryText: "event 1",
-  //       trailingText: "trailing 1",
-  //     },
-  //     {
-  //       id: "idtest",
-  //       primaryText: "event 1",
-  //       trailingText: "trailing 1",
-  //     },
-  //     {
-  //       id: "idtest",
-  //       primaryText: "event 1",
-  //       trailingText: "trailing 1",
-  //     },
-  //   ];
-
-  //   const newEvents = eventsData.map((event) => (
-  //     <ListItem {...event} onClick={() => setSelectedEventId(event.id)} />
-  //   ));
-  //   setEvents(newEvents);
-  // }, []);
-
   const onChangeCalendar = (date: Date) => {
     const mDate = moment(date);
     onChange(date);

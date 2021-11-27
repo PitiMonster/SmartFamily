@@ -16,9 +16,13 @@ import NotificationsIcon from "@mui/icons-material/Notifications";
 import MoreIcon from "@mui/icons-material/MoreVert";
 import LogoutIcon from "@mui/icons-material/Logout";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import Popper from "@mui/material/Popper";
+import Fade from "@mui/material/Fade";
 
 import logoImgPath from "../../assets/icons/idea.svg";
 import classes from "./index.module.scss";
+
+import NotificationsInvitationsTabWindow from "./components/NotificationsInvitationsTabWindow";
 
 // import history from "history/browser";
 
@@ -67,7 +71,13 @@ const MyAppBar = () => {
   const history = useHistory<History>();
   const location = useLocation() as any;
 
+  const appBarRef = React.useRef<null | HTMLElement>(null);
+
+  const [isNotificationsOpen, setIsNotificationsOpen] =
+    React.useState<boolean>(false);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [notificationsAnchorEl, setNotificationsAnchorEl] =
+    React.useState<null | HTMLElement>(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
     React.useState<null | HTMLElement>(null);
   const [unreadMessagesCount, setUnreadMessagesCount] =
@@ -98,6 +108,14 @@ const MyAppBar = () => {
 
   const handleMobileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setMobileMoreAnchorEl(event.currentTarget);
+  };
+
+  const handleClickNotifications = (event: React.MouseEvent<HTMLElement>) => {
+    console.log(isNotificationsOpen);
+    if (window.innerWidth < 900) {
+      setNotificationsAnchorEl(appBarRef as any);
+    } else setNotificationsAnchorEl(event.currentTarget);
+    setIsNotificationsOpen((isNotificationsOpen) => !isNotificationsOpen);
   };
 
   const menuId = "primary-search-account-menu";
@@ -197,6 +215,7 @@ const MyAppBar = () => {
           size="large"
           aria-label="show 17 new notifications"
           color="inherit"
+          onClick={handleClickNotifications}
         >
           <NotificationsIcon />
         </IconButton>
@@ -220,6 +239,7 @@ const MyAppBar = () => {
 
   return (
     <Box
+      ref={appBarRef}
       sx={{
         flexGrow: 1,
         gridArea: "appBar",
@@ -290,9 +310,34 @@ const MyAppBar = () => {
               size="large"
               aria-label="show 17 new notifications"
               color="inherit"
+              onClick={handleClickNotifications}
             >
               <NotificationsIcon />
             </IconButton>
+            <Popper
+              open={isNotificationsOpen}
+              anchorEl={notificationsAnchorEl}
+              transition
+            >
+              {({ TransitionProps }) => (
+                <Fade {...TransitionProps} timeout={350}>
+                  <Box
+                    sx={{
+                      mt: { xs: 8, md: 1 },
+                      mr: { xs: 0, md: 1 },
+                      boxShadow: 3,
+                      backgroundColor: "#fff",
+                      width: { xs: "100vw", md: "350px" },
+                      height: { xs: "93vh", md: "400px" },
+                      overflowY: "auto",
+                      overflowX: "hidden",
+                    }}
+                  >
+                    <NotificationsInvitationsTabWindow />
+                  </Box>
+                </Fade>
+              )}
+            </Popper>
             <IconButton
               size="large"
               edge="end"

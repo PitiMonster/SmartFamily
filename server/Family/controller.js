@@ -15,6 +15,8 @@ exports.getFamilies = catchAsync(async (req, res, next) => {
     },
   });
 
+  console.log(user);
+
   const userChats = [];
 
   for (const family of user.families) {

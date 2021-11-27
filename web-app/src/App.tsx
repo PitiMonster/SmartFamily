@@ -24,6 +24,8 @@ import {
   runAppEmitters,
 } from "./utils/websockets";
 import { getCurrentUser } from "./store/user/actions";
+import { getNotifications } from "./store/notifications/actions";
+import { getInvitations } from "./store/invitations/actions";
 
 const App = () => {
   const dispatch = useAppDispatch();
@@ -57,6 +59,8 @@ const App = () => {
     setIsUserLoggedIn(isToken);
     if (isToken) {
       dispatch(getCurrentUser());
+      dispatch(getNotifications);
+      dispatch(getInvitations);
     }
   }, [localStorage.getItem("token")]);
 
