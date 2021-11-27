@@ -17,14 +17,26 @@ import TextInput from "../../../../../components/inputs/TextInput";
 import MainButton from "../../../../../components/buttons/MainButton";
 import { cloudinaryUploadWidget, cld } from "../../../../../utils/cloudinary";
 
-const AddModifyRewardModal: React.FC<{
+import { Reward as RewardType } from "../../../../../types";
+
+interface PropsType extends RewardType {
   title: string;
-  name: string;
-  photo: string;
   photoId: string;
-  points: number;
-  description: string;
-}> = ({ title, name, photo, photoId, points, description }) => {
+  groupId: string;
+  childId: string;
+}
+
+const AddModifyRewardModal: React.FC<PropsType> = ({
+  groupId,
+  childId,
+  _id,
+  title,
+  name,
+  photo,
+  photoId,
+  points,
+  description,
+}) => {
   const dispatch = useAppDispatch();
   const [rewardName, setRewardName] = useState<string>("");
   const [rewardPoints, setRewardPoints] = useState<string>("");
@@ -63,7 +75,7 @@ const AddModifyRewardModal: React.FC<{
     setRewardName(name);
     setRewardPoints(points.toString());
     setRewardPhoto(photo);
-    setRewardDescription(description);
+    setRewardDescription(description as string);
   }, [name, points, photo, description]);
 
   return (

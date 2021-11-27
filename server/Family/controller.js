@@ -84,7 +84,7 @@ exports.getFamilyChildren = catchAsync(async (req, res, next) => {
 });
 
 exports.getOneFamilyChild = catchAsync(async (req, res, next) => {
-  const { id, childId } = req.params;
+  const { childId, id } = req.params;
   const family = await Family.findById(id);
   // points chnge to object {
   //  familyId: pointsValue
@@ -108,8 +108,11 @@ exports.getOneFamilyChild = catchAsync(async (req, res, next) => {
   if (!child || child.role === "parent") {
     return next(new AppError("No child found in provided family", 404));
   }
-  child.points = child.pointsCount.get(id);
-  child.pointsCount = undefined;
+  console.log(child.pointsCount);
 
-  return res.status(200).json({ status: "success", data: child });
+  const jsChild = child.toJSON();
+  jsChild.points = child.pointsCount.get(id);
+  jsChild.pointsCount = undefined;
+
+  return res.status(200).json({ status: "success", data: jsChild });
 });

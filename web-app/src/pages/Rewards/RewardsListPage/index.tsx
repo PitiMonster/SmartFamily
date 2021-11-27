@@ -12,38 +12,42 @@ import { Stack } from "@mui/material";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
 import Avatar from "@mui/material/Avatar";
+import ShoppingBasketIcon from "@mui/icons-material/ShoppingBasket";
 
 import classes from "./index.module.scss";
 
-import { useAppSelector } from "../../../hooks";
+import { useAppSelector, useAppDispatch } from "../../../hooks";
+import { useParams } from "react-router-dom";
 
 import rewardImagePath from "../../../assets/images/rewardPhoto.jpg";
 
 import ContentLayout from "../../../layout/ContentLayout";
 import AddModifyRewardModal from "./components/AddModifyReward";
 
-interface RenderRewardOptions {
-  name: string;
-  photo: string;
-  points: number;
+import { Reward as RewardType } from "../../../types";
+import { purchaseReward } from "../../../store/rewards/actions";
+
+interface RenderRewardOptions extends RewardType {
   photoId: string;
-  description: string;
-  handleRemoveItem: (name: string) => void;
+  handleSecondaryAction: () => void;
   onClick: () => void;
 }
 
-interface SelectedRewardData {
+interface SelectedRewardData extends RewardType {
   title: string;
-  photo: string;
   photoId: string;
-  name: string;
-  points: number;
-  description: string;
 }
 
 const RewardsListPage: React.FC = () => {
+  const dispatch = useAppDispatch();
+  const currentUser = useAppSelector((state) => state.user.loggedInUser);
+  const rewards = useAppSelector((state) => state.rewards.rewards);
+  const isBackdrop = useAppSelector((state) => state.utils.isBackdrop);
+  const { id, groupId } = useParams<{ id: string; groupId: string }>();
+
   const [selectedRewardData, setSelectedRewardData] =
     useState<SelectedRewardData>({
+      _id: "none",
       title: "Add reward",
       name: "https://res.cloudinary.com/dq7ionfvn/image/upload/v1634891263/SmartFamily/default_person.jpg",
       photo: "",
@@ -53,91 +57,39 @@ const RewardsListPage: React.FC = () => {
     });
   const [isAddModifyRewardModal, setIsAddModifyRewardModal] =
     useState<boolean>(false);
-  const [rewardsList, setRewardsList] = useState<
-    {
-      name: string;
-      photo: string;
-      points: number;
-      photoId: string;
-      description: string;
-    }[]
-  >([]);
-
-  const isBackdrop = useAppSelector((state) => state.utils.isBackdrop);
+  // const [rewardsList, setRewardsList] = useState<
+  //   {
+  //     name: string;
+  //     photo: string;
+  //     points: number;
+  //     photoId: string;
+  //     description: string;
+  //   }[]
+  // >([]);
 
   useEffect(() => {
     if (!isBackdrop) {
       setIsAddModifyRewardModal(false);
-      setSelectedRewardData({
-        title: "Add reward",
-        name: "",
-        photo:
-          "https://res.cloudinary.com/dq7ionfvn/image/upload/v1634891263/SmartFamily/default_person.jpg",
-        photoId: "SmartFamily/piggy-bank",
-        points: 0,
-        description: "",
-      });
+      // setSelectedRewardData({
+      //   title: "Add reward",
+      //   name: "",
+      //   photo:
+      //     "https://res.cloudinary.com/dq7ionfvn/image/upload/v1634891263/SmartFamily/default_person.jpg",
+      //   photoId: "SmartFamily/piggy-bank",
+      //   points: 0,
+      //   description: "",
+      // });
     }
   }, [isBackdrop]);
 
-  useEffect(() => {
-    const items = [
-      {
-        name: "Do homework",
-        photo:
-          "https://res.cloudinary.com/dq7ionfvn/image/upload/v1635345933/SmartFamily/piggy-bank.png",
-        photoId: "SmartFamily/piggy-bank",
-
-        points: 25,
-        description: "Tem desc",
-      },
-      {
-        name: "Do homework",
-        photo:
-          "https://res.cloudinary.com/dq7ionfvn/image/upload/v1635345933/SmartFamily/piggy-bank.png",
-        photoId: "SmartFamily/piggy-bank",
-
-        points: 25,
-        description: "Tem desc",
-      },
-      {
-        name: "Do homework",
-        photo:
-          "https://res.cloudinary.com/dq7ionfvn/image/upload/v1635345933/SmartFamily/piggy-bank.png",
-        photoId: "SmartFamily/piggy-bank",
-
-        points: 25,
-        description: "Tem desc",
-      },
-      {
-        name: "Do homework",
-        photo:
-          "https://res.cloudinary.com/dq7ionfvn/image/upload/v1635345933/SmartFamily/piggy-bank.png",
-        photoId: "SmartFamily/piggy-bank",
-
-        points: 25,
-        description: "Tem desc",
-      },
-      {
-        name: "Do homework",
-        photo:
-          "https://res.cloudinary.com/dq7ionfvn/image/upload/v1635345933/SmartFamily/piggy-bank.png",
-        photoId: "SmartFamily/piggy-bank",
-
-        points: 25,
-        description: "Tem desc",
-      },
-    ];
-    setRewardsList(items);
-  }, []);
-
   const renderItem = ({
+    _id,
     name,
     photo,
     photoId,
     points,
     description,
-    handleRemoveItem,
+    handleSecondaryAction,
     onClick,
   }: RenderRewardOptions) => (
     <ListItem
@@ -150,26 +102,29 @@ const RewardsListPage: React.FC = () => {
             sx={{ paddingRight: "1rem" }}
           />
           <IconButton
-            aria-label="delete"
-            title="Delete"
-            onClick={() => handleRemoveItem(name)}
-            color="error"
+            onClick={() => handleSecondaryAction()}
+            color={currentUser?.role === "parent" ? "error" : "primary"}
           >
-            <DeleteIcon />
+            {currentUser?.role === "parent" ? (
+              <DeleteIcon />
+            ) : (
+              <ShoppingBasketIcon />
+            )}
           </IconButton>
           <IconButton
             aria-label="info"
             title="Info"
             onClick={() => {
-              setSelectedRewardData({
-                title: "Modify reward",
-                name,
-                photo,
-                photoId,
-                points,
-                description,
-              });
-              setIsAddModifyRewardModal(true);
+              // setSelectedRewardData({
+              //   _id,
+              //   title: "Modify reward",
+              //   name,
+              //   photo,
+              //   photoId,
+              //   points,
+              //   description,
+              // });
+              // setIsAddModifyRewardModal(true);
             }}
           >
             <KeyboardArrowRightIcon />
@@ -209,10 +164,17 @@ const RewardsListPage: React.FC = () => {
           </div>
           <List className={classes.list}>
             <TransitionGroup>
-              {rewardsList.map((item) =>
+              {rewards.map((item) =>
                 renderItem({
                   ...item,
-                  handleRemoveItem: (name) => {},
+                  photoId: "default",
+                  handleSecondaryAction: () => {
+                    if (currentUser?.role === "parent") {
+                      // remove item
+                    } else if (currentUser?.role === "child") {
+                      dispatch(purchaseReward(groupId, id, item._id));
+                    }
+                  },
                   onClick: () => {},
                 })
               )}
@@ -221,7 +183,11 @@ const RewardsListPage: React.FC = () => {
         </div>
       </div>
       {isAddModifyRewardModal && (
-        <AddModifyRewardModal {...selectedRewardData} />
+        <AddModifyRewardModal
+          groupId={groupId}
+          childId={id}
+          {...selectedRewardData}
+        />
       )}
     </ContentLayout>
   );

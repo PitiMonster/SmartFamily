@@ -36,7 +36,7 @@ router
   .route("/:id/children/:childId")
   .get(permissionController.isFamilyMember, familyController.getOneFamilyChild);
 
-router.use("/:familyId/:children/:childId/tasks", taskRouter);
-router.use("/:familyId/:children/:childId/rewards", rewardRouter);
+router.use("/:familyId/children/:childId/tasks", taskRouter);
+router.use("/:familyId/children/:childId/rewards", rewardRouter);
 
 module.exports = router;

@@ -12,6 +12,7 @@ import userSlice from "./user/slice";
 import invitationsSlice from "./invitations/slice";
 import notificationsSlice from "./notifications/slice";
 import tasksSlice from "./tasks/slice";
+import rewardsSlice from "./rewards/slice";
 
 const store = configureStore({
   reducer: {
@@ -27,6 +28,7 @@ const store = configureStore({
     invitations: invitationsSlice.reducer,
     notifications: notificationsSlice.reducer,
     tasks: tasksSlice.reducer,
+    rewards: rewardsSlice.reducer,
   },
 });
 

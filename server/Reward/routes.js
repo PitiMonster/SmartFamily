@@ -13,7 +13,9 @@ router
   .get(rewardController.getRewards)
   .post(authController.restrictTo("parent"), rewardController.createReward);
 
-router.route("/:id").get(rewardController.getReward);
-router.route("/:id/purchase").patch(rewardController.purchaseReward);
+router
+  .route("/:id")
+  .get(rewardController.getReward)
+  .patch(authController.restrictTo("child"), rewardController.purchaseReward);
 
 module.exports = router;

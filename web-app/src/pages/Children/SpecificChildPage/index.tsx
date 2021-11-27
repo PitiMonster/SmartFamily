@@ -36,11 +36,10 @@ const SpecificChildPage: React.FC = () => {
   }, [currentUser]);
 
   useEffect(() => {
-    if (id) {
+    if (id && user) {
       if (id === user?._id) {
         setImage(user.profilePhoto);
         setName(user.name);
-        console.log("mypoints", (user?.pointsCount as any)[groupId] as string);
         setPoints(((user?.pointsCount as any)[groupId] as number) ?? 0);
       } else {
         dispatch(getOneChild(groupId, id));
