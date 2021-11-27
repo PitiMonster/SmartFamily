@@ -45,8 +45,9 @@ const ParentCode: React.FC = () => {
         toastSuccess("You have successfully created account!\nSign in now!");
         history.replace("/auth/signin");
       }
+      dispatch(setStatus(null));
     }
-  }, [status, dispatch]);
+  }, [status, dispatch, currentAction, isParentIdCorrect, history]);
 
   const handleSendCode = () => {
     setIsEmailError(false);

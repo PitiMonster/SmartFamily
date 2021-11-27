@@ -77,6 +77,7 @@ const AdditionalDataPage: React.FC = () => {
       dispatch(setStatus(null));
       history.push(`/auth/signup/choose-photo`);
     }
+    dispatch(setStatus(null));
   }, [status, history, dispatch]);
 
   return (

@@ -15,7 +15,6 @@ const Router: React.FC = () => {
   const currentUser = useAppSelector((state) => state.user.loggedInUser);
 
   const [user, setUser] = useState<UserType | undefined>();
-  console.log(currentUser);
 
   useEffect(() => {
     setUser(currentUser);

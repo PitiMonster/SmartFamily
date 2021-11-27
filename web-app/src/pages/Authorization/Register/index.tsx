@@ -72,6 +72,7 @@ const Register: React.FC = () => {
       dispatch(setStatus(null));
       history.push(`${history.location.pathname}/fill-data`);
     }
+    dispatch(setStatus(null));
   }, [status, history, dispatch]);
 
   return (

@@ -28,7 +28,7 @@ exports.createInvitation = catchAsync(async (req, res, next) => {
 
   const receiverDocument = await User.findOne({ username: receiverUsername });
   if (!receiverDocument) {
-    return next(new AppError("No receiver found with provided id", 404));
+    return next(new AppError("No user found with provided username", 404));
   }
 
   console.log(receiverDocument);
@@ -94,6 +94,8 @@ exports.responseToInvitation = catchAsync(async (req, res, next) => {
       invitation.family.members.push(invitation.receiver);
       invitation.family.chat.members.push(invitation.receiver);
       req.user.families.push(invitation.family._id);
+      if (req.user.role === "child")
+        req.user.pointsCount.set(invitation.family._id.toString(), 0);
       await invitation.family.save({ validateBeforeSave: false });
       await invitation.family.chat.save({ validateBeforeSave: false });
       await req.user.save({ validateBeforeSave: false });
