@@ -9,6 +9,8 @@ import budgetSlice from "./budget/slice";
 import shoppingListSlice from "./shopping/slice";
 import childrenSlice from "./children/slice";
 import userSlice from "./user/slice";
+import invitationsSlice from "./invitations/slice";
+import notificationsSlice from "./notifications/slice";
 
 const store = configureStore({
   reducer: {
@@ -21,6 +23,8 @@ const store = configureStore({
     shopping: shoppingListSlice.reducer,
     children: childrenSlice.reducer,
     user: userSlice.reducer,
+    invitations: invitationsSlice.reducer,
+    notifications: notificationsSlice.reducer,
   },
 });
 

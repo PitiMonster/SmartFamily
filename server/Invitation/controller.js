@@ -9,14 +9,16 @@ const notificationController = require("../Notification/controller");
 
 exports.getInvitations = catchAsync(async (req, res, next) => {
   const user = await User.findById(req.user.id).populate({
-    path: "myInvitations",
+    path: "invitations",
     select: "sender createdAt",
+    populate: { path: "sender", select: "name surname profilePhoto" },
   });
-  return res.status(200).json({ status: "success", data: user.myInvitations });
+  console.log(user);
+  return res.status(200).json({ status: "success", data: user.invitations });
 });
 
 exports.createInvitation = catchAsync(async (req, res, next) => {
-  const { receiver, family } = req.body;
+  const { receiverUsername, family } = req.body;
 
   if (req.user.role !== "parent") {
     return next(
@@ -24,17 +26,22 @@ exports.createInvitation = catchAsync(async (req, res, next) => {
     );
   }
 
-  const receiverDocument = await User.findById(receiver);
+  const receiverDocument = await User.findOne({ username: receiverUsername });
   if (!receiverDocument) {
     return next(new AppError("No receiver found with provided id", 404));
   }
+
+  console.log(receiverDocument);
 
   const familyDocument = await Family.findById(family);
   if (!familyDocument) {
     return next(new AppError("No family found with provided id", 404));
   }
 
-  const existingInvitation = await Invitation.findOne({ family, receiver });
+  const existingInvitation = await Invitation.findOne({
+    family,
+    receiver: receiverDocument._id,
+  });
   if (existingInvitation) {
     return next(
       new AppError("This user is already invited to this family!", 400)
@@ -45,7 +52,7 @@ exports.createInvitation = catchAsync(async (req, res, next) => {
     return next(new AppError("You are not a member of this family!", 403));
   }
 
-  if (familyDocument.members.includes(receiver)) {
+  if (familyDocument.members.includes(receiverDocument._id)) {
     return next(
       new AppError("Invited user is already a member of this family", 400)
     );
@@ -53,13 +60,13 @@ exports.createInvitation = catchAsync(async (req, res, next) => {
 
   const newInvitation = await Invitation.create({
     sender: req.user.id,
-    receiver,
+    receiver: receiverDocument._id,
     family,
   });
 
   req.notificationData = {
     type: "invitation",
-    receiver,
+    receiver: receiverDocument._id,
     invitation: newInvitation._id,
   };
 
@@ -73,17 +80,23 @@ exports.responseToInvitation = catchAsync(async (req, res, next) => {
 
   const invitation = await Invitation.findById(id).populate({
     path: "family",
-    select: "members",
+    select: "members receiver chat",
+    populate: { path: "chat", select: "members" },
   });
 
   if (!invitation) {
     return next(new AppError("Invitation with that id not found!", 404));
   }
 
+  console.log(invitation);
   switch (response.toString()) {
     case "accept":
       invitation.family.members.push(invitation.receiver);
+      invitation.family.chat.members.push(invitation.receiver);
+      req.user.families.push(invitation.family._id);
       await invitation.family.save({ validateBeforeSave: false });
+      await invitation.family.chat.save({ validateBeforeSave: false });
+      await req.user.save({ validateBeforeSave: false });
       await Invitation.deleteOne(invitation);
 
       // send notification - "Dołączył nowy członek rodziny!"
@@ -96,7 +109,7 @@ exports.responseToInvitation = catchAsync(async (req, res, next) => {
       break;
   }
 
-  return res.status(204);
+  return res.status(200).json({ status: "success" });
 });
 
 exports.getOneInvitation = crudHandlers.getOne(Invitation);

@@ -1,13 +1,35 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-interface NotificationsState {}
+import { Notification as NotificationType } from "../../types";
 
-const initialState: NotificationsState = {};
+interface NotificationsState {
+  notifications: NotificationType[];
+}
+
+const initialState: NotificationsState = {
+  notifications: [],
+};
 
 const notificationsSlice = createSlice({
   name: "notifications",
   initialState,
-  reducers: {},
+  reducers: {
+    setNotifications(
+      state,
+      action: PayloadAction<{ notifications: NotificationType[] }>
+    ) {
+      state.notifications = action.payload.notifications;
+    },
+    addNotification(
+      state,
+      action: PayloadAction<{ notification: NotificationType }>
+    ) {
+      state.notifications = [
+        action.payload.notification,
+        ...state.notifications,
+      ];
+    },
+  },
 });
 
 export const notificationsActions = notificationsSlice.actions;

@@ -1,7 +1,6 @@
 import api from "../../api/api";
 import { AppDispatch } from "..";
 import { groupsActions } from "./slice";
-import { chatsActions } from "../chat/slice";
 import { utilsActions } from "../utils/slice";
 import countUnreadMessages from "../../utils/countUnreadMessages";
 

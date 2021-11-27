@@ -45,13 +45,20 @@ const createInvitationNotification = catchAsync(async (req, next) => {
 
   const text = `${req.user.name} ${req.user.surname} wysłał Ci zaproszenie do rodziny ${invitationDocument.family.name}`;
 
-  return await Notification.create({
+  const notification = await Notification.create({
     type: "invitation",
     text,
     photo: null,
     invitation,
     receiver,
   });
+
+  return await notification
+    .populate({
+      path: "invitation",
+      populate: { path: "sender", select: "name surname profilePhoto" },
+    })
+    .execPopulate();
 });
 const createNewTaskNotification = catchAsync(async (req, next) => {
   const { task, receiver } = req.notificationData;
@@ -203,20 +210,25 @@ const createBudgetValueExceededNotification = catchAsync(async (req, next) => {
 
   const text = `Budget ${budgetDocument.name} has been exceeded`;
 
-  return await Notification.create({
+  const notification = await Notification.create({
     type: "budgetExceeded",
     text,
     photo: null,
     budget,
     receiver,
   });
+  return await notification.populate({ path: "budget" }).execPopulate();
 });
 
 exports.getNotifications = catchAsync(async (req, res, next) => {
-  const user = await User.findById(req.user.id).populate({
-    path: "notifications",
-  });
-  return res.status(200).json({ status: "success", data: user.notifications });
+  const user = await User.findById(req.user.id)
+    .populate({
+      path: "notifications",
+    })
+    .sort({ createdAt: -1 });
+  return res
+    .status(200)
+    .json({ status: "success", data: user.notifications.reverse() });
 });
 
 exports.createNotification = catchAsync(async (req, next) => {

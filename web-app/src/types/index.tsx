@@ -48,10 +48,10 @@ export type Reward = {
 
 export type Notification = {
   _id: string;
-  type: string;
+  type?: string;
   text: string;
-  photo: string;
-  receiver: User | string;
+  photo?: string;
+  receiver?: User | string;
   calendarEvent?: CalendarEvent | string;
   task?: Task | string;
   invitation?: Invitation | string;
