@@ -13,26 +13,33 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import Checkbox from "@mui/material/Checkbox";
 import { Stack } from "@mui/material";
+import CheckIcon from "@mui/icons-material/Check";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 
 import classes from "./index.module.scss";
 
-import { useAppSelector } from "../../../hooks";
+import { useAppSelector, useAppDispatch } from "../../../hooks";
+import { useParams } from "react-router-dom";
 
 import taskImagePath from "../../../assets/images/tasksPhoto.jpg";
 
 import ContentLayout from "../../../layout/ContentLayout";
 import AddModifyTaskModal from "./components/AddModifyTaskModal";
 
-interface RenderTaskOptions {
-  name: string;
-  parentUsername: string;
-  createdAt: Date;
-  deadline: Date;
-  points: number;
+import { Task as TaskType } from "../../../types";
+import {
+  setTaskToCheck,
+  setTaskTodo,
+  setTaskDone,
+  removeTask,
+  getTasks,
+} from "../../../store/tasks/actions";
+import { toastSuccess } from "../../../utils/toasts";
+import { setStatus } from "../../../store/utils/actions";
+
+interface RenderTaskOptions extends TaskType {
   checked: boolean;
-  description: string;
-  handleRemoveItem: (name: string) => void;
+  handleSecondaryAction: () => void;
   onClick: () => void;
 }
 
@@ -46,6 +53,18 @@ interface SelectedTaskData {
 }
 
 const TaskListPage: React.FC = () => {
+  const dispatch = useAppDispatch();
+  const { groupId, id } = useParams<{ groupId: string; id: string }>();
+  const status = useAppSelector((state) => state.utils.status);
+  const currentUser = useAppSelector((state) => state.user.loggedInUser);
+  const tasks = useAppSelector((state) => state.tasks.tasks);
+  const tasksToCheck = useAppSelector((state) => state.tasks.toCheckTasks);
+  const tasksDone = useAppSelector((state) => state.tasks.doneTasks);
+  const isBackdrop = useAppSelector((state) => state.utils.isBackdrop);
+  const [currentAction, setCurrentAction] = useState<
+    "setToCheck" | "setTodo" | "setDone" | "create" | "delete" | ""
+  >("");
+
   const [selectedTaskData, setSelectedTaskData] = useState<SelectedTaskData>({
     title: "Add task",
     name: "",
@@ -56,30 +75,6 @@ const TaskListPage: React.FC = () => {
   });
   const [isAddModifyTaskModal, setIsAddModifyTaskModal] =
     useState<boolean>(false);
-  const [shoppingList, setShoppingList] = useState<
-    {
-      name: string;
-      parentUsername: string;
-      createdAt: Date;
-      deadline: Date;
-      points: number;
-      checked: boolean;
-      description: string;
-    }[]
-  >([]);
-  const [checkedShoppingList, setCheckedShoppingList] = useState<
-    {
-      name: string;
-      parentUsername: string;
-      createdAt: Date;
-      deadline: Date;
-      points: number;
-      checked: boolean;
-      description: string;
-    }[]
-  >([]);
-
-  const isBackdrop = useAppSelector((state) => state.utils.isBackdrop);
 
   useEffect(() => {
     if (!isBackdrop) {
@@ -96,83 +91,74 @@ const TaskListPage: React.FC = () => {
   }, [isBackdrop]);
 
   useEffect(() => {
-    const items = [
-      {
-        name: "Do homework",
-        parentUsername: "cooolMummy",
-        createdAt: new Date(Date.now()),
-        deadline: new Date(Date.now()),
-        points: 25,
-        checked: false,
-        description: "Tem desc",
-      },
-      {
-        name: "Do homework",
-        parentUsername: "cooolMummy",
-        createdAt: new Date(Date.now()),
-        deadline: new Date(Date.now()),
-        points: 25,
-        checked: false,
-        description: "Tem desc",
-      },
-      {
-        name: "Do homework",
-        parentUsername: "cooolMummy",
-        createdAt: new Date(Date.now()),
-        deadline: new Date(Date.now()),
-        points: 25,
-        checked: false,
-        description: "Tem desc",
-      },
-      {
-        name: "Do homework",
-        parentUsername: "cooolMummy",
-        createdAt: new Date(Date.now()),
-        deadline: new Date(Date.now()),
-        points: 25,
-        checked: false,
-        description: "Tem desc",
-      },
-    ];
-    setShoppingList(items);
-  }, []);
+    if (status === "success" && currentAction) {
+      let toastText = "Success";
+      switch (currentAction) {
+        case "setToCheck":
+          toastText = "Task set to check successfully";
+          break;
+        case "setTodo":
+          toastText = "Task set to do successfully";
+          break;
+        case "setDone":
+          toastText = "Task set to done successfully";
+          break;
+        case "create":
+          toastText = "Task created successfully";
+          break;
+        case "delete":
+          toastText = "Task deleted successfully";
+          break;
+        default:
+          break;
+      }
+      toastSuccess(toastText);
+      setCurrentAction("");
+      dispatch(setStatus(null));
+    }
+  }, [status, dispatch, currentAction]);
+
+  useEffect(() => {
+    dispatch(getTasks(groupId, id));
+  }, [dispatch, groupId, id]);
 
   const renderItem = ({
     name,
     createdAt,
-    deadline,
-    parentUsername,
+    completionDate,
+    principal,
     points,
+    status,
     checked,
     description,
-    handleRemoveItem,
+    handleSecondaryAction,
     onClick,
   }: RenderTaskOptions) => (
     <ListItem
       sx={{ paddingLeft: 0 }}
       secondaryAction={
         <Stack direction="row" alignItems="center">
-          <IconButton
-            aria-label="delete"
-            title="Delete"
-            onClick={() => handleRemoveItem(name)}
-            color="error"
-          >
-            <DeleteIcon />
-          </IconButton>
+          {currentUser?.role === "parent" && (status === "todo" || "toCheck") && (
+            <IconButton
+              onClick={() => handleSecondaryAction()}
+              color={status === "todo" ? "error" : "primary"}
+            >
+              {status === "todo" ? <DeleteIcon /> : <CheckIcon />}
+            </IconButton>
+          )}
           <IconButton
             aria-label="info"
             title="Info"
             onClick={() => {
-              setSelectedTaskData({
-                title: "Modify task",
-                name,
-                createdAt,
-                deadline,
-                points,
-                description,
-              });
-              setIsAddModifyTaskModal(true);
+              // setSelectedTaskData({
+              //   title: "Modify task",
+              //   name,
+              //   createdAt,
+              //   deadline,
+              //   points,
+              //   description,
+              // });
+              // setIsAddModifyTaskModal(true);
             }}
           >
             <KeyboardArrowRightIcon />
@@ -188,13 +174,14 @@ const TaskListPage: React.FC = () => {
             tabIndex={-1}
             disableRipple
             inputProps={{ "aria-labelledby": name }}
-            color={checked ? "primary" : "primary"}
+            color={status !== "done" ? "primary" : "info"}
+            disabled={status === "done"}
           />
         </ListItemIcon>
         <ListItemText
           id={name}
           primary={name}
-          secondary={`${moment(deadline).format("DD/MM/YYYY, hh:mm")}`}
+          secondary={`${moment(completionDate).format("DD/MM/YYYY, hh:mm")}`}
         />
       </ListItemButton>
     </ListItem>
@@ -212,34 +199,34 @@ const TaskListPage: React.FC = () => {
         <div className={classes.container__list}>
           <div className={classes.header}>
             <p className={classes.header__title}>Tasks</p>
-            <IconButton
-              color="primary"
-              onClick={() => {
-                setIsAddModifyTaskModal(true);
-              }}
-            >
-              <AddIcon fontSize="large" />
-            </IconButton>
+            {currentUser?.role === "parent" && (
+              <IconButton
+                color="primary"
+                onClick={() => {
+                  setIsAddModifyTaskModal(true);
+                }}
+              >
+                <AddIcon fontSize="large" />
+              </IconButton>
+            )}
           </div>
           <div className={classes.lists}>
             <List>
               <TransitionGroup>
-                {shoppingList.map((item) => (
-                  <Collapse in={item.checked}>
+                {tasks.map((item) => (
+                  <Collapse key={item._id} in={item.status === "todo"}>
                     {renderItem({
                       ...item,
-                      handleRemoveItem: (name) => {},
+                      checked: false,
+                      handleSecondaryAction: () => {
+                        dispatch(removeTask(groupId, id, item._id));
+                        setCurrentAction("delete");
+                      },
                       onClick: () => {
-                        setShoppingList((prev) => {
-                          const firstItem = prev[0];
-                          firstItem.checked = !firstItem.checked;
-                          const newList = prev.slice(1);
-                          setCheckedShoppingList((prev) => [
-                            firstItem,
-                            ...prev,
-                          ]);
-                          return [...newList];
-                        });
+                        if (item.contractor === currentUser?._id) {
+                          dispatch(setTaskToCheck(groupId, id, item._id));
+                          setCurrentAction("setToCheck");
+                        }
                       },
                     })}
                   </Collapse>
@@ -248,20 +235,35 @@ const TaskListPage: React.FC = () => {
             </List>
             <List>
               <TransitionGroup>
-                {checkedShoppingList.map((item) => (
-                  <Collapse in={item.checked}>
+                {tasksToCheck.map((item) => (
+                  <Collapse key={item._id} in={item.status === "tocheck"}>
                     {renderItem({
                       ...item,
-                      handleRemoveItem: (name) => {},
-                      onClick: () => {
-                        setCheckedShoppingList((prev) => {
-                          const firstItem = prev[0];
-                          firstItem.checked = !firstItem.checked;
-                          const newList = prev.slice(1);
-                          setShoppingList((prev) => [firstItem, ...prev]);
-                          return [...newList];
-                        });
+                      checked: true,
+                      handleSecondaryAction: () => {
+                        dispatch(setTaskDone(groupId, id, item._id));
+                        setCurrentAction("setDone");
                       },
+                      onClick: () => {
+                        if (currentUser?.role === "parent") {
+                          dispatch(setTaskTodo(groupId, id, item._id));
+                          setCurrentAction("setTodo");
+                        }
+                      },
+                    })}
+                  </Collapse>
+                ))}
+              </TransitionGroup>
+            </List>
+            <List>
+              <TransitionGroup>
+                {tasksDone.map((item) => (
+                  <Collapse key={item._id} in={item.status === "done"}>
+                    {renderItem({
+                      ...item,
+                      checked: true,
+                      handleSecondaryAction: () => {},
+                      onClick: () => {},
                     })}
                   </Collapse>
                 ))}
@@ -270,7 +272,13 @@ const TaskListPage: React.FC = () => {
           </div>
         </div>
       </div>
-      {isAddModifyTaskModal && <AddModifyTaskModal {...selectedTaskData} />}
+      {isAddModifyTaskModal && (
+        <AddModifyTaskModal
+          groupId={groupId}
+          childId={id}
+          {...selectedTaskData}
+        />
+      )}
     </ContentLayout>
   );
 };

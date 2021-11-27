@@ -32,10 +32,8 @@ exports.createCalendarEvent = catchAsync(async (req, res, next) => {
   req.family.save({ validateBeforeSave: false });
 
   if (process.env.NODE_ENV !== "test")
-    schedule.scheduleJob(moment(date, "MM-DD-YYYY").toDate(), async () => {
+    schedule.scheduleJob(moment(date).toDate(), async () => {
       // create notification calendarEvent and send it to author
-      console.log(date);
-      console.log("no siema byq nowe powiadomienie event: ", name);
       req.notificationData = {
         type: "calendarEvent",
         receiver: req.user._id,

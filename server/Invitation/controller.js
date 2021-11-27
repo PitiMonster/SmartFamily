@@ -13,7 +13,6 @@ exports.getInvitations = catchAsync(async (req, res, next) => {
     select: "sender createdAt",
     populate: { path: "sender", select: "name surname profilePhoto" },
   });
-  console.log(user);
   return res.status(200).json({ status: "success", data: user.invitations });
 });
 
@@ -30,8 +29,6 @@ exports.createInvitation = catchAsync(async (req, res, next) => {
   if (!receiverDocument) {
     return next(new AppError("No user found with provided username", 404));
   }
-
-  console.log(receiverDocument);
 
   const familyDocument = await Family.findById(family);
   if (!familyDocument) {
@@ -88,7 +85,6 @@ exports.responseToInvitation = catchAsync(async (req, res, next) => {
     return next(new AppError("Invitation with that id not found!", 404));
   }
 
-  console.log(invitation);
   switch (response.toString()) {
     case "accept":
       invitation.family.members.push(invitation.receiver);

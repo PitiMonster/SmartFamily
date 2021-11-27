@@ -11,17 +11,22 @@ const moment = require("moment");
 const notificationController = require("../Notification/controller");
 
 exports.getTasks = catchAsync(async (req, res, next) => {
-  const family = await Family.findById(req.params.familyId).populate({
+  const { familyId, childId } = req.params;
+  const family = await Family.findById(familyId).populate({
     path: "tasks",
-    select: "name date",
   });
-  return res.status(200).json({ status: "success", data: family.tasks });
+  const tasks = [];
+  for (const task of family.tasks) {
+    if (task.contractor.toString() === childId) tasks.push(task);
+  }
+  return res.status(200).json({ status: "success", data: tasks });
 });
 
 exports.createTask = catchAsync(async (req, res, next) => {
-  const { name, completionDate, points, description, contractor } = req.body;
+  const { childId } = req.params;
+  const { name, completionDate, points, description } = req.body;
 
-  const contractorDocument = await User.findById(contractor);
+  const contractorDocument = await User.findById(childId);
 
   if (!contractorDocument || contractorDocument.role !== "child") {
     return next(new AppError("Task contractor can be child only!", 400));
@@ -36,14 +41,14 @@ exports.createTask = catchAsync(async (req, res, next) => {
     uniqueName: req.family._id.toString() + name.toString(),
     completionDate,
     points,
-    contractor,
+    contractor: childId,
     principal: req.user._id,
     description,
   });
 
   req.notificationData = {
     type: "newTask",
-    receiver: contractor,
+    receiver: childId,
     task: newTask._id,
   };
 
@@ -52,12 +57,12 @@ exports.createTask = catchAsync(async (req, res, next) => {
 
   if (process.env.NODE_ENV !== "test")
     schedule.scheduleJob(
-      moment(completionDate, "MM-DD-YYYY").subtract(1, "h").toDate(),
+      moment(completionDate).subtract(1, "h").toDate(),
       async () => {
         // create notification oneHourToCompleteTask for contractor
         req.notificationData = {
           type: "taskOneHourLeft",
-          receiver: contractor,
+          receiver: childId,
           task: newTask._id,
         };
 
@@ -65,19 +70,16 @@ exports.createTask = catchAsync(async (req, res, next) => {
       }
     );
   if (process.env.NODE_ENV !== "test")
-    schedule.scheduleJob(
-      moment(completionDate, "MM-DD-YYYY").toDate(),
-      async () => {
-        // create notification runOutOfTimeToCompleteTask for contractor
-        req.notificationData = {
-          type: "taskTimeIsUp",
-          receiver: contractor,
-          task: newTask._id,
-        };
+    schedule.scheduleJob(moment(completionDate).toDate(), async () => {
+      // create notification runOutOfTimeToCompleteTask for contractor
+      req.notificationData = {
+        type: "taskTimeIsUp",
+        receiver: childId,
+        task: newTask._id,
+      };
 
-        await notificationController.createNotification(req, next);
-      }
-    );
+      await notificationController.createNotification(req, next);
+    });
 
   await notificationController.createNotification(req, next);
 
@@ -108,7 +110,7 @@ exports.completeTask = catchAsync(async (req, res, next) => {
 });
 
 exports.responseTask = catchAsync(async (req, res, next) => {
-  const { response, id } = req.params;
+  const { response, id, familyId } = req.params;
 
   const task = await Task.findOne({ _id: id, status: "tocheck" }).populate({
     path: "contractor",
@@ -125,10 +127,11 @@ exports.responseTask = catchAsync(async (req, res, next) => {
   };
 
   if (response === "done") {
-    task.contractor.pointsCount += task.points;
+    const currPoints = task.contractor.pointsCount.get(familyId);
+    task.contractor.pointsCount.set(familyId, currPoints + task.points);
     await task.contractor.save({ validateBeforeSave: false });
     req.notificationData.type = "taskApproved";
-  } else {
+  } else if (response === "todo") {
     req.notificationData.type = "taskRejected";
   }
 
@@ -138,6 +141,19 @@ exports.responseTask = catchAsync(async (req, res, next) => {
   await notificationController.createNotification(req, next);
 
   return res.status(200).json({ status: "success", data: task });
+});
+
+exports.removeTask = catchAsync(async (req, res, next) => {
+  const { id } = req.params;
+
+  const task = await Task.findOne({ _id: id, status: "todo" });
+
+  if (!task) {
+    return next(new AppError("Task not found", 404));
+  }
+
+  await Task.deleteOne(task);
+  return res.status(202).json({ status: "success" });
 });
 
 exports.getTask = crudHandlers.getOne(Task);

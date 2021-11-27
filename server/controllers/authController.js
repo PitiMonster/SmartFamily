@@ -89,7 +89,6 @@ exports.signUp = catchAsync(async (req, res, next) => {
 
   if (role === "parent") {
     const url = `${req.protocol}://${req.get("host")}/me`;
-    // console.log(url);
     await new Email(newUser, url).sendWelcome();
     res.status(201).json({ status: "success", data: {} });
   } else {
@@ -214,9 +213,6 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
 
 exports.resetPassword = catchAsync(async (req, res, next) => {
   // 1) Get user based on the token
-  console.log(req.params.id);
-  console.log(req.body.password);
-  console.log(req.body.passwordConfirm);
   const hashedToken = crypto
     .createHash("sha256")
     .update(req.params.token)
@@ -291,7 +287,6 @@ exports.verifyChildCodeToParent = catchAsync(async (req, res, next) => {
 
   const parent = await User.findOne({ email: parentEmail, role: "parent" });
   const child = await User.findOne({ _id: childId, active: false });
-  console.log(childId);
   if (!parent) {
     return next(
       new AppError("No parent found with provided email address", 404)

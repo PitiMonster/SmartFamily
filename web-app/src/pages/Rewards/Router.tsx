@@ -5,7 +5,7 @@ import RewardsListPage from "./RewardsListPage";
 const Router: React.FC = () => {
   return (
     <Switch>
-      <Route path="/:id/rewards" exact={true}>
+      <Route path="" exact={true}>
         <RewardsListPage />
       </Route>
     </Switch>

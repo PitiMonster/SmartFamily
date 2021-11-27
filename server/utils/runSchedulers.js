@@ -18,31 +18,41 @@ const runSchedulers = async () => {
 
   for (const task of allFutureTasks) {
     if (
-      moment(task.completionDate, "MM-DD-YYYY").subtract(1, "h") >=
-      moment().toDate()
+      moment(task.completionDate).subtract(1, "h").toDate() >= moment().toDate()
     )
       schedule.scheduleJob(
-        moment(task.completionDate, "MM-DD-YYYY").subtract(1, "h").toDate(),
-        () => {
-          console.log(`${task.name}: one hour notification`);
+        moment(task.completionDate).subtract(1, "h").toDate(),
+        async () => {
           // create notification oneHourToCompleteTask for contractor
+          const req = {
+            notificationData: {
+              type: "taskOneHourLeft",
+              receiver: task.contractor,
+              task: task._id,
+            },
+          };
+
+          await notificationController.createNotification(req, next);
         }
       );
-
-    schedule.scheduleJob(
-      moment(task.completionDate, "MM-DD-YYYY").toDate(),
-      () => {
-        console.log(`${task.name}: run out of time notification`);
-
+    if (moment(task.completionDate).toDate() >= moment().toDate())
+      schedule.scheduleJob(moment(task.completionDate).toDate(), async () => {
         // create notification runOutOfTimeToCompleteTask for contractor
-      }
-    );
+        const req = {
+          notificationData: {
+            type: "taskTimeIsUp",
+            receiver: task.contractor,
+            task: task._id,
+          },
+        };
+
+        await notificationController.createNotification(req, next);
+      });
   }
 
   for (const event of allFutureCalendarEvents) {
-    schedule.scheduleJob(
-      moment(event.date, "MM-DD-YYYY").toDate(),
-      async () => {
+    if (moment(event.date).toDate() >= moment().toDate())
+      schedule.scheduleJob(moment(event.date).toDate(), async () => {
         console.log(`${event.name}: calendar event notification`);
         // create notification calendarEvent and send it to author
         const req = {
@@ -54,8 +64,7 @@ const runSchedulers = async () => {
         };
 
         await notificationController.createNotification(req, next);
-      }
-    );
+      });
   }
 };
 

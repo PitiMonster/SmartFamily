@@ -26,7 +26,7 @@ export type Task = {
   points: Number;
   principal: User | string;
   contractor: User | string;
-  status: string;
+  status: "todo" | "tocheck" | "done";
   description?: string;
 };
 

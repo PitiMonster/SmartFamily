@@ -10,22 +10,21 @@ import MobileDatePicker from "@mui/lab/MobileDatePicker";
 
 import classes from "./index.module.scss";
 
-import { useAppDispatch } from "../../../../../hooks";
-import { updateBackdrop } from "../../../../../store/utils/actions";
+import { useAppDispatch, useAppSelector } from "../../../../../hooks";
+import { setStatus, updateBackdrop } from "../../../../../store/utils/actions";
 
 import TextInput from "../../../../../components/inputs/TextInput";
 import MainButton from "../../../../../components/buttons/MainButton";
+import { toastError, toastSuccess } from "../../../../../utils/toasts";
+import { createTask } from "../../../../../store/tasks/actions";
 
 const AddModifyTaskModal: React.FC<{
-  title: string;
-  name: string;
-  createdAt: Date;
-  deadline: Date;
-  points: number;
-  description: string;
-}> = ({ title, name, createdAt, deadline, points, description }) => {
+  groupId: string;
+  childId: string;
+}> = ({ groupId, childId }) => {
   const dispatch = useAppDispatch();
-  const [itemName, setItemName] = useState<string>("");
+  const status = useAppSelector((state) => state.utils.status);
+  const [taskName, setTaskName] = useState<string>("");
   const [taskCreatedAt, setCreatedAt] = useState<Date>(new Date(Date.now()));
   const [taskDeadline, setTaskDeadline] = useState<Date | null>(
     new Date(Date.now())
@@ -37,28 +36,62 @@ const AddModifyTaskModal: React.FC<{
     dispatch(updateBackdrop(true));
   }, [dispatch]);
 
+  useEffect(() => {
+    if (status === "success") {
+      toastSuccess("Task created successfully");
+      dispatch(updateBackdrop(false));
+      dispatch(setStatus(null));
+    }
+  }, [status, dispatch]);
+
   const handleDateChange = (newValue: Date | null) => {
     setTaskDeadline(newValue);
   };
 
-  useEffect(() => {
-    setItemName(name);
-    setCreatedAt(createdAt);
-    setTaskDeadline(deadline);
-    setTaskPoints(points.toString());
-    setTaskDescription(description);
-  }, [name, createdAt, deadline, points, description]);
+  const handleSave = () => {
+    if (!taskName || !taskDeadline || !taskPoints) {
+      toastError("Name, deadline and points fields are required");
+      return;
+    }
+    // if (taskDeadline < taskCreatedAt) {
+    //   toastError("Task cannot have deadline in past");
+    //   return;
+    // }
+    if (+taskPoints && +taskPoints <= 0) {
+      toastError("Points field value must be positive number");
+      return;
+    }
+
+    dispatch(
+      createTask(
+        groupId,
+        childId,
+        taskName,
+        taskDeadline,
+        taskPoints,
+        taskDescription
+      )
+    );
+  };
+
+  // useEffect(() => {
+  //   setItemName(name);
+  //   setCreatedAt(createdAt);
+  //   setTaskDeadline(deadline);
+  //   setTaskPoints(points.toString());
+  //   setTaskDescription(description);
+  // }, [name, createdAt, deadline, points, description]);
 
   return (
     <div className={classes.modal}>
-      <p className={classes.title}>{title}</p>
+      <p className={classes.title}>Add task</p>
       <FormControl variant="standard" color="primary" className={classes.input}>
-        <TextInput text={itemName} setText={setItemName} label="Item name" />
+        <TextInput text={taskName} setText={setTaskName} label="Item name" />
       </FormControl>
       <FormControl variant="standard" color="primary" className={classes.input}>
         <TextInput
           text={moment(taskCreatedAt).format("DD/MM/YYYY, hh:mm")}
-          setText={setItemName}
+          setText={setTaskName}
           label="Created at"
           disabled={true}
         />
@@ -94,7 +127,7 @@ const AddModifyTaskModal: React.FC<{
         value={taskDescription}
         onChange={(event) => setTaskDescription(event.target.value)}
       />
-      <MainButton isOutline={true} text="Save" onClick={() => {}} />
+      <MainButton isOutline={true} text="Save" onClick={handleSave} />
     </div>
   );
 };

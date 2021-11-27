@@ -15,8 +15,6 @@ router.use(authController.protect);
 
 router.use("/:familyId/budgets", budgetRouter);
 router.use("/:familyId/calendar", calendarRouter);
-router.use("/:familyId/tasks", taskRouter);
-router.use("/:familyId/rewards", rewardRouter);
 router.use("/:familyId/shopping", shoppingItemRouter);
 
 router
@@ -37,5 +35,8 @@ router
 router
   .route("/:id/children/:childId")
   .get(permissionController.isFamilyMember, familyController.getOneFamilyChild);
+
+router.use("/:familyId/:children/:childId/tasks", taskRouter);
+router.use("/:familyId/:children/:childId/rewards", rewardRouter);
 
 module.exports = router;

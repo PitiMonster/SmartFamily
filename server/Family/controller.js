@@ -15,8 +15,6 @@ exports.getFamilies = catchAsync(async (req, res, next) => {
     },
   });
 
-  console.log(user);
-
   const userChats = [];
 
   for (const family of user.families) {
@@ -40,8 +38,6 @@ exports.createFamily = catchAsync(async (req, res, next) => {
     lastMessageDate: new Date(Date.now()),
   });
 
-  console.log(newChat);
-
   const newFamily = await Family.create({
     name: req.body.name,
     members: [req.user.id],
@@ -62,7 +58,6 @@ exports.getOneFamily = crudHandlers.getOne(Family, {
 
 exports.getFamilyChildren = catchAsync(async (req, res, next) => {
   const { id } = req.params;
-  console.log(id);
   const family = await Family.findById(id).populate({
     path: "members",
     select: "name profilePhoto pointsCount role",
@@ -76,11 +71,9 @@ exports.getFamilyChildren = catchAsync(async (req, res, next) => {
   if (!family) {
     return next(new AppError("No family found with provied id ", 404));
   }
-  console.log(family);
   const children = [];
   for (member of family.members) {
     if (member.role === "child") {
-      console.log(member.pointsCount.get(id));
       member.points = member.pointsCount.get(id);
       member.pointsCount = undefined;
       children.push(member);
@@ -92,7 +85,6 @@ exports.getFamilyChildren = catchAsync(async (req, res, next) => {
 
 exports.getOneFamilyChild = catchAsync(async (req, res, next) => {
   const { id, childId } = req.params;
-  console.log(id);
   const family = await Family.findById(id);
   // points chnge to object {
   //  familyId: pointsValue
@@ -116,7 +108,6 @@ exports.getOneFamilyChild = catchAsync(async (req, res, next) => {
   if (!child || child.role === "parent") {
     return next(new AppError("No child found in provided family", 404));
   }
-  console.log(child.pointsCount.get(id));
   child.points = child.pointsCount.get(id);
   child.pointsCount = undefined;
 
