@@ -10,22 +10,37 @@ import FormControl from "@mui/material/FormControl";
 
 import classes from "./index.module.scss";
 
-import { useAppDispatch } from "../../../../../hooks";
-import { updateBackdrop } from "../../../../../store/utils/actions";
+import { useAppDispatch, useAppSelector } from "../../../../../hooks";
+import { setStatus, updateBackdrop } from "../../../../../store/utils/actions";
 
 import TextInput from "../../../../../components/inputs/TextInput";
 import MainButton from "../../../../../components/buttons/MainButton";
 import { cloudinaryUploadWidget, cld } from "../../../../../utils/cloudinary";
 
-const AddModifyRewardModal: React.FC<{
+import { Reward as RewardType } from "../../../../../types";
+import { createReward } from "../../../../../store/rewards/actions";
+import { toastError, toastSuccess } from "../../../../../utils/toasts";
+
+interface PropsType extends RewardType {
   title: string;
-  name: string;
-  photo: string;
   photoId: string;
-  points: number;
-  description: string;
-}> = ({ title, name, photo, photoId, points, description }) => {
+  groupId: string;
+  childId: string;
+}
+
+const AddModifyRewardModal: React.FC<PropsType> = ({
+  groupId,
+  childId,
+  _id,
+  title,
+  name,
+  photo,
+  photoId,
+  points,
+  description,
+}) => {
   const dispatch = useAppDispatch();
+  const status = useAppSelector((state) => state.utils.status);
   const [rewardName, setRewardName] = useState<string>("");
   const [rewardPoints, setRewardPoints] = useState<string>("");
   const [rewardPhoto, setRewardPhoto] = useState<string>("");
@@ -60,11 +75,42 @@ const AddModifyRewardModal: React.FC<{
   }, [dispatch]);
 
   useEffect(() => {
+    if (status === "success") {
+      toastSuccess("Reward created successfully");
+      dispatch(updateBackdrop(false));
+      dispatch(setStatus(null));
+    }
+  }, [status, dispatch]);
+
+  useEffect(() => {
     setRewardName(name);
     setRewardPoints(points.toString());
     setRewardPhoto(photo);
-    setRewardDescription(description);
+    setRewardDescription(description as string);
   }, [name, points, photo, description]);
+
+  const handleSave = () => {
+    if (!rewardName || !rewardPoints) {
+      toastError("Name and points fields are required");
+      return;
+    }
+
+    if (points < 0) {
+      toastError("Points field value cannot be negative");
+      return;
+    }
+
+    dispatch(
+      createReward(
+        groupId,
+        childId,
+        rewardName,
+        rewardPhoto,
+        rewardPoints,
+        rewardDescription
+      )
+    );
+  };
 
   return (
     <div className={classes.modal}>
@@ -106,7 +152,7 @@ const AddModifyRewardModal: React.FC<{
         value={rewardDescription}
         onChange={(event) => setRewardDescription(event.target.value)}
       />
-      <MainButton isOutline={true} text="Save" onClick={() => {}} />
+      <MainButton isOutline={true} text="Save" onClick={handleSave} />
     </div>
   );
 };

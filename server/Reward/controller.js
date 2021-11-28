@@ -38,7 +38,7 @@ exports.createReward = catchAsync(async (req, res, next) => {
 });
 
 exports.purchaseReward = catchAsync(async (req, res, next) => {
-  const { id } = req.params;
+  const { id, familyId } = req.params;
 
   if (req.user.role !== "child") {
     return next(new AppError("Only child is permitted to buy reward!", 403));
@@ -48,8 +48,8 @@ exports.purchaseReward = catchAsync(async (req, res, next) => {
   if (!reward) {
     return next(new AppError("No reward document found with provided id", 404));
   }
-
-  if (req.user.pointsCount < reward.points) {
+  let points = req.user.pointsCount.get(familyId);
+  if (points < reward.points) {
     return next(
       new AppError(
         "You do not have enough points to purchase this reward!",
@@ -57,8 +57,8 @@ exports.purchaseReward = catchAsync(async (req, res, next) => {
       )
     );
   }
-
-  req.user.pointsCount -= reward.points;
+  points -= reward.points;
+  req.user.pointsCount.set(familyId, points);
   req.user.purchasedRewards.push(id);
   await req.user.save({ validateBeforeSave: false });
 

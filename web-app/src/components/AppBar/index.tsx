@@ -281,7 +281,7 @@ const MyAppBar = () => {
               Smart Family
             </Typography>
           </div>
-          <Search sx={{ display: { xs: "none", sm: "block" } }}>
+          {/* <Search sx={{ display: { xs: "none", sm: "block" } }}>
             <SearchIconWrapper>
               <SearchIcon />
             </SearchIconWrapper>
@@ -289,7 +289,7 @@ const MyAppBar = () => {
               placeholder="Search…"
               inputProps={{ "aria-label": "search" }}
             />
-          </Search>
+          </Search> */}
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: "none", md: "flex" } }}>
             <IconButton
