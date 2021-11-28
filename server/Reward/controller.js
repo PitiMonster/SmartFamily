@@ -48,7 +48,7 @@ exports.purchaseReward = catchAsync(async (req, res, next) => {
   if (!reward) {
     return next(new AppError("No reward document found with provided id", 404));
   }
-  const points = req.user.pointsCount.get(familyId);
+  let points = req.user.pointsCount.get(familyId);
   if (points < reward.points) {
     return next(
       new AppError(

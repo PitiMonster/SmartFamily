@@ -25,7 +25,9 @@ import ContentLayout from "../../../layout/ContentLayout";
 import AddModifyRewardModal from "./components/AddModifyReward";
 
 import { Reward as RewardType } from "../../../types";
-import { purchaseReward } from "../../../store/rewards/actions";
+import { getRewards, purchaseReward } from "../../../store/rewards/actions";
+import { toastSuccess } from "../../../utils/toasts";
+import { setStatus } from "../../../store/utils/actions";
 
 interface RenderRewardOptions extends RewardType {
   photoId: string;
@@ -43,15 +45,17 @@ const RewardsListPage: React.FC = () => {
   const currentUser = useAppSelector((state) => state.user.loggedInUser);
   const rewards = useAppSelector((state) => state.rewards.rewards);
   const isBackdrop = useAppSelector((state) => state.utils.isBackdrop);
+  const status = useAppSelector((state) => state.utils.status);
   const { id, groupId } = useParams<{ id: string; groupId: string }>();
 
   const [selectedRewardData, setSelectedRewardData] =
     useState<SelectedRewardData>({
       _id: "none",
       title: "Add reward",
-      name: "https://res.cloudinary.com/dq7ionfvn/image/upload/v1634891263/SmartFamily/default_person.jpg",
-      photo: "",
-      photoId: "SmartFamily/piggy-bank",
+      name: "",
+      photo:
+        "https://res.cloudinary.com/dq7ionfvn/image/upload/v1638111700/SmartFamily/QuestionMark.jpg",
+      photoId: "SmartFamily/QuestionMark",
       points: 0,
       description: "",
     });
@@ -82,6 +86,17 @@ const RewardsListPage: React.FC = () => {
     }
   }, [isBackdrop]);
 
+  useEffect(() => {
+    if (status === "success") {
+      dispatch(setStatus(null));
+      toastSuccess("Reward bought successfully");
+    }
+  }, [status, dispatch]);
+
+  useEffect(() => {
+    dispatch(getRewards(groupId, id));
+  }, [dispatch, groupId, id]);
+
   const renderItem = ({
     _id,
     name,
@@ -106,7 +121,8 @@ const RewardsListPage: React.FC = () => {
             color={currentUser?.role === "parent" ? "error" : "primary"}
           >
             {currentUser?.role === "parent" ? (
-              <DeleteIcon />
+              // <DeleteIcon />
+              <></>
             ) : (
               <ShoppingBasketIcon />
             )}
