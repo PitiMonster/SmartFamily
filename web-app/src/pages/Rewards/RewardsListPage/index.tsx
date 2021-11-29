@@ -87,11 +87,11 @@ const RewardsListPage: React.FC = () => {
   }, [isBackdrop]);
 
   useEffect(() => {
-    if (status === "success") {
+    if (status === "success" && currentUser?.role === "child") {
       dispatch(setStatus(null));
       toastSuccess("Reward bought successfully");
     }
-  }, [status, dispatch]);
+  }, [status, dispatch, currentUser]);
 
   useEffect(() => {
     dispatch(getRewards(groupId, id));

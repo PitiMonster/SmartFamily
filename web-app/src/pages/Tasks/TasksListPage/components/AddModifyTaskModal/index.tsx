@@ -97,14 +97,6 @@ const AddModifyTaskModal: React.FC<{
     );
   };
 
-  // useEffect(() => {
-  //   setItemName(name);
-  //   setCreatedAt(createdAt);
-  //   setTaskDeadline(deadline);
-  //   setTaskPoints(points.toString());
-  //   setTaskDescription(description);
-  // }, [name, createdAt, deadline, points, description]);
-
   return (
     <div className={classes.modal}>
       {!name && <p className={classes.title}>Add task</p>}
