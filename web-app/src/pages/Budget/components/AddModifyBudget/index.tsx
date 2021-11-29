@@ -67,20 +67,22 @@ const AddModifyBudget: React.FC<{
   }, [renewUnit, renewUnitCount]);
 
   useEffect(() => {
-    if (currentAction === "") return;
-    switch (currentAction) {
-      case "create":
-        toastSuccess("Bduget created successfully");
-        break;
-      case "update":
-        toastSuccess("Budget updated successfully");
-        break;
-      default:
-        break;
+    if (status === "success") {
+      if (currentAction === "") return;
+      switch (currentAction) {
+        case "create":
+          toastSuccess("Bduget created successfully");
+          break;
+        case "update":
+          toastSuccess("Budget updated successfully");
+          break;
+        default:
+          break;
+      }
+      setCurrentAction("");
+      dispatch(setStatus(null));
+      dispatch(updateBackdrop(false));
     }
-    setCurrentAction("");
-    dispatch(setStatus(null));
-    dispatch(updateBackdrop(false));
   }, [status, dispatch, currentAction]);
 
   const handleRenewUnitChange = (event: SelectChangeEvent) => {

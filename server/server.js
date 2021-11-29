@@ -2,6 +2,7 @@
 const mongoose = require("mongoose");
 const cloudinary = require("cloudinary");
 const dotenv = require("dotenv");
+const temp = require("./backup.js");
 dotenv.config({ path: "./config.env" });
 
 const app = require("./app");
@@ -28,6 +29,7 @@ process.on("unhandledRejection", (err) => {
     process.exit(1);
   });
 });
+temp();
 
 mongoose
   .connect(DB, {

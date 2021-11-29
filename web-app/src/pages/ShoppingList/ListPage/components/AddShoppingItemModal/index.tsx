@@ -90,7 +90,7 @@ const AddExpenseModal: React.FC<SelectedItemType | null> = ({
         <TextInput text={itemName} setText={setItemName} label="Item name" />
       </FormControl>
       <FormControl variant="standard" color="primary" className={classes.input}>
-        <TextInput text={itemCount} setText={setItemCount} label="Price" />
+        <TextInput text={itemCount} setText={setItemCount} label="Count" />
       </FormControl>
 
       <TextareaAutosize

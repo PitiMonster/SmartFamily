@@ -43,13 +43,8 @@ interface RenderTaskOptions extends TaskType {
   onClick: () => void;
 }
 
-interface SelectedTaskData {
+interface SelectedTaskData extends TaskType {
   title: string;
-  name: string;
-  createdAt: Date;
-  deadline: Date;
-  points: number;
-  description: string;
 }
 
 const TaskListPage: React.FC = () => {
@@ -67,9 +62,13 @@ const TaskListPage: React.FC = () => {
 
   const [selectedTaskData, setSelectedTaskData] = useState<SelectedTaskData>({
     title: "Add task",
+    _id: "",
     name: "",
+    contractor: "",
+    principal: "",
+    status: "todo",
     createdAt: new Date(Date.now()),
-    deadline: new Date(Date.now()),
+    completionDate: new Date(Date.now()),
     points: 0,
     description: "",
   });
@@ -81,9 +80,13 @@ const TaskListPage: React.FC = () => {
       setIsAddModifyTaskModal(false);
       setSelectedTaskData({
         title: "Add task",
+        _id: "",
         name: "",
+        contractor: "",
+        principal: "",
+        status: "todo",
         createdAt: new Date(Date.now()),
-        deadline: new Date(Date.now()),
+        completionDate: new Date(Date.now()),
         points: 0,
         description: "",
       });
@@ -123,10 +126,12 @@ const TaskListPage: React.FC = () => {
   }, [dispatch, groupId, id]);
 
   const renderItem = ({
+    _id,
     name,
     createdAt,
     completionDate,
     principal,
+    contractor,
     points,
     status,
     checked,
@@ -138,7 +143,7 @@ const TaskListPage: React.FC = () => {
       sx={{ paddingLeft: 0 }}
       secondaryAction={
         <Stack direction="row" alignItems="center">
-          {currentUser?.role === "parent" && (status === "todo" || "toCheck") && (
+          {currentUser?.role === "parent" && status !== "done" && (
             <IconButton
               onClick={() => handleSecondaryAction()}
               color={status === "todo" ? "error" : "primary"}
@@ -150,15 +155,19 @@ const TaskListPage: React.FC = () => {
             aria-label="info"
             title="Info"
             onClick={() => {
-              // setSelectedTaskData({
-              //   title: "Modify task",
-              //   name,
-              //   createdAt,
-              //   deadline,
-              //   points,
-              //   description,
-              // });
-              // setIsAddModifyTaskModal(true);
+              setSelectedTaskData({
+                _id,
+                title: "Modify task",
+                name,
+                principal,
+                contractor,
+                status,
+                createdAt,
+                completionDate,
+                points,
+                description,
+              });
+              setIsAddModifyTaskModal(true);
             }}
           >
             <KeyboardArrowRightIcon />

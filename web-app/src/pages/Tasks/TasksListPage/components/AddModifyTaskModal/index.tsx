@@ -21,7 +21,20 @@ import { createTask } from "../../../../../store/tasks/actions";
 const AddModifyTaskModal: React.FC<{
   groupId: string;
   childId: string;
-}> = ({ groupId, childId }) => {
+  points: Number;
+  name: string;
+  createdAt: Date;
+  completionDate: Date;
+  description?: string;
+}> = ({
+  groupId,
+  childId,
+  name,
+  points,
+  completionDate,
+  createdAt,
+  description,
+}) => {
   const dispatch = useAppDispatch();
   const status = useAppSelector((state) => state.utils.status);
   const [taskName, setTaskName] = useState<string>("");
@@ -35,6 +48,16 @@ const AddModifyTaskModal: React.FC<{
   useEffect(() => {
     dispatch(updateBackdrop(true));
   }, [dispatch]);
+
+  useEffect(() => {
+    if (name && points && completionDate && createdAt) {
+      setTaskName(name);
+      setTaskPoints(points.toString());
+      setTaskDeadline(completionDate);
+      setCreatedAt(createdAt);
+      setTaskDescription(description as string);
+    }
+  }, [name, points, description, completionDate, createdAt]);
 
   useEffect(() => {
     if (status === "success") {
@@ -53,10 +76,10 @@ const AddModifyTaskModal: React.FC<{
       toastError("Name, deadline and points fields are required");
       return;
     }
-    // if (taskDeadline < taskCreatedAt) {
-    //   toastError("Task cannot have deadline in past");
-    //   return;
-    // }
+    if (taskDeadline < taskCreatedAt) {
+      toastError("Task cannot have deadline in past");
+      return;
+    }
     if (+taskPoints && +taskPoints <= 0) {
       toastError("Points field value must be positive number");
       return;
@@ -84,9 +107,14 @@ const AddModifyTaskModal: React.FC<{
 
   return (
     <div className={classes.modal}>
-      <p className={classes.title}>Add task</p>
+      {!name && <p className={classes.title}>Add task</p>}
       <FormControl variant="standard" color="primary" className={classes.input}>
-        <TextInput text={taskName} setText={setTaskName} label="Item name" />
+        <TextInput
+          disabled={!!name}
+          text={taskName}
+          setText={setTaskName}
+          label="Item name"
+        />
       </FormControl>
       <FormControl variant="standard" color="primary" className={classes.input}>
         <TextInput
@@ -107,6 +135,7 @@ const AddModifyTaskModal: React.FC<{
               variant="standard"
               className={classes.input}
               {...params}
+              disabled={!!name}
             />
           )}
         />
@@ -116,6 +145,7 @@ const AddModifyTaskModal: React.FC<{
           text={taskPoints}
           setText={setTaskPoints}
           label="Points for task"
+          disabled={!!name}
         />
       </FormControl>
 
@@ -124,10 +154,13 @@ const AddModifyTaskModal: React.FC<{
         minRows={10}
         maxRows={10}
         placeholder="Item description"
+        disabled={!!name}
         value={taskDescription}
         onChange={(event) => setTaskDescription(event.target.value)}
       />
-      <MainButton isOutline={true} text="Save" onClick={handleSave} />
+      {!name && (
+        <MainButton isOutline={true} text="Save" onClick={handleSave} />
+      )}
     </div>
   );
 };
